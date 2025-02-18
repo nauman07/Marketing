@@ -4,8 +4,8 @@ import os
 from github import Github
 
 # GitHub credentials and repository information
-GITHUB_TOKEN = "your_github_personal_access_token"
-REPO_NAME = "your_username/your_repo_name"
+GITHUB_TOKEN = st.secrets["github"]["token"]
+REPO_NAME = st.secrets["github"]["repo"]
 BRANCH = "main"  # or "master" depending on your repo
 CSV_FILE_PATH = "data.csv"
 
