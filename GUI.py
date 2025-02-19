@@ -69,8 +69,8 @@ def display_header():
     st.markdown(
         """
         <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px;">
-            <img src="rwth-954x537.jpg" alt="Logo" width="100">
-            <h1>User Questionnaire</h1>
+            <img src="/rwth-954x537.jpg" alt="Logo" width="100">
+            <h1>New Survey</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -81,7 +81,7 @@ def display_footer():
     st.markdown(
         """
         <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px; margin-top: 20px;">
-            <p>© 2023 Your Company. All rights reserved.</p>
+            <p>© 2023 RWTH Aachen University. All rights reserved.</p>
         </div>
         """,
         unsafe_allow_html=True
