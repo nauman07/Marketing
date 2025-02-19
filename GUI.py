@@ -68,7 +68,7 @@ def set_background(image_path):
 def display_header():
     st.markdown(
         """
-        <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px;">
+        <div style="text-align: center; padding: 10px; border-radius: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" alt="Logo" width="100">
             <h1>New Survey</h1>
         </div>
