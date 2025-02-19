@@ -114,7 +114,7 @@ def main():
         st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     if st.session_state.page != "Page 1":
         if col1.button("Previous"):
             if st.session_state.page == "Page 2":
@@ -123,7 +123,7 @@ def main():
                 st.session_state.page = "Page 2"
 
     if st.session_state.page != "Page 3":
-        if col4.button("Next"):
+        if col3.button("Next"):
             if st.session_state.page == "Page 1":
                 st.session_state.page = "Page 2"
             elif st.session_state.page == "Page 2":
