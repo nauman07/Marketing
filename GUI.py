@@ -90,7 +90,7 @@ def display_footer():
 # Main function
 def main():
     # Set background animation
-    set_background("rwth-aachen.jpg")  # Replace with your image path
+    set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Replace with your image path
 
     # Display header
     display_header()
