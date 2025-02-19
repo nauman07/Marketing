@@ -1,47 +1,126 @@
 import streamlit as st
 import pandas as pd
 import os
+import base64
+from PIL import Image
 
+# Define the CSV file to store data
 data_file = "data.csv"
 
-# Define questions
-questions = [
-    "Name",
-    "Email",
-    "Company",
-    "Position",
-    "Department",
-    "What is your favorite color?",
-    "How many hours do you work daily?",
-    "Do you prefer tea or coffee?",
-    "What is your favorite hobby?"
-]
+# Define questions for each page
+questions = {
+    "Page 1": [
+        "Name",
+        "Email",
+        "Company",
+        "Position",
+        "Department"
+    ],
+    "Page 2": [
+        "What is your favorite color?",
+        "How many hours do you work daily?",
+        "Do you prefer tea or coffee?"
+    ],
+    "Page 3": [
+        "What is your favorite hobby?",
+        "What is your favorite book?",
+        "What is your favorite movie?"
+    ]
+}
 
+# Function to save responses to CSV
 def save_to_csv(answers):
     if os.path.exists(data_file):
         df = pd.read_csv(data_file, index_col=["Name", "Email"])
     else:
-        df = pd.DataFrame(columns=["Name", "Email"] + questions[2:])
+        df = pd.DataFrame(columns=["Name", "Email"] + list(questions["Page 2"]) + list(questions["Page 3"]))
     
     new_entry = pd.DataFrame([answers]).set_index(["Name", "Email"])
     df = pd.concat([df, new_entry])
     df.to_csv(data_file)
 
+# Function to set a background image with animation
+def set_background(image_path):
+    with open(image_path, "rb") as f:
+        img_data = f.read()
+    b64_encoded = base64.b64encode(img_data).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{b64_encoded}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            animation: moveBackground 20s linear infinite;
+        }}
+        @keyframes moveBackground {{
+            0% {{ background-position: 0% 50%; }}
+            50% {{ background-position: 100% 50%; }}
+            100% {{ background-position: 0% 50%; }}
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Function to display the header with a logo
+def display_header():
+    st.markdown(
+        """
+        <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px;">
+            <img src="https://via.placeholder.com/150" alt="Logo" width="100">
+            <h1>User Questionnaire</h1>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Function to display the footer
+def display_footer():
+    st.markdown(
+        """
+        <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px; margin-top: 20px;">
+            <p>© 2023 Your Company. All rights reserved.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Main function
 def main():
-    st.title("User Questionnaire")
-    
-    st.write("Please answer the following questions:")
-    
+    # Set background animation
+    set_background("background.jpg")  # Replace with your image path
+
+    # Display header
+    display_header()
+
+    # Initialize session state for page navigation
+    if "page" not in st.session_state:
+        st.session_state.page = "Page 1"
+
+    # Navigation buttons
+    col1, col2, col3 = st.columns(3)
+    if col1.button("Page 1"):
+        st.session_state.page = "Page 1"
+    if col2.button("Page 2"):
+        st.session_state.page = "Page 2"
+    if col3.button("Page 3"):
+        st.session_state.page = "Page 3"
+
+    # Display questions based on the current page
+    st.write(f"### {st.session_state.page}")
     user_answers = {}
-    user_answers["Name"] = st.text_input("Name", "")
-    user_answers["Email"] = st.text_input("Email", "")
-    
-    for question in questions[2:]:
+    for question in questions[st.session_state.page]:
         user_answers[question] = st.text_input(question, "")
-    
+
+    # Submit button
     if st.button("Submit"):
         save_to_csv(user_answers)
         st.success("Thank you! Your responses have been recorded.")
+
+    # Display footer
+    display_footer()
 
 if __name__ == "__main__":
     main()
