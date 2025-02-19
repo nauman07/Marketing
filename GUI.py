@@ -104,7 +104,7 @@ def main():
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
-        st.markdown(f"<p style='font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
+        #st.markdown(f"<p style='font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
         st.session_state.answers[question] = st.text_input(question, value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
