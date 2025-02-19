@@ -2,10 +2,11 @@ import streamlit as st
 import pandas as pd
 import os
 import base64
+import json  # Import the json module
 from PIL import Image
 
-# Define the CSV file to store data
-data_file = "data.csv"
+# Define the JSON file to store data
+data_file = "data.json"
 
 # Define questions for each page
 questions = {
@@ -28,16 +29,21 @@ questions = {
     ]
 }
 
-# Function to save responses to CSV
-def save_to_csv(answers):
+# Function to save responses to JSON
+def save_to_json(answers):
+    # Check if the JSON file exists
     if os.path.exists(data_file):
-        df = pd.read_csv(data_file, index_col=["Name", "Email"])
+        with open(data_file, "r") as f:
+            data = json.load(f)  # Load existing data
     else:
-        df = pd.DataFrame(columns=["Name", "Email"] + list(questions["Page 2"]) + list(questions["Page 3"]))
-    
-    new_entry = pd.DataFrame([answers]).set_index(["Name", "Email"])
-    df = pd.concat([df, new_entry])
-    df.to_csv(data_file)
+        data = []  # Initialize an empty list if the file doesn't exist
+
+    # Append the new entry to the data
+    data.append(answers)
+
+    # Save the updated data back to the JSON file
+    with open(data_file, "w") as f:
+        json.dump(data, f, indent=4)  # Write data with pretty formatting
 
 # Function to set a background image with animation
 def set_background(image_path):
@@ -105,10 +111,10 @@ def main():
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
         st.markdown(f"<p style='font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
-        st.session_state.answers[question] = st.text_input("",value=st.session_state.answers.get(question, ""), key=question)
+        st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
-    col1, col2, col3,col4 = st.columns(4)
+    col1, col2, col3, col4 = st.columns(4)
     if st.session_state.page != "Page 1":
         if col1.button("Previous"):
             if st.session_state.page == "Page 2":
@@ -126,7 +132,7 @@ def main():
     # Submit button (only on the last page)
     if st.session_state.page == "Page 3":
         if st.button("Submit"):
-            save_to_csv(st.session_state.answers)
+            save_to_json(st.session_state.answers)  # Save answers to JSON
             st.success("Thank you! Your responses have been recorded.")
             st.session_state.answers = {}  # Clear answers after submission
 
