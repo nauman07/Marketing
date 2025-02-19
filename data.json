@@ -1,1 +1,15 @@
-
+[
+    {
+        "Name": "John Doe",
+        "Email": "john@example.com",
+        "Company": "ABC Corp",
+        "Position": "Manager",
+        "Department": "HR",
+        "What is your favorite color?": "Blue",
+        "How many hours do you work daily?": "8",
+        "Do you prefer tea or coffee?": "Coffee",
+        "What is your favorite hobby?": "Reading",
+        "What is your favorite book?": "1984",
+        "What is your favorite movie?": "Inception"
+    }
+]
