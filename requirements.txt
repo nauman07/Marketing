@@ -4,3 +4,5 @@ numpy
 pandas
 requests
 PyGithub
+pillow
+pybase64
