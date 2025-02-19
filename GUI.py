@@ -69,7 +69,7 @@ def display_header():
     st.markdown(
         """
         <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px;">
-            <img src="https://via.placeholder.com/150" alt="Logo" width="100">
+            <img src="rwth-954x537.jpg" alt="Logo" width="100">
             <h1>User Questionnaire</h1>
         </div>
         """,
@@ -90,7 +90,7 @@ def display_footer():
 # Main function
 def main():
     # Set background animation
-    set_background("background.jpg")  # Replace with your image path
+    set_background("rwth-aachen.jpg")  # Replace with your image path
 
     # Display header
     display_header()
