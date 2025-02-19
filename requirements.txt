@@ -6,3 +6,4 @@ requests
 PyGithub
 pillow
 pybase64
+jsons
