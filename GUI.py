@@ -95,30 +95,40 @@ def main():
     # Display header
     display_header()
 
-    # Initialize session state for page navigation
+    # Initialize session state for page navigation and answers
     if "page" not in st.session_state:
         st.session_state.page = "Page 1"
-
-    # Navigation buttons
-    col1, col2, col3 = st.columns(3)
-    if col1.button("Page 1"):
-        st.session_state.page = "Page 1"
-    if col2.button("Page 2"):
-        st.session_state.page = "Page 2"
-    if col3.button("Page 3"):
-        st.session_state.page = "Page 3"
+    if "answers" not in st.session_state:
+        st.session_state.answers = {}
 
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
-    user_answers = {}
     for question in questions[st.session_state.page]:
         st.markdown(f"<p style='font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
-        user_answers[question] = st.text_input(question, "", key=question)
+        st.session_state.answers[question] = st.text_input(question, value=st.session_state.answers.get(question, ""), key=question)
 
-    # Submit button
-    if st.button("Submit"):
-        save_to_csv(user_answers)
-        st.success("Thank you! Your responses have been recorded.")
+    # Navigation buttons
+    col1, col2, col3 = st.columns(3)
+    if st.session_state.page != "Page 1":
+        if col1.button("Previous"):
+            if st.session_state.page == "Page 2":
+                st.session_state.page = "Page 1"
+            elif st.session_state.page == "Page 3":
+                st.session_state.page = "Page 2"
+
+    if st.session_state.page != "Page 3":
+        if col3.button("Next"):
+            if st.session_state.page == "Page 1":
+                st.session_state.page = "Page 2"
+            elif st.session_state.page == "Page 2":
+                st.session_state.page = "Page 3"
+
+    # Submit button (only on the last page)
+    if st.session_state.page == "Page 3":
+        if st.button("Submit"):
+            save_to_csv(st.session_state.answers)
+            st.success("Thank you! Your responses have been recorded.")
+            st.session_state.answers = {}  # Clear answers after submission
 
     # Display footer
     display_footer()
