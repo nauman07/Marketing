@@ -69,7 +69,7 @@ def display_header():
     st.markdown(
         """
         <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/RWTH_Aachen_University_Logo.svg/1200px-RWTH_Aachen_University_Logo.svg.png" alt="Logo" width="100">
+            <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" alt="Logo" width="100">
             <h1>New Survey</h1>
         </div>
         """,
@@ -108,7 +108,7 @@ def main():
         st.session_state.answers[question] = st.text_input("",value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3,col4 = st.columns(4)
     if st.session_state.page != "Page 1":
         if col1.button("Previous"):
             if st.session_state.page == "Page 2":
@@ -117,7 +117,7 @@ def main():
                 st.session_state.page = "Page 2"
 
     if st.session_state.page != "Page 3":
-        if col3.button("Next"):
+        if col4.button("Next"):
             if st.session_state.page == "Page 1":
                 st.session_state.page = "Page 2"
             elif st.session_state.page == "Page 2":
