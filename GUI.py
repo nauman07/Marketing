@@ -69,7 +69,7 @@ def display_header():
     st.markdown(
         """
         <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px;">
-            <img src="/rwth-954x537.jpg" alt="Logo" width="100">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/RWTH_Aachen_University_Logo.svg/1200px-RWTH_Aachen_University_Logo.svg.png" alt="Logo" width="100">
             <h1>New Survey</h1>
         </div>
         """,
@@ -112,7 +112,8 @@ def main():
     st.write(f"### {st.session_state.page}")
     user_answers = {}
     for question in questions[st.session_state.page]:
-        user_answers[question] = st.text_input(question, "")
+        st.markdown(f"<p style='font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
+        user_answers[question] = st.text_input(question, "", key=question)
 
     # Submit button
     if st.button("Submit"):
