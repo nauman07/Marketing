@@ -36,7 +36,9 @@ questions = {
 
 # Function to save responses to Firebase
 def save_to_firebase(answers):
-    db.collection("survey_responses").add(answers)
+    # Ensure no blank responses
+    processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
+    db.collection("survey_responses").add(processed_answers)
 
 # Function to set a background image
 def set_background(image_path):
@@ -98,10 +100,15 @@ def main():
 
     # Navigation buttons
     col1, col2, col3 = st.columns(3)
-    if st.session_state.page != "Page 1" and col1.button("Previous"):
-        st.session_state.page = "Page 1" if st.session_state.page == "Page 2" else "Page 2"
-    if st.session_state.page != "Page 3" and col3.button("Next"):
-        st.session_state.page = "Page 2" if st.session_state.page == "Page 1" else "Page 3"
+    
+    pages = list(questions.keys())
+    current_index = pages.index(st.session_state.page)
+    
+    if current_index > 0 and col1.button("Previous"):
+        st.session_state.page = pages[current_index - 1]
+    
+    if current_index < len(pages) - 1 and col3.button("Next"):
+        st.session_state.page = pages[current_index + 1]
     
     # Submit button
     if st.session_state.page == "Page 3" and st.button("Submit"):
