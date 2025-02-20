@@ -49,9 +49,10 @@ questions = {
 # Function to save responses to Firebase
 def save_to_firebase(answers):
     try:
-        user_name = answers.get("Name", "Unknown").replace(" ", "_")  # Use name as collection name
+        user_name = answers.get("Name", "Unknown")
+        collection_name = f"survey_{user_name.replace(' ', '_')}"
         processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
-        db.collection(user_name).add(processed_answers)
+        db.collection(collection_name).add(processed_answers)
         st.success("Data successfully saved to Firebase!")
     except Exception as e:
         st.error(f"Error saving data: {e}")
@@ -112,7 +113,7 @@ def main():
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
-        st.markdown(f"<p style='color: black; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: white; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
         st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
@@ -121,14 +122,13 @@ def main():
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
     
-    if col1.button("Previous") and current_index > 0:
+    if current_index > 0 and col1.button("Previous"):
         st.session_state.page = pages[current_index - 1]
         st.rerun()
     
-    if current_index < len(pages) - 1:
-        if col3.button("Next"):
-            st.session_state.page = pages[current_index + 1]
-            st.rerun()
+    if current_index < len(pages) - 1 and col3.button("Next"):
+        st.session_state.page = pages[current_index + 1]
+        st.rerun()
     
     # Submit button
     if st.session_state.page == "Page 3" and st.button("Submit"):
