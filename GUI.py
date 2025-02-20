@@ -36,9 +36,33 @@ questions = {
 
 # Function to save responses to Firebase
 def save_to_firebase(answers):
-    # Ensure no blank responses
-    processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
-    db.collection("survey_responses").add(processed_answers)
+    try:
+        processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
+        db.collection("survey_responses").add(processed_answers)
+        st.success("Data successfully saved to Firebase!")
+    except Exception as e:
+        st.error(f"Error saving data: {e}")
+
+# Function to insert dummy data for testing Firebase connectivity
+def insert_dummy_data():
+    try:
+        dummy_data = {
+            "Name": "John Doe",
+            "Email": "john.doe@example.com",
+            "Company": "TestCorp",
+            "Position": "Engineer",
+            "Department": "IT",
+            "Favorite Color": "Blue",
+            "Work Hours": "8",
+            "Tea or Coffee": "Coffee",
+            "Hobby": "Reading",
+            "Book": "1984",
+            "Movie": "Inception"
+        }
+        db.collection("survey_responses").add(dummy_data)
+        st.success("Dummy data added successfully!")
+    except Exception as e:
+        st.error(f"Error adding dummy data: {e}")
 
 # Function to set a background image
 def set_background(image_path):
@@ -113,8 +137,12 @@ def main():
     # Submit button
     if st.session_state.page == "Page 3" and st.button("Submit"):
         save_to_firebase(st.session_state.answers)
-        st.success("Thank you! Your responses have been recorded.")
         st.session_state.answers = {}
+        st.session_state.page = "Page 1"  # Reset to first page after submission
+    
+    # Button to insert dummy data
+    if st.button("Insert Dummy Data"):
+        insert_dummy_data()
     
     display_footer()
 
