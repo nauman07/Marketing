@@ -49,8 +49,9 @@ questions = {
 # Function to save responses to Firebase
 def save_to_firebase(answers):
     try:
+        user_name = answers.get("Name", "Unknown").replace(" ", "_")  # Use name as collection name
         processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
-        db.collection("survey_responses").add(processed_answers)
+        db.collection(user_name).add(processed_answers)
         st.success("Data successfully saved to Firebase!")
     except Exception as e:
         st.error(f"Error saving data: {e}")
@@ -69,10 +70,6 @@ def set_background(image_path):
             background-position: center;
             background-repeat: no-repeat;
         }}
-        .stMarkdown p {{
-            color: white !important;
-            font-weight: bold;
-        }}
         </style>
         """,
         unsafe_allow_html=True
@@ -84,7 +81,7 @@ def display_header():
         """
         <div style="text-align: center;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
-            <h1 style="color: white;">New Survey</h1>
+            <h1>New Survey</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -94,7 +91,7 @@ def display_header():
 def display_footer():
     st.markdown(
         """
-        <div style="text-align: center; background-color: #222; padding: 10px; margin-top: 20px; color: white;">
+        <div style="text-align: center; background-color: #f0f0f0; padding: 10px; margin-top: 20px;">
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
         </div>
         """,
@@ -115,7 +112,7 @@ def main():
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
-        st.markdown(f"<p style='color: white; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: black; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
         st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
@@ -128,9 +125,10 @@ def main():
         st.session_state.page = pages[current_index - 1]
         st.rerun()
     
-    if col3.button("Next") and current_index < len(pages) - 1:
-        st.session_state.page = pages[current_index + 1]
-        st.rerun()
+    if current_index < len(pages) - 1:
+        if col3.button("Next"):
+            st.session_state.page = pages[current_index + 1]
+            st.rerun()
     
     # Submit button
     if st.session_state.page == "Page 3" and st.button("Submit"):
