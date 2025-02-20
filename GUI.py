@@ -69,6 +69,10 @@ def set_background(image_path):
             background-position: center;
             background-repeat: no-repeat;
         }}
+        .stMarkdown p {{
+            color: white !important;
+            font-weight: bold;
+        }}
         </style>
         """,
         unsafe_allow_html=True
@@ -80,7 +84,7 @@ def display_header():
         """
         <div style="text-align: center;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
-            <h1>New Survey</h1>
+            <h1 style="color: white;">New Survey</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -90,7 +94,7 @@ def display_header():
 def display_footer():
     st.markdown(
         """
-        <div style="text-align: center; background-color: #f0f0f0; padding: 10px; margin-top: 20px;">
+        <div style="text-align: center; background-color: #222; padding: 10px; margin-top: 20px; color: white;">
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
         </div>
         """,
@@ -111,7 +115,7 @@ def main():
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
-        st.markdown(f"<p style='color: black; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: white; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
         st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
