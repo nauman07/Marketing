@@ -1,12 +1,17 @@
 import streamlit as st
-import pandas as pd
-import os
+import firebase_admin
+from firebase_admin import credentials, firestore
+import json
 import base64
-import json  # Import the json module
+import os
 from PIL import Image
 
-# Define the JSON file to store data
-data_file = "data.json"
+# Initialize Firebase using Streamlit secrets
+if not firebase_admin._apps:
+    cred = credentials.Certificate(json.loads(st.secrets["firebase_credentials"]))
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 # Define questions for each page
 questions = {
@@ -29,23 +34,11 @@ questions = {
     ]
 }
 
-# Function to save responses to JSON
-def save_to_json(answers):
-    # Check if the JSON file exists
-    if os.path.exists(data_file):
-        with open(data_file, "r") as f:
-            data = json.load(f)  # Load existing data
-    else:
-        data = []  # Initialize an empty list if the file doesn't exist
+# Function to save responses to Firebase
+def save_to_firebase(answers):
+    db.collection("survey_responses").add(answers)
 
-    # Append the new entry to the data
-    data.append(answers)
-
-    # Save the updated data back to the JSON file
-    with open(data_file, "w") as f:
-        json.dump(data, f, indent=4)  # Write data with pretty formatting
-
-# Function to set a background image with animation
+# Function to set a background image
 def set_background(image_path):
     with open(image_path, "rb") as f:
         img_data = f.read()
@@ -58,12 +51,6 @@ def set_background(image_path):
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            animation: moveBackground 20s linear infinite;
-        }}
-        @keyframes moveBackground {{
-            0% {{ background-position: 0% 50%; }}
-            50% {{ background-position: 100% 50%; }}
-            100% {{ background-position: 0% 50%; }}
         }}
         </style>
         """,
@@ -74,8 +61,8 @@ def set_background(image_path):
 def display_header():
     st.markdown(
         """
-        <div style="text-align: center; padding: 10px; border-radius: 10px;">
-            <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" alt="Logo" width="100">
+        <div style="text-align: center;">
+            <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
             <h1>New Survey</h1>
         </div>
         """,
@@ -86,7 +73,7 @@ def display_header():
 def display_footer():
     st.markdown(
         """
-        <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border-radius: 10px; margin-top: 20px;">
+        <div style="text-align: center; background-color: #f0f0f0; padding: 10px; margin-top: 20px;">
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
         </div>
         """,
@@ -95,13 +82,10 @@ def display_footer():
 
 # Main function
 def main():
-    # Set background animation
     set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Replace with your image path
-
-    # Display header
     display_header()
 
-    # Initialize session state for page navigation and answers
+    # Initialize session state
     if "page" not in st.session_state:
         st.session_state.page = "Page 1"
     if "answers" not in st.session_state:
@@ -110,33 +94,21 @@ def main():
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
-        st.markdown(f"<p style='font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
-        st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
+        st.session_state.answers[question] = st.text_input(question, value=st.session_state.answers.get(question, ""))
 
     # Navigation buttons
     col1, col2, col3 = st.columns(3)
-    if st.session_state.page != "Page 1":
-        if col1.button("Previous"):
-            if st.session_state.page == "Page 2":
-                st.session_state.page = "Page 1"
-            elif st.session_state.page == "Page 3":
-                st.session_state.page = "Page 2"
-
-    if st.session_state.page != "Page 3":
-        if col3.button("Next"):
-            if st.session_state.page == "Page 1":
-                st.session_state.page = "Page 2"
-            elif st.session_state.page == "Page 2":
-                st.session_state.page = "Page 3"
-
-    # Submit button (only on the last page)
-    if st.session_state.page == "Page 3":
-        if st.button("Submit"):
-            save_to_json(st.session_state.answers)  # Save answers to JSON
-            st.success("Thank you! Your responses have been recorded.")
-            st.session_state.answers = {}  # Clear answers after submission
-
-    # Display footer
+    if st.session_state.page != "Page 1" and col1.button("Previous"):
+        st.session_state.page = "Page 1" if st.session_state.page == "Page 2" else "Page 2"
+    if st.session_state.page != "Page 3" and col3.button("Next"):
+        st.session_state.page = "Page 2" if st.session_state.page == "Page 1" else "Page 3"
+    
+    # Submit button
+    if st.session_state.page == "Page 3" and st.button("Submit"):
+        save_to_firebase(st.session_state.answers)
+        st.success("Thank you! Your responses have been recorded.")
+        st.session_state.answers = {}
+    
     display_footer()
 
 if __name__ == "__main__":
