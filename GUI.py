@@ -64,6 +64,17 @@ def insert_dummy_data():
     except Exception as e:
         st.error(f"Error adding dummy data: {e}")
 
+# Function to test Firebase connectivity
+def test_firebase_connection():
+    try:
+        docs = db.collection("survey_responses").limit(1).stream()
+        for _ in docs:
+            st.success("Successfully connected to Firebase!")
+            return
+        st.warning("Connected to Firebase, but no data found.")
+    except Exception as e:
+        st.error(f"Firebase connection failed: {e}")
+
 # Function to set a background image
 def set_background(image_path):
     with open(image_path, "rb") as f:
@@ -120,7 +131,8 @@ def main():
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
-        st.session_state.answers[question] = st.text_input(question, value=st.session_state.answers.get(question, ""))
+        st.markdown(f"<p style='color: black; font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
+        st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
     col1, col2, col3 = st.columns(3)
@@ -140,9 +152,11 @@ def main():
         st.session_state.answers = {}
         st.session_state.page = "Page 1"  # Reset to first page after submission
     
-    # Button to insert dummy data
+    # Buttons for testing Firebase connectivity
     if st.button("Insert Dummy Data"):
         insert_dummy_data()
+    if st.button("Test Firebase Connection"):
+        test_firebase_connection()
     
     display_footer()
 
