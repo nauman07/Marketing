@@ -55,38 +55,6 @@ def save_to_firebase(answers):
     except Exception as e:
         st.error(f"Error saving data: {e}")
 
-# Function to insert dummy data for testing Firebase connectivity
-def insert_dummy_data():
-    try:
-        dummy_data = {
-            "Name": "John Doe",
-            "Email": "john.doe@example.com",
-            "Company": "TestCorp",
-            "Position": "Engineer",
-            "Department": "IT",
-            "Favorite Color": "Blue",
-            "Work Hours": "8",
-            "Tea or Coffee": "Coffee",
-            "Hobby": "Reading",
-            "Book": "1984",
-            "Movie": "Inception"
-        }
-        db.collection("survey_responses").add(dummy_data)
-        st.success("Dummy data added successfully!")
-    except Exception as e:
-        st.error(f"Error adding dummy data: {e}")
-
-# Function to test Firebase connectivity
-def test_firebase_connection():
-    try:
-        docs = db.collection("survey_responses").limit(1).stream()
-        for _ in docs:
-            st.success("Successfully connected to Firebase!")
-            return
-        st.warning("Connected to Firebase, but no data found.")
-    except Exception as e:
-        st.error(f"Firebase connection failed: {e}")
-
 # Function to set a background image
 def set_background(image_path):
     with open(image_path, "rb") as f:
@@ -143,7 +111,7 @@ def main():
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
     for question in questions[st.session_state.page]:
-        st.markdown(f"<p style='color: black; font-weight: bold;'>{question}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: black; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
         st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
@@ -152,23 +120,20 @@ def main():
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
     
-    if current_index > 0 and col1.button("Previous"):
+    if col1.button("Previous") and current_index > 0:
         st.session_state.page = pages[current_index - 1]
+        st.rerun()
     
-    if current_index < len(pages) - 1 and col3.button("Next"):
+    if col3.button("Next") and current_index < len(pages) - 1:
         st.session_state.page = pages[current_index + 1]
+        st.rerun()
     
     # Submit button
     if st.session_state.page == "Page 3" and st.button("Submit"):
         save_to_firebase(st.session_state.answers)
         st.session_state.answers = {}
         st.session_state.page = "Page 1"  # Reset to first page after submission
-    
-    # Buttons for testing Firebase connectivity
-    if st.button("Insert Dummy Data"):
-        insert_dummy_data()
-    if st.button("Test Firebase Connection"):
-        test_firebase_connection()
+        st.rerun()
     
     display_footer()
 
