@@ -112,20 +112,15 @@ def save_to_firebase(answers, is_control):
     except Exception as e:
         st.error(f"Error saving data: {e}")
 
-# Function to set a background image
-def set_background(image_path):
-    with open(image_path, "rb") as f:
-        img_data = f.read()
-    b64_encoded = base64.b64encode(img_data).decode()
+# Function to set a blue background
+def set_background():
     st.markdown(
-        f"""
+        """
         <style>
-        .stApp {{
-            background-image: url("data:image/png;base64,{b64_encoded}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }}
+        .stApp {
+            background-color: #0077b6;  /* Blue background color */
+            color: white;  /* White text for better contrast */
+        }
         </style>
         """,
         unsafe_allow_html=True
@@ -178,7 +173,7 @@ def display_scenarios(is_control):
 
 # Main function for Control Group
 def control_group():
-    set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Replace with your image path
+    set_background()  # Set blue background
     display_header()
 
     # Initialize session state
@@ -230,7 +225,7 @@ def control_group():
 
 # Main function for Bias Group
 def bias_group():
-    set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Replace with your image path
+    set_background()  # Set blue background
     display_header()
 
     # Initialize session state
