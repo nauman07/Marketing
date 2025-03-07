@@ -75,31 +75,6 @@ questions = {
     }
 }
 
-# Supplier details
-suppliers = {
-    "Supplier A": {
-        "Price": "$8,750/unit (25% above market average)",
-        "Lead Time": "18 days (±4 days variability)",
-        "Reliability": "97% defect-free rate",
-        "Minimum Order Quantity": "15 units",
-        "Additional": "FAA-certified manufacturing facility, 5-year warranty"
-    },
-    "Supplier B": {
-        "Price": "$7,000/unit (Industry Benchmark)",
-        "Lead Time": "20 days (±7 days variability)",
-        "Reliability": "95% defect-free rate",
-        "Minimum Order Quantity": "10 units",
-        "Additional": "Recently ISO 9001 certified, 2-year warranty"
-    },
-    "Supplier C": {
-        "Price": "$9,800/unit (40% above market average)",
-        "Lead Time": "15 days (±2 days variability)",
-        "Reliability": "99% defect-free rate",
-        "Minimum Order Quantity": "20 units",
-        "Additional": "Used by 7 of the top 10 global airlines, 7-year warranty"
-    }
-}
-
 # Function to save responses to Firebase
 def save_to_firebase(answers, is_control):
     try:
@@ -154,28 +129,6 @@ def display_footer():
         unsafe_allow_html=True
     )
 
-# Function to display supplier details
-def display_supplier_details():
-    st.write("### Supplier Details")
-    for supplier, details in suppliers.items():
-        st.write(f"#### {supplier}")
-        for key, value in details.items():
-            st.write(f"- **{key}**: {value}")
-
-# Function to display scenarios
-def display_scenarios(is_control):
-    st.write("### Scenario Description")
-    if is_control:
-        st.write("""
-        **Control Group Scenario**:
-        AeroConnect Airlines is reviewing its procurement strategy for avionics control units. The current supplier's contract is expiring, and the airline must select a new supplier. Each aircraft requires regular replacement of these units as part of scheduled maintenance procedures. The airline operates 45 commercial aircraft and plans to add 8 more within the next 18 months.
-        """)
-    else:
-        st.write("""
-        **Bias Group Scenario**:
-        In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
-        """)
-
 # Main function
 def main():
     set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Replace with your image path
@@ -198,11 +151,6 @@ def main():
             st.rerun()
         display_footer()
         return
-
-    # Display scenarios and supplier details
-    is_control = st.session_state.group == "Control Group"
-    display_scenarios(is_control)
-    display_supplier_details()
 
     # Get questions for the selected group
     group_questions = questions[st.session_state.group]
