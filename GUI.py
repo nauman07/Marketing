@@ -176,8 +176,8 @@ def display_scenarios(is_control):
         In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
         """)
 
-# Main function
-def main():
+# Main function for Control Group
+def control_group():
     set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Replace with your image path
     display_header()
 
@@ -186,26 +186,13 @@ def main():
         st.session_state.page = "Page 1"
     if "answers" not in st.session_state:
         st.session_state.answers = {}
-    if "group" not in st.session_state:
-        st.session_state.group = None  # Control or Bias group
-
-    # Group selection (only on the first run)
-    if st.session_state.group is None:
-        st.write("### Select Your Group")
-        group = st.radio("Are you in the control group or bias group?", ("Control Group", "Bias Group"))
-        if st.button("Start Survey"):
-            st.session_state.group = group
-            st.rerun()
-        display_footer()
-        return
 
     # Display scenarios and supplier details
-    is_control = st.session_state.group == "Control Group"
-    display_scenarios(is_control)
+    display_scenarios(is_control=True)
     display_supplier_details()
 
-    # Get questions for the selected group
-    group_questions = questions[st.session_state.group]
+    # Get questions for the control group
+    group_questions = questions["Control Group"]
 
     # Display questions based on the current page
     st.write(f"### {st.session_state.page}")
@@ -234,14 +221,73 @@ def main():
     
     # Submit button
     if st.session_state.page == "Page 3" and st.button("Submit"):
-        is_control = 1 if st.session_state.group == "Control Group" else 0
-        save_to_firebase(st.session_state.answers, is_control)
+        save_to_firebase(st.session_state.answers, is_control=1)
         st.session_state.answers = {}
         st.session_state.page = "Page 1"  # Reset to first page after submission
-        st.session_state.group = None  # Reset group selection
         st.rerun()
     
     display_footer()
+
+# Main function for Bias Group
+def bias_group():
+    set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Replace with your image path
+    display_header()
+
+    # Initialize session state
+    if "page" not in st.session_state:
+        st.session_state.page = "Page 1"
+    if "answers" not in st.session_state:
+        st.session_state.answers = {}
+
+    # Display scenarios and supplier details
+    display_scenarios(is_control=False)
+    display_supplier_details()
+
+    # Get questions for the bias group
+    group_questions = questions["Bias Group"]
+
+    # Display questions based on the current page
+    st.write(f"### {st.session_state.page}")
+    for question in group_questions[st.session_state.page]:
+        st.markdown(f"<p style='color: white; font-weight: 900;'>{question}</p>", unsafe_allow_html=True)
+        if "Rate your confidence" in question or "Strongly Disagree" in question:
+            # Use a slider for rating questions
+            st.session_state.answers[question] = st.slider("", 1, 10 if "confidence" in question else 5, key=question)
+        else:
+            # Use a text input for other questions
+            st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
+
+    # Navigation buttons
+    col1, col2, col3 = st.columns(3)
+    
+    pages = list(group_questions.keys())
+    current_index = pages.index(st.session_state.page)
+    
+    if current_index > 0 and col1.button("Previous"):
+        st.session_state.page = pages[current_index - 1]
+        st.rerun()
+    
+    if current_index < len(pages) - 1 and col3.button("Next"):
+        st.session_state.page = pages[current_index + 1]
+        st.rerun()
+    
+    # Submit button
+    if st.session_state.page == "Page 3" and st.button("Submit"):
+        save_to_firebase(st.session_state.answers, is_control=0)
+        st.session_state.answers = {}
+        st.session_state.page = "Page 1"  # Reset to first page after submission
+        st.rerun()
+    
+    display_footer()
+
+# Main app routing
+def main():
+    st.sidebar.title("Navigation")
+    app_mode = st.sidebar.radio("Go to", ["Control Group", "Bias Group"])
+    if app_mode == "Control Group":
+        control_group()
+    elif app_mode == "Bias Group":
+        bias_group()
 
 if __name__ == "__main__":
     main()
