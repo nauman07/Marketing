@@ -1,5 +1,6 @@
 import streamlit as st
 from firebase_config import initialize_firebase
+import base64
 
 # Initialize Firebase
 db = initialize_firebase()
@@ -29,6 +30,31 @@ questions = {
     ]
 }
 
+# Supplier details
+suppliers = {
+    "Supplier A": {
+        "Price": "$8,750/unit (25% above market average)",
+        "Lead Time": "18 days (±4 days variability)",
+        "Reliability": "97% defect-free rate",
+        "Minimum Order Quantity": "15 units",
+        "Additional": "FAA-certified manufacturing facility, 5-year warranty"
+    },
+    "Supplier B": {
+        "Price": "$7,000/unit (Industry Benchmark)",
+        "Lead Time": "20 days (±7 days variability)",
+        "Reliability": "95% defect-free rate",
+        "Minimum Order Quantity": "10 units",
+        "Additional": "Recently ISO 9001 certified, 2-year warranty"
+    },
+    "Supplier C": {
+        "Price": "$9,800/unit (40% above market average)",
+        "Lead Time": "15 days (±2 days variability)",
+        "Reliability": "99% defect-free rate",
+        "Minimum Order Quantity": "20 units",
+        "Additional": "Used by 7 of the top 10 global airlines, 7-year warranty"
+    }
+}
+
 # Function to save responses to Firebase
 def save_to_firebase(answers):
     try:
@@ -40,6 +66,92 @@ def save_to_firebase(answers):
         st.success("Data successfully saved to Firebase!")
     except Exception as e:
         st.error(f"Error saving data: {e}")
+
+# Function to set a background image
+def set_background(image_path):
+    with open(image_path, "rb") as f:
+        img_data = f.read()
+    b64_encoded = base64.b64encode(img_data).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{b64_encoded}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Function to display the header with a logo
+def display_header():
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
+            <h1>Bias Group Survey</h1>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Function to display the footer
+def display_footer():
+    st.markdown(
+        """
+        <div style="text-align: center; background-color: #f0f0f0; padding: 10px; margin-top: 20px;">
+            <p>© 2023 RWTH Aachen University. All rights reserved.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Function to display supplier details
+def display_supplier_details():
+    st.markdown(
+        """
+        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+            <h3>Supplier Details</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    for supplier, details in suppliers.items():
+        st.markdown(
+            f"""
+            <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <h4>{supplier}</h4>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        for key, value in details.items():
+            st.markdown(
+                f"""
+                <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                    <p><strong>{key}</strong>: {value}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+# Function to display scenarios
+def display_scenario():
+    st.markdown(
+        """
+        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+            <h3>Scenario Description</h3>
+            <p>
+                <strong>Bias Group Scenario:</strong><br>
+                In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Function to display questions with grey background
 def display_question(question):
@@ -54,7 +166,8 @@ def display_question(question):
 
 # Main function for Bias Group
 def bias_group():
-    st.title("Bias Group Survey")
+    set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Background image
+    display_header()
 
     # Initialize session state
     if "page" not in st.session_state:
@@ -62,8 +175,19 @@ def bias_group():
     if "answers" not in st.session_state:
         st.session_state.answers = {}
 
+    # Display scenario and supplier details
+    display_scenario()
+    display_supplier_details()
+
     # Display questions based on the current page
-    st.write(f"### {st.session_state.page}")
+    st.markdown(
+        f"""
+        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+            <h3>{st.session_state.page}</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     for question in questions[st.session_state.page]:
         display_question(question)
         if "Rate your confidence" in question or "Strongly Disagree" in question:
@@ -93,6 +217,8 @@ def bias_group():
         st.session_state.answers = {}
         st.session_state.page = "Page 1"  # Reset to first page after submission
         st.rerun()
+    
+    display_footer()
 
 if __name__ == "__main__":
     bias_group()
