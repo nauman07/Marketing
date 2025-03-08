@@ -230,7 +230,7 @@ def control_group():
 
 # Main function for Bias Group
 def bias_group():
-    set_background("krantz-acs-rwth-carl-aachen-referenz-galerie-01.webp")  # Replace with your image path
+    set_background("rwth-aachen.jpg")  # Replace with your image path
     display_header()
 
     # Initialize session state
