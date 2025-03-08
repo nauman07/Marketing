@@ -90,7 +90,7 @@ def set_background(image_path):
 def display_header():
     st.markdown(
         """
-        <div style="text-align: center;">
+        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
             <h1>Bias Group Survey</h1>
         </div>
@@ -102,7 +102,7 @@ def display_header():
 def display_footer():
     st.markdown(
         """
-        <div style="text-align: center; background-color: #f0f0f0; padding: 10px; margin-top: 20px;">
+        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-top: 20px;">
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
         </div>
         """,
@@ -113,7 +113,7 @@ def display_footer():
 def display_supplier_details():
     st.markdown(
         """
-        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3>Supplier Details</h3>
         </div>
         """,
@@ -122,7 +122,7 @@ def display_supplier_details():
     for supplier, details in suppliers.items():
         st.markdown(
             f"""
-            <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+            <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
                 <h4>{supplier}</h4>
             </div>
             """,
@@ -131,7 +131,7 @@ def display_supplier_details():
         for key, value in details.items():
             st.markdown(
                 f"""
-                <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
                     <p><strong>{key}</strong>: {value}</p>
                 </div>
                 """,
@@ -142,7 +142,7 @@ def display_supplier_details():
 def display_scenario():
     st.markdown(
         """
-        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3>Scenario Description</h3>
             <p>
                 <strong>Bias Group Scenario:</strong><br>
@@ -153,11 +153,11 @@ def display_scenario():
         unsafe_allow_html=True
     )
 
-# Function to display questions with grey background
+# Function to display questions with semi-transparent background
 def display_question(question):
     st.markdown(
         f"""
-        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
@@ -182,7 +182,7 @@ def bias_group():
     # Display questions based on the current page
     st.markdown(
         f"""
-        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3>{st.session_state.page}</h3>
         </div>
         """,
