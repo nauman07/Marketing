@@ -104,12 +104,23 @@ def display_header():
         unsafe_allow_html=True
     )
 
-# Function to display the footer
+# Function to display the footer with developer details
 def display_footer():
     st.markdown(
         """
         <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-top: 20px;">
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
+            <p>For more information or if you are facing any issues, please contact the developer:</p>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <img src="https://raw.githubusercontent.com/your-repo/your-folder/1705048040202.jpeg" alt="Developer Logo" width="50" style="border-radius: 50%;">
+                <div>
+                    <p style="margin: 0;"><strong>HarshVarshan Kanthode</strong></p>
+                    <p style="margin: 0;">
+                        <a href="mailto:harshvardhan.kanthode@rwth-aachen.de" style="text-decoration: none; color: inherit;">📧 Email</a> | 
+                        <a href="https://www.linkedin.com/in/harshvardhan-kanthode-628863189/" target="_blank" style="text-decoration: none; color: inherit;">🔗 LinkedIn</a>
+                    </p>
+                </div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
