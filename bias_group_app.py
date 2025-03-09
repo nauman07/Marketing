@@ -258,16 +258,26 @@ def display_question(question):
     )
 
 # Function to display numeric input with reduced distance
-def display_numeric_input(question, min_value, max_value, key):
-    # st.markdown(
-    #     f"""
-    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-    #     </div>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
-    value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
+# def display_numeric_input(question, min_value, max_value, key):
+#     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
+#     return value
+
+def display_slider(question, min_value, max_value, key):
+    # Apply white background and padding for better visibility
+    st.markdown(
+        """
+        <style>
+        div[data-testid="stSlider"] {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    # Create the slider
+    value = st.slider(question, min_value=min_value, max_value=max_value, value=(min_value + max_value) // 2, key=key)
     return value
 
 # Function to display importance ratings with reduced distance and white background for options
@@ -367,7 +377,7 @@ def bias_group():
             # Use a numeric input for rating questions
             min_value = 1
             max_value = 10 if "confidence" in question else 5
-            st.session_state.answers[question] = display_numeric_input(question, min_value, max_value, key=question)
+            st.session_state.answers[question] = display_slider(question, min_value, max_value, key=question)
         elif "If Supplier B improved" in question:
             # Multiple-choice question
             options = [
