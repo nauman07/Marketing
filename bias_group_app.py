@@ -269,8 +269,19 @@ def display_slider(question, min_value, max_value, key):
         <style>
         div[data-testid="stSlider"] {
             background-color: white;
-            padding: 2px;
-            border-radius: 2px;
+            padding: 5px;  /* Reduced padding */
+            border-radius: 5px;
+        }
+        
+        /* Adjusts the label and internal padding */
+        div[data-testid="stSlider"] > div {
+            margin: 0px !important;
+            padding: 0px !important;
+        }
+
+        /* Reduce space between slider elements */
+        div[data-testid="stSlider"] .stSlider {
+            gap: 2px !important;
         }
         </style>
         """,
