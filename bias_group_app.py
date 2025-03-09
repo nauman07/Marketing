@@ -140,7 +140,7 @@ def display_supplier_details():
     st.markdown(
         """
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-            <h3>Supplier Details</h3>
+            <h3 style="color: black;">Supplier Details</h3>
         </div>
         """,
         unsafe_allow_html=True
@@ -160,9 +160,11 @@ def display_supplier_details():
                 padding: 8px;
                 text-align: left;
                 border-bottom: 1px solid #ddd;
+                color: black; /* Ensure text color is black */
             }}
             th {{
                 background-color: rgba(255, 255, 255, 0.8);
+                color: black; /* Ensure header text color is black */
             }}
             </style>
             {table_html}
@@ -176,8 +178,8 @@ def display_scenario():
     st.markdown(
         """
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-            <h3>Scenario Description</h3>
-            <p>
+            <h3 style="color: black;">Scenario Description</h3>
+            <p style="color: black;">
                 <strong>Group Scenario:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
             </p>
