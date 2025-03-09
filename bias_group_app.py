@@ -1,6 +1,7 @@
 import streamlit as st
 from firebase_config import initialize_firebase
 import base64
+import pandas as pd
 
 # Initialize Firebase
 db = initialize_firebase()
@@ -55,6 +56,11 @@ suppliers = {
     }
 }
 
+# Convert supplier data to a pandas DataFrame for tabular display
+suppliers_df = pd.DataFrame(suppliers).transpose()
+suppliers_df.index.name = "Supplier"
+suppliers_df.reset_index(inplace=True)
+
 # Function to save responses to Firebase
 def save_to_firebase(answers):
     try:
@@ -92,7 +98,7 @@ def display_header():
         """
         <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
-            <h1>Group Survey</h1>
+            <h1>Bias Group Survey</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -109,7 +115,7 @@ def display_footer():
         unsafe_allow_html=True
     )
 
-# Function to display supplier details
+# Function to display supplier details in a table with semi-transparent background
 def display_supplier_details():
     st.markdown(
         """
@@ -119,24 +125,31 @@ def display_supplier_details():
         """,
         unsafe_allow_html=True
     )
-    for supplier, details in suppliers.items():
-        st.markdown(
-            f"""
-            <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-                <h4>{supplier}</h4>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        for key, value in details.items():
-            st.markdown(
-                f"""
-                <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-                    <p><strong>{key}</strong>: {value}</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    # Convert the DataFrame to HTML and inject custom CSS for the table
+    table_html = suppliers_df.to_html(index=False, escape=False)
+    st.markdown(
+        f"""
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <style>
+            table {{
+                width: 100%;
+                border-collapse: collapse;
+                background-color: rgba(255, 255, 255, 0.8);
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }}
+            th {{
+                background-color: rgba(255, 255, 255, 0.8);
+            }}
+            </style>
+            {table_html}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Function to display scenarios
 def display_scenario():
@@ -145,7 +158,7 @@ def display_scenario():
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3>Scenario Description</h3>
             <p>
-                <strong>Group Scenario:</strong><br>
+                <strong>Bias Group Scenario:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
             </p>
         </div>
