@@ -295,14 +295,14 @@ def display_importance_ratings(question, factors, key):
 
 # Function to display multiple-choice questions with white background for options
 def display_multiple_choice(question, options, key):
-    st.markdown(
-        f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # st.markdown(
+    #     f"""
+    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
     # Inject custom CSS for white background on radio buttons
     st.markdown(
         """
