@@ -104,12 +104,15 @@ def display_header():
         unsafe_allow_html=True
     )
 
-# Function to display the footer
+# Function to display the footer with a "Contact Developer" section
 def display_footer():
     st.markdown(
         """
         <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-top: 20px;">
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
+            <p>For more information or if you are facing any issues, please contact the developer: 
+                <a href="mailto:harshvardhan.kanthode@rwth-aachen.de">HarshVardhan Kanthode</a>.
+            </p>
         </div>
         """,
         unsafe_allow_html=True
