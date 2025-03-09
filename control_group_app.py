@@ -115,7 +115,7 @@ def display_footer():
         unsafe_allow_html=True
     )
 
-# Function to display supplier details in a table
+# Function to display supplier details in a table with semi-transparent background
 def display_supplier_details():
     st.markdown(
         """
@@ -125,7 +125,15 @@ def display_supplier_details():
         """,
         unsafe_allow_html=True
     )
+    # Wrap the table in a semi-transparent container
+    st.markdown(
+        """
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        """,
+        unsafe_allow_html=True
+    )
     st.table(suppliers_df)  # Display supplier data in a table
+    st.markdown("</div>", unsafe_allow_html=True)  # Close the container
 
 # Function to display scenarios
 def display_scenario():
