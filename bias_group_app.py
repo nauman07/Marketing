@@ -269,7 +269,7 @@ def display_slider(question, min_value, max_value, key):
         <style>
         div[data-testid="stSlider"] {
             background-color: white;
-            padding: 10px;
+            padding: 5px;
             border-radius: 5px;
         }
         </style>
@@ -277,7 +277,7 @@ def display_slider(question, min_value, max_value, key):
         unsafe_allow_html=True
     )
     # Create the slider
-    value = st.slider(" ", min_value=min_value, max_value=max_value, value=(min_value + max_value) // 2, key=key)
+    value = st.slider("", min_value=min_value, max_value=max_value, value=(min_value + max_value) // 2, key=key)
     return value
 
 # Function to display importance ratings with reduced distance and white background for options
