@@ -380,7 +380,10 @@ def display_percentage_allocation():
                 remaining = 100 - st.session_state.supplier_c_percent
                 st.session_state.supplier_a_percent = remaining // 2
                 st.session_state.supplier_b_percent = remaining - st.session_state.supplier_a_percent
-
+    
+    # Add a space between the previous text box and the slider columns
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+    
     # Sliders for percentage allocation
     col1, col2, col3 = st.columns(3)
 
