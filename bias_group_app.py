@@ -198,50 +198,7 @@ def display_question(question):
 
 # Function to display slider with semi-transparent background and white slider
 def display_slider(question, min_value, max_value, key):
-    st.markdown(
-        f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-            <p style="color: black; font-weight: 900;">{question}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    # Inject custom CSS to style the slider
-    st.markdown(
-        """
-        <style>
-        /* Target the slider track */
-        .stSlider .st-ax {
-            background-color: white !important;
-        }
-        /* Target the slider thumb */
-        .stSlider .st-bx {
-            background-color: white !important;
-            border: 2px solid #ccc !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    # Wrap the slider in a div with semi-transparent background
-    st.markdown(
-        f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-        """,
-        unsafe_allow_html=True
-    )
-    
     slider_value = st.slider("", min_value, max_value, key=key)
-    
-    st.markdown(
-        f"""
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
     return slider_value
 
 # Main function for Bias Group
