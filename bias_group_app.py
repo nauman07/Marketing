@@ -17,31 +17,31 @@ questions = {
         "Department"
     ],
     "Page 2": [
-        "Based on the information provided, which supplier would you select for AeroConnect Airlines?",
-        "Rate your confidence in this decision, considering the potential impact on aircraft availability (1 = Not at all confident, 10 = Extremely confident)",
-        "If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)",
+        "Q1. Based on the information provided, which supplier would you select for AeroConnect Airlines?",
+        "Q2. Rate your confidence in this decision, considering the potential impact on aircraft availability (1 = Not at all confident, 10 = Extremely confident)",
+        "Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)",
         "Supplier A: in %",
         "Supplier B: in %",
         "Supplier C: in %"
     ],
     "Page 3": [
-        "Selecting a supplier with lower reliability exposes AeroConnect to significant operational disruptions, potential regulatory scrutiny, and passenger compensation claims. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "The hidden costs from selecting the lowest-price supplier (emergency shipments, flight cancellations, maintenance complications) often exceed the initial savings. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise. (1 = Strongly Disagree, 5 = Strongly Agree)"
+        "Q4. Selecting a supplier with lower reliability exposes AeroConnect to significant operational disruptions, potential regulatory scrutiny, and passenger compensation claims. (1 = Strongly Disagree, 5 = Strongly Agree)",
+        "Q5. The hidden costs from selecting the lowest-price supplier (emergency shipments, flight cancellations, maintenance complications) often exceed the initial savings. (1 = Strongly Disagree, 5 = Strongly Agree)",
+        "Q6. Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation. (1 = Strongly Disagree, 5 = Strongly Agree)",
+        "Q7. Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise. (1 = Strongly Disagree, 5 = Strongly Agree)"
     ],
     "Page 4: Follow-up Scenarios": [
-        "If Supplier B improved their reliability rating to 97% but increased their price by 10%, would you change your original supplier selection? (Note- Each 1% decrease in reliability has historically corresponded to a 15% increase in maintenance issues)",
-        "What is the minimum reliability percentage you would consider acceptable? (Each reliability percentage point below 99% correlates with approximately 3 additional flight cancellations per year)",
-        "If a delivery delay grounds aircraft and disrupts operations, which option would you prefer?"
+        "Q8. If Supplier B improved their reliability rating to 97% but increased their price by 10%, would you change your original supplier selection? (Note- Each 1% decrease in reliability has historically corresponded to a 15% increase in maintenance issues)",
+        "Q9. What is the minimum reliability percentage you would consider acceptable? (Each reliability percentage point below 99% correlates with approximately 3 additional flight cancellations per year)",
+        "Q10. If a delivery delay grounds aircraft and disrupts operations, which option would you prefer?"
     ],
     "Page 5: Importance Ratings": [
-        "Rate the importance of each factor in your supplier selection decision: (1 = Not Important, 2 = Slightly Important, 3 = Moderately Important, 4 = Very Important, 5 = Extremely Important)",
-        "Which attribute would you be most willing to compromise on to improve reliability by 2%?"
+        "Q11. Rate the importance of each factor in your supplier selection decision: (1 = Not Important, 2 = Slightly Important, 3 = Moderately Important, 4 = Very Important, 5 = Extremely Important)",
+        "Q12. Which attribute would you be most willing to compromise on to improve reliability by 2%?"
     ],
     "Page 6: Long-term Considerations": [
-        "Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction? (Note- This would protect against any potential future price increases due to market volatility)",
-        "How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
+        "Q13. Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction? (Note- This would protect against any potential future price increases due to market volatility)",
+        "Q14. How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
     ]
 }
 
