@@ -135,12 +135,11 @@ def display_footer():
         unsafe_allow_html=True
     )
 
-# Function to display supplier details in a table with semi-transparent background
 def display_supplier_details():
     st.markdown(
         """
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-            <h3>Supplier Details</h3>
+            <h3 style="color: black;">Supplier Details</h3>
         </div>
         """,
         unsafe_allow_html=True
@@ -160,9 +159,11 @@ def display_supplier_details():
                 padding: 8px;
                 text-align: left;
                 border-bottom: 1px solid #ddd;
+                color: black; /* Ensure text color is black */
             }}
             th {{
                 background-color: rgba(255, 255, 255, 0.8);
+                color: black; /* Ensure header text color is black */
             }}
             </style>
             {table_html}
@@ -170,14 +171,13 @@ def display_supplier_details():
         """,
         unsafe_allow_html=True
     )
-
-# Function to display scenarios
+    
 def display_scenario():
     st.markdown(
         """
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-            <h3>Scenario Description</h3>
-            <p>
+            <h3 style="color: black;">Scenario Description</h3>
+            <p style="color: black;">
                 <strong>Group Scenario:</strong><br>
                 AeroConnect Airlines is reviewing its procurement strategy for avionics control units. The current supplier's contract is expiring, and the airline must select a new supplier. Each aircraft requires regular replacement of these units as part of scheduled maintenance procedures. The airline operates 45 commercial aircraft and plans to add 8 more within the next 18 months.
             </p>
