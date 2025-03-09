@@ -422,7 +422,7 @@ def bias_group():
             st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
         else:
             # Use a text input for other questions
-            st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
+            st.session_state.answers[question] = st.text_input(" ", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
     col1, col2, col3 = st.columns(3)
