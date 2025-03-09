@@ -134,6 +134,7 @@ def display_footer():
         """,
         unsafe_allow_html=True
     )
+
 # Function to display supplier details in a table with semi-transparent background
 def display_supplier_details():
     st.markdown(
@@ -196,11 +197,11 @@ def display_question(question):
         unsafe_allow_html=True
     )
 
-# Function to display slider with semi-transparent background and white slider
-def display_slider(question, min_value, max_value, key):
-    slider_value = st.slider("", min_value, max_value, key=key)
-    return slider_value
-    
+# Function to display numeric input with semi-transparent background
+def display_numeric_input(question, min_value, max_value, key):
+    value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
+    return value
+
 # Main function for Control Group
 def control_group():
     set_background("rwth-aachen.jpg")  # Background image
@@ -228,8 +229,10 @@ def control_group():
     for question in questions[st.session_state.page]:
         display_question(question)
         if "Rate your confidence" in question or "Strongly Disagree" in question:
-            # Use a slider for rating questions
-            st.session_state.answers[question] = display_slider(question, 1, 10 if "confidence" in question else 5, key=question)
+            # Use a numeric input for rating questions
+            min_value = 1
+            max_value = 10 if "confidence" in question else 5
+            st.session_state.answers[question] = display_numeric_input(question, min_value, max_value, key=question)
         else:
             # Use a text input for other questions
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
