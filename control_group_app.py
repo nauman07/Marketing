@@ -18,9 +18,9 @@ questions = {
         "Based on the information provided, which supplier would you select for AeroConnect Airlines?",
         "Rate your confidence in this decision (1 = Not Confident at all, 10 = Extremely Confident)",
         "If you had to distribute AeroConnect’s annual orders across these suppliers, what % would you allocate to each? (Total % must equal 100)",
-        "Supplier A: ____ %",
-        "Supplier B: ____ %",
-        "Supplier C: ____ %"
+        "Supplier A: in %",
+        "Supplier B: in %",
+        "Supplier C: in %"
     ],
     "Page 3": [
         "I believe selecting a supplier with a lower reliability poses a risk to AeroConnect’s operations. (1 = Strongly Disagree, 5 = Strongly Agree)",
@@ -145,7 +145,7 @@ def display_scenario():
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3>Scenario Description</h3>
             <p>
-                <strong>Control Group Scenario:</strong><br>
+                <strong>Group Scenario:</strong><br>
                 AeroConnect Airlines is reviewing its procurement strategy for avionics control units. The current supplier's contract is expiring, and the airline must select a new supplier. Each aircraft requires regular replacement of these units as part of scheduled maintenance procedures. The airline operates 45 commercial aircraft and plans to add 8 more within the next 18 months.
             </p>
         </div>
@@ -178,7 +178,7 @@ def display_slider(question, min_value, max_value, key):
 
 # Main function for Control Group
 def control_group():
-    set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Background image
+    set_background("krantz-acs-rwth-carl-aachen-referenz-galerie-01.webp")  # Background image
     display_header()
 
     # Initialize session state
