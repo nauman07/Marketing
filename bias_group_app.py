@@ -316,6 +316,7 @@ def bias_group():
         unsafe_allow_html=True
     )
     for question in questions[st.session_state.page]:
+        display_question(question)
         if "Rate your confidence" in question or "Strongly Disagree" in question:
             # Use a numeric input for rating questions
             min_value = 1
