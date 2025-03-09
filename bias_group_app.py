@@ -250,7 +250,7 @@ def display_scenario():
 def display_question(question):
     st.markdown(
         f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255); border-radius: 5px;">
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
