@@ -206,8 +206,26 @@ def display_slider(question, min_value, max_value, key):
         """,
         unsafe_allow_html=True
     )
-    return st.slider("", min_value, max_value, key=key)
-
+    
+    # Wrap the slider in a div with semi-transparent background
+    st.markdown(
+        f"""
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        """,
+        unsafe_allow_html=True
+    )
+    
+    slider_value = st.slider("", min_value, max_value, key=key)
+    
+    st.markdown(
+        f"""
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    return slider_value
+    
 # Main function for Control Group
 def control_group():
     set_background("rwth-aachen.jpg")  # Background image
