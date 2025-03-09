@@ -9,7 +9,8 @@ db = initialize_firebase()
 # Questions for Bias Group
 questions = {
     "Page 1": [
-        "Name",
+        "First Name (Mandatory)",
+        "Last Name",
         "Email",
         "Company",
         "Position",
@@ -77,7 +78,7 @@ suppliers_df.reset_index(inplace=True)
 # Function to save responses to Firebase
 def save_to_firebase(answers):
     try:
-        user_name = answers.get("Name", "Unknown")
+        user_name = answers.get("First Name (Mandatory)", "Unknown")
         collection_name = f"survey_{user_name.replace(' ', '_')}"
         processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
         processed_answers["is_control"] = False  # Mark as Bias Group
@@ -153,6 +154,17 @@ def display_supplier_details():
     st.markdown(
         """
         <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+            <h3 style="color: black;">Evaluation Criteria</h3>
+            <p style="color: black;">
+                You are expected to evaluate the suppliers through various criteria: <strong>Lead Time, Lead Variability, Reliability, Price, Minimum Order Quantity, Certification Standards, and Warranty Period</strong>.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        """
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Supplier Details</h3>
         </div>
         """,
@@ -218,7 +230,14 @@ def display_scenario():
                 <strong>Your Task:</strong><br>
                 As the procurement specialist, you must evaluate <strong>3</strong> potential suppliers and make a recommendation. Your decision will impact not only cost structures but also maintenance schedules, parts availability, and potentially operational reliability.
             </p>
-            <p style="color: black;">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        """
+        <div style="padding: 10px; background-color: rgba(255, 0, 0, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <p style="color: yellow;">
                 <strong>Industry Data:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging <strong>3-5 days per incident</strong>. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging <strong>$450,000 per incident</strong>. Quality control variations among suppliers were identified as the primary contributing factor.
             </p>
@@ -231,7 +250,7 @@ def display_scenario():
 def display_question(question):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 5px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
@@ -261,7 +280,12 @@ def display_multiple_choice(question, options, key):
         """,
         unsafe_allow_html=True
     )
-    selected_option = st.radio("", options, key=key)
+    selected_option = st.radio(
+        "",
+        options,
+        key=key,
+        format_func=lambda x: f"<div style='padding: 5px; background-color: rgba(255, 255, 255, 0.8); border-radius: 5px; margin-bottom: 5px;'>{x}</div>",
+    )
     return selected_option
 
 # Function to display importance ratings
@@ -278,7 +302,7 @@ def display_importance_ratings(question, factors, key):
     for factor in factors:
         st.markdown(
             f"""
-            <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+            <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 5px;">
                 <p style="color: black; font-weight: 900;">{factor}</p>
             </div>
             """,
