@@ -199,6 +199,14 @@ def display_question(question):
 
 # Function to display numeric input with semi-transparent background
 def display_numeric_input(question, min_value, max_value, key):
+    st.markdown(
+        f"""
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <p style="color: black; font-weight: 900;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
     return value
 
@@ -227,7 +235,6 @@ def control_group():
         unsafe_allow_html=True
     )
     for question in questions[st.session_state.page]:
-        display_question(question)
         if "Rate your confidence" in question or "Strongly Disagree" in question:
             # Use a numeric input for rating questions
             min_value = 1
@@ -235,6 +242,7 @@ def control_group():
             st.session_state.answers[question] = display_numeric_input(question, min_value, max_value, key=question)
         else:
             # Use a text input for other questions
+            display_question(question)
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
 
     # Navigation buttons
