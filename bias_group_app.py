@@ -246,23 +246,23 @@ def display_scenario():
         unsafe_allow_html=True
     )
 
-# Function to display questions with semi-transparent background
+# Function to display questions with reduced distance and no background on options
 def display_question(question):
     st.markdown(
         f"""
         <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-            <p style="color: black; font-weight: 900;">{question}</p>
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-# Function to display numeric input with semi-transparent background
+# Function to display numeric input with reduced distance
 def display_numeric_input(question, min_value, max_value, key):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <p style="color: black; font-weight: 900;">{question}</p>
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
         unsafe_allow_html=True
@@ -270,12 +270,12 @@ def display_numeric_input(question, min_value, max_value, key):
     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
     return value
 
-# Function to display multiple-choice questions
+# Function to display multiple-choice questions with no background on options
 def display_multiple_choice(question, options, key):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <p style="color: black; font-weight: 900;">{question}</p>
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
         unsafe_allow_html=True
@@ -284,16 +284,15 @@ def display_multiple_choice(question, options, key):
         "",
         options,
         key=key,
-        format_func=lambda x: f"<div style='padding: 5px; background-color: rgba(255, 255, 255, 0.8); border-radius: 5px; margin-bottom: 5px;'>{x}</div>",
     )
     return selected_option
 
-# Function to display importance ratings
+# Function to display importance ratings with reduced distance
 def display_importance_ratings(question, factors, key):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <p style="color: black; font-weight: 900;">{question}</p>
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
         unsafe_allow_html=True
@@ -302,8 +301,8 @@ def display_importance_ratings(question, factors, key):
     for factor in factors:
         st.markdown(
             f"""
-            <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 5px;">
-                <p style="color: black; font-weight: 900;">{factor}</p>
+            <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+                <p style="color: black; font-weight: 900; margin-bottom: 5px;">{factor}</p>
             </div>
             """,
             unsafe_allow_html=True
