@@ -18,9 +18,9 @@ questions = {
         "Based on the information provided, which supplier would you select for AeroConnect Airlines?",
         "Rate your confidence in this decision, considering the potential impact on aircraft availability (1 = Not at all confident, 10 = Extremely confident)",
         "If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)",
-        "Supplier A: ____%",
-        "Supplier B: ____%",
-        "Supplier C: ____%"
+        "Supplier A: in %",
+        "Supplier B: in %",
+        "Supplier C: in %"
     ],
     "Page 3": [
         "Selecting a supplier with lower reliability exposes AeroConnect to significant operational disruptions, potential regulatory scrutiny, and passenger compensation claims. (1 = Strongly Disagree, 5 = Strongly Agree)",
@@ -145,7 +145,7 @@ def display_scenario():
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3>Scenario Description</h3>
             <p>
-                <strong>Bias Group Scenario:</strong><br>
+                <strong>Group Scenario:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
             </p>
         </div>
@@ -178,7 +178,7 @@ def display_slider(question, min_value, max_value, key):
 
 # Main function for Bias Group
 def bias_group():
-    set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Background image
+    set_background("krantz-acs-rwth-carl-aachen-referenz-galerie-01.webp")  # Background image
     display_header()
 
     # Initialize session state
