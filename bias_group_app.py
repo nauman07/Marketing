@@ -200,7 +200,7 @@ def display_question(question):
 def display_slider(question, min_value, max_value, key):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
