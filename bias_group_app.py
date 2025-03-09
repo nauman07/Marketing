@@ -104,15 +104,24 @@ def display_header():
         unsafe_allow_html=True
     )
 
+# Function to encode local image to Base64
+def get_image_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
+
 # Function to display the footer with developer details
 def display_footer():
+    # Encode the local image to Base64
+    image_path = "1705048040202.jpeg"  # Path to the local image
+    image_base64 = get_image_base64(image_path)
+
     st.markdown(
-        """
+        f"""
         <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-top: 20px;">
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
             <p>For more information or if you are facing any issues, please contact the developer:</p>
             <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <img src="https://github.com/nauman07/Marketing/blob/main/1705048040202.jpeg" alt="Developer Logo" width="50" style="border-radius: 50%;">
+                <img src="data:image/jpeg;base64,{image_base64}" alt="Developer Logo" width="50" style="border-radius: 50%;">
                 <div>
                     <p style="margin: 0;"><strong>HarshVarshan Kanthode</strong></p>
                     <p style="margin: 0;">
@@ -125,7 +134,6 @@ def display_footer():
         """,
         unsafe_allow_html=True
     )
-
 # Function to display supplier details in a table with semi-transparent background
 def display_supplier_details():
     st.markdown(
