@@ -344,6 +344,100 @@ def display_multiple_choice(question, options, key):
     )
     return selected_option
 
+def display_percentage_allocation():
+    # st.markdown(
+    #     """
+    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">
+    #             Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)
+    #         </p>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
+
+    # Initialize session state for percentages
+    if "supplier_a_percent" not in st.session_state:
+        st.session_state.supplier_a_percent = 33
+    if "supplier_b_percent" not in st.session_state:
+        st.session_state.supplier_b_percent = 33
+    if "supplier_c_percent" not in st.session_state:
+        st.session_state.supplier_c_percent = 34
+
+    # Function to adjust percentages dynamically
+    def adjust_percentages(changed_supplier):
+        total = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
+        if total != 100:
+            if changed_supplier == "A":
+                remaining = 100 - st.session_state.supplier_a_percent
+                st.session_state.supplier_b_percent = remaining // 2
+                st.session_state.supplier_c_percent = remaining - st.session_state.supplier_b_percent
+            elif changed_supplier == "B":
+                remaining = 100 - st.session_state.supplier_b_percent
+                st.session_state.supplier_a_percent = remaining // 2
+                st.session_state.supplier_c_percent = remaining - st.session_state.supplier_a_percent
+            elif changed_supplier == "C":
+                remaining = 100 - st.session_state.supplier_c_percent
+                st.session_state.supplier_a_percent = remaining // 2
+                st.session_state.supplier_b_percent = remaining - st.session_state.supplier_a_percent
+
+    # Sliders for percentage allocation
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.session_state.supplier_a_percent = st.slider(
+            "Supplier A: in %",
+            min_value=0,
+            max_value=100,
+            value=st.session_state.supplier_a_percent,
+            key="supplier_a_slider",
+            on_change=adjust_percentages,
+            args=("A",)
+        )
+
+    with col2:
+        st.session_state.supplier_b_percent = st.slider(
+            "Supplier B: in %",
+            min_value=0,
+            max_value=100,
+            value=st.session_state.supplier_b_percent,
+            key="supplier_b_slider",
+            on_change=adjust_percentages,
+            args=("B",)
+        )
+
+    with col3:
+        st.session_state.supplier_c_percent = st.slider(
+            "Supplier C: in %",
+            min_value=0,
+            max_value=100,
+            value=st.session_state.supplier_c_percent,
+            key="supplier_c_slider",
+            on_change=adjust_percentages,
+            args=("C",)
+        )
+
+    # Display current allocation and total
+    total_percent = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
+    st.markdown(
+        f"""
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">
+                Current Allocation: Supplier A = {st.session_state.supplier_a_percent}%, Supplier B = {st.session_state.supplier_b_percent}%, Supplier C = {st.session_state.supplier_c_percent}%
+            </p>
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">
+                Total: {total_percent}%
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Save the answers to session state
+    st.session_state.answers["Supplier A: in %"] = st.session_state.supplier_a_percent
+    st.session_state.answers["Supplier B: in %"] = st.session_state.supplier_b_percent
+    st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
+
 # Main function for Bias Group
 def bias_group():
     set_background("rwth-aachen.jpg")  # Background image
@@ -384,7 +478,11 @@ def bias_group():
     )
     for question in questions[st.session_state.page]:
         display_question(question)
-        if "Rate your confidence" in question or "Strongly Disagree" in question:
+
+        if question == "Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)":
+        display_percentage_allocation()  # Call the custom function for percentage allocation
+        
+        elif "Rate your confidence" in question or "Strongly Disagree" in question:
             # Use a numeric input for rating questions
             min_value = 1
             max_value = 10 if "confidence" in question else 5
