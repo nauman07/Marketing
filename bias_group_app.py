@@ -389,6 +389,13 @@ def bias_group():
             min_value = 1
             max_value = 10 if "confidence" in question else 5
             st.session_state.answers[question] = display_slider(question, min_value, max_value, key=question)
+        elif "which supplier would you select for AeroConnect" in question:
+            options = [
+                "Supplier A",
+                "Supplier B",
+                "Supplier C"
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+            ]
         elif "If Supplier B improved" in question:
             # Multiple-choice question
             options = [
