@@ -28,6 +28,19 @@ questions = {
         "The hidden costs from selecting the lowest-price supplier (emergency shipments, flight cancellations, maintenance complications) often exceed the initial savings. (1 = Strongly Disagree, 5 = Strongly Agree)",
         "Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation. (1 = Strongly Disagree, 5 = Strongly Agree)",
         "Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise. (1 = Strongly Disagree, 5 = Strongly Agree)"
+    ],
+    "Page 4": [
+        "If Supplier B improved their reliability rating to 97% but increased their price by 10%, would you change your original supplier selection? (Note- Each 1% decrease in reliability has historically corresponded to a 15% increase in maintenance issues)",
+        "What is the minimum reliability percentage you would consider acceptable? (Each reliability percentage point below 99% correlates with approximately 3 additional flight cancellations per year)",
+        "If a delivery delay grounds aircraft and disrupts operations, which option would you prefer?"
+    ],
+    "Page 5": [
+        "Rate the importance of each factor in your supplier selection decision: (1 = Not Important, 2 = Slightly Important, 3 = Moderately Important, 4 = Very Important, 5 = Extremely Important)",
+        "Which attribute would you be most willing to compromise on to improve reliability by 2%?"
+    ],
+    "Page 6": [
+        "Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction? (Note- This would protect against any potential future price increases due to market volatility)",
+        "How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
     ]
 }
 
@@ -180,7 +193,7 @@ def display_scenario():
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Scenario Description</h3>
             <p style="color: black;">
-                <strong>Aircraft Part: Control Display Unit (CDU)</strong><br>
+                <strong>Aircraft Part Selected: Control Display Unit (CDU)</strong><br>
                 CDUs are essential components in modern aircraft, enabling pilots to manage and monitor various flight systems. The <strong>Control Display Unit (CDU)</strong> serves as the primary interface for pilots to interact with the aircraft's avionics systems. The CDU allows for flight management, system monitoring, and operational control, making it indispensable for safe and efficient flight operations.
             </p>
             <p style="color: black;">
@@ -206,9 +219,6 @@ def display_scenario():
                 As the procurement specialist, you must evaluate three potential suppliers and make a recommendation. Your decision will impact not only cost structures but also maintenance schedules, parts availability, and potentially operational reliability.
             </p>
             <p style="color: black;">
-                Review the information provided about each supplier. Consider factors such as price, lead time, reliability, minimum order quantities, and additional terms. Based on this information, select the supplier that you believe offers the best overall value for AeroConnect Airlines.
-            </p>
-            <p style="color: black;">
                 <strong>Industry Data:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging <strong>3-5 days per incident</strong>. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging <strong>$450,000 per incident</strong>. Quality control variations among suppliers were identified as the primary contributing factor.
             </p>
@@ -232,6 +242,19 @@ def display_question(question):
 def display_numeric_input(question, min_value, max_value, key):
     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
     return value
+
+# Function to display multiple-choice questions
+def display_multiple_choice(question, options, key):
+    selected_option = st.radio("", options, key=key)
+    return selected_option
+
+# Function to display importance ratings
+def display_importance_ratings(question, factors, key):
+    st.markdown(f"**{question}**")
+    ratings = {}
+    for factor in factors:
+        ratings[factor] = st.slider(factor, 1, 5, 3, key=f"{key}_{factor}")
+    return ratings
 
 # Main function for Bias Group
 def bias_group():
@@ -268,6 +291,68 @@ def bias_group():
             min_value = 1
             max_value = 10 if "confidence" in question else 5
             st.session_state.answers[question] = display_numeric_input(question, min_value, max_value, key=question)
+        elif "If Supplier B improved" in question:
+            # Multiple-choice question
+            options = [
+                "Yes, I would switch to Supplier B",
+                "No, I would stay with my original choice",
+                "I originally chose Supplier B and would still choose them"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "minimum reliability percentage" in question:
+            # Multiple-choice question
+            options = [
+                "99% or higher",
+                "97-98%",
+                "95-96%",
+                "90-94%",
+                "Below 90%"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "If a delivery delay grounds aircraft" in question:
+            # Multiple-choice question
+            options = [
+                "Pay a 35% premium for emergency shipments, impacting quarterly profit targets",
+                "Cancel revenue-generating flights until delivery, potentially losing loyal customers",
+                "Maintain a larger safety stock (increasing inventory costs by 20% and reducing capital available for other investments)"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "Rate the importance of each factor" in question:
+            # Importance ratings
+            factors = [
+                "Initial purchase price",
+                "Reliability rating",
+                "Lead time",
+                "Lead time variability",
+                "Minimum order quantity",
+                "Certification standards",
+                "Warranty period"
+            ]
+            st.session_state.answers[question] = display_importance_ratings(question, factors, key=question)
+        elif "Which attribute would you be most willing to compromise on" in question:
+            # Multiple-choice question
+            options = [
+                "Price",
+                "Lead time",
+                "Lead time variability",
+                "Minimum order quantity",
+                "Warranty period"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "Would you be willing to commit to a 2-year contract" in question:
+            # Multiple-choice question
+            options = ["Yes", "No", "Unsure"]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "How much would you be willing to invest" in question:
+            # Multiple-choice question
+            options = [
+                "$0 (not willing to invest)",
+                "Up to $50,000",
+                "$50,001 - $100,000",
+                "$100,001 - $200,000",
+                "Over $200,000"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
         else:
             # Use a text input for other questions
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
@@ -287,7 +372,7 @@ def bias_group():
         st.rerun()
     
     # Submit button
-    if st.session_state.page == "Page 3" and st.button("Submit"):
+    if st.session_state.page == "Page 6" and st.button("Submit"):
         save_to_firebase(st.session_state.answers)
         st.session_state.answers = {}
         st.session_state.page = "Page 1"  # Reset to first page after submission
