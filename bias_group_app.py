@@ -236,8 +236,8 @@ def display_scenario():
     )
     st.markdown(
         """
-        <div style="padding: 10px; background-color: rgba(255, 0, 0, 0.8); border-radius: 10px; margin-bottom: 10px;">
-            <p style="color: yellow;">
+        <div style="padding: 10px; background-color: rgba(255, 0, 0); border-radius: 10px; margin-bottom: 10px;">
+            <p style="color: white;">
                 <strong>Industry Data:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging <strong>3-5 days per incident</strong>. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging <strong>$450,000 per incident</strong>. Quality control variations among suppliers were identified as the primary contributing factor.
             </p>
@@ -250,7 +250,7 @@ def display_scenario():
 def display_question(question):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 5px;">
+        <div style=" background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 5px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
