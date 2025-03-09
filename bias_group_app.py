@@ -98,7 +98,7 @@ def display_header():
         """
         <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
-            <h1>Bias Group Survey</h1>
+            <h1>Group Survey</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -158,7 +158,7 @@ def display_scenario():
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3>Scenario Description</h3>
             <p>
-                <strong>Bias Group Scenario:</strong><br>
+                <strong>Group Scenario:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
             </p>
         </div>
