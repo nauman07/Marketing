@@ -270,24 +270,7 @@ def display_numeric_input(question, min_value, max_value, key):
     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
     return value
 
-# Function to display multiple-choice questions with no background on options
-def display_multiple_choice(question, options, key):
-    st.markdown(
-        f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    selected_option = st.radio(
-        "",
-        options,
-        key=key,
-    )
-    return selected_option
-
-# Function to display importance ratings with reduced distance
+# Function to display importance ratings with reduced distance and white background for options
 def display_importance_ratings(question, factors, key):
     st.markdown(
         f"""
@@ -309,6 +292,36 @@ def display_importance_ratings(question, factors, key):
         )
         ratings[factor] = st.number_input("", min_value=1, max_value=5, value=3, key=f"{key}_{factor}")
     return ratings
+
+# Function to display multiple-choice questions with white background for options
+def display_multiple_choice(question, options, key):
+    st.markdown(
+        f"""
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    # Inject custom CSS for white background on radio buttons
+    st.markdown(
+        """
+        <style>
+        .stRadio > div {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    selected_option = st.radio(
+        "",
+        options,
+        key=key,
+    )
+    return selected_option
 
 # Main function for Bias Group
 def bias_group():
