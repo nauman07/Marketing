@@ -328,6 +328,16 @@ def bias_group():
     set_background("rwth-aachen.jpg")  # Background image
     display_header()
 
+    # Inject custom CSS to reduce spacing before any questions are displayed
+    st.markdown(
+        """
+        <style>
+        div[data-testid="stTextInput"] { margin-top: -20px; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
     # Initialize session state
     if "page" not in st.session_state:
         st.session_state.page = "Page 1"
