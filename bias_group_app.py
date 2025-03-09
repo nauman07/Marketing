@@ -112,7 +112,7 @@ def display_footer():
             <p>© 2023 RWTH Aachen University. All rights reserved.</p>
             <p>For more information or if you are facing any issues, please contact the developer:</p>
             <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <img src="1705048040202.jpeg" alt="Developer Logo" width="50" style="border-radius: 50%;">
+                <img src="https://github.com/nauman07/Marketing/blob/main/1705048040202.jpeg" alt="Developer Logo" width="50" style="border-radius: 50%;">
                 <div>
                     <p style="margin: 0;"><strong>HarshVarshan Kanthode</strong></p>
                     <p style="margin: 0;">
