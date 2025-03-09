@@ -191,7 +191,7 @@ def display_slider(question, min_value, max_value, key):
 
 # Main function for Control Group
 def control_group():
-    set_background("krantz-acs-rwth-carl-aachen-referenz-galerie-01.webp")  # Background image
+    set_background("rwth-aachen.jpg")  # Background image
     display_header()
 
     # Initialize session state
