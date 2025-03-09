@@ -132,7 +132,11 @@ def display_supplier_details():
         """,
         unsafe_allow_html=True
     )
-    st.table(suppliers_df)  # Display supplier data in a table
+    # Convert the DataFrame to HTML and inject custom CSS for the table
+    st.markdown(
+        suppliers_df.to_html(index=False, escape=False),
+        unsafe_allow_html=True
+    )
     st.markdown("</div>", unsafe_allow_html=True)  # Close the container
 
 # Function to display scenarios
