@@ -125,16 +125,31 @@ def display_supplier_details():
         """,
         unsafe_allow_html=True
     )
-    # Wrap the table in a semi-transparent container
+    # Convert the DataFrame to HTML and inject custom CSS for the table
+    table_html = suppliers_df.to_html(index=False, escape=False)
     st.markdown(
-        """
+        f"""
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <style>
+            table {{
+                width: 100%;
+                border-collapse: collapse;
+                background-color: rgba(255, 255, 255, 0.8);
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }}
+            th {{
+                background-color: rgba(255, 255, 255, 0.8);
+            }}
+            </style>
+            {table_html}
+        </div>
         """,
         unsafe_allow_html=True
     )
-    # Display the table
-    st.table(suppliers_df)
-    st.markdown("</div>", unsafe_allow_html=True)  # Close the container
 
 # Function to display scenarios
 def display_scenario():
