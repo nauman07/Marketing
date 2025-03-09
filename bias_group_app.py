@@ -164,6 +164,18 @@ def display_question(question):
         unsafe_allow_html=True
     )
 
+# Function to display slider with semi-transparent background
+def display_slider(question, min_value, max_value, key):
+    st.markdown(
+        f"""
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <p style="color: black; font-weight: 900;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    return st.slider("", min_value, max_value, key=key)
+
 # Main function for Bias Group
 def bias_group():
     set_background("4689289055_06563de23c.irprodgera_tw8mx.jpeg")  # Background image
@@ -192,7 +204,7 @@ def bias_group():
         display_question(question)
         if "Rate your confidence" in question or "Strongly Disagree" in question:
             # Use a slider for rating questions
-            st.session_state.answers[question] = st.slider("", 1, 10 if "confidence" in question else 5, key=question)
+            st.session_state.answers[question] = display_slider(question, 1, 10 if "confidence" in question else 5, key=question)
         else:
             # Use a text input for other questions
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
