@@ -479,8 +479,8 @@ def bias_group():
     for question in questions[st.session_state.page]:
         display_question(question)
 
-        if question == "Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)":
-        display_percentage_allocation()  # Call the custom function for percentage allocation
+        if "Q3. If you had to distribute AeroConnect's" in question:
+            display_percentage_allocation()  # Call the custom function for percentage allocation
         
         elif "Rate your confidence" in question or "Strongly Disagree" in question:
             # Use a numeric input for rating questions
