@@ -111,7 +111,7 @@ def display_header():
         """
         <div style="text-align: center; padding: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
-            <h1>Group Survey</h1>
+            <h1>Survey: Supplier Selection for Aircraft CDU</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -130,7 +130,7 @@ def display_footer():
 
     st.markdown(
         f"""
-        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-top: 20px;">
+        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-top: 20px;">
             <p>© 2025 RWTH Aachen University. All rights reserved.</p>
             <p>For more information or if you are facing any issues, please contact the developer:</p>
             <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
@@ -152,7 +152,7 @@ def display_footer():
 def display_supplier_details():
     st.markdown(
         """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Supplier Details</h3>
         </div>
         """,
@@ -162,12 +162,12 @@ def display_supplier_details():
     table_html = suppliers_df.to_html(index=False, escape=False)
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <style>
             table {{
                 width: 100%;
                 border-collapse: collapse;
-                background-color: rgba(255, 255, 255, 0.8);
+                background-color: rgba(255, 255, 255);
             }}
             th, td {{
                 padding: 8px;
@@ -176,7 +176,7 @@ def display_supplier_details():
                 color: black; /* Ensure text color is black */
             }}
             th {{
-                background-color: rgba(255, 255, 255, 0.8);
+                background-color: rgba(255, 255, 255);
                 color: black; /* Ensure header text color is black */
             }}
             </style>
@@ -190,25 +190,25 @@ def display_supplier_details():
 def display_scenario():
     st.markdown(
         """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Scenario Description</h3>
             <p style="color: black;">
-                <strong>Aircraft Part Selected: Control Display Unit (CDU)</strong><br>
-                CDUs are essential components in modern aircraft, enabling pilots to manage and monitor various flight systems. The <strong>Control Display Unit (CDU)</strong> serves as the primary interface for pilots to interact with the aircraft's avionics systems. The CDU allows for flight management, system monitoring, and operational control, making it indispensable for safe and efficient flight operations.
+                <strong> Case Study Background:</strong><br>
+                AeroConnect Airlines has been rapidly expanding its fleet and network over the past three years. As part of its operational optimization initiative, the airline is reviewing its procurement strategy for critical aircraft components. Your team has been tasked with selecting a new supplier for <strong>Avionics Control Units</strong>, which are essential components that manage flight-critical electronic systems throughout the aircraft. This survey aims to evaluate your selection criteria for 3 suppliers for the CDU Component.
             </p>
             <p style="color: black;">
-                <strong>Main Uses of CDU:</strong><br>
+                <strong>Component Overview: Control Display Unit (CDU)</strong><br>
+                CDUs are essential components in modern aircrafts, enabling pilots to manage and monitor various flight systems. The <strong>Control Display Unit (CDU)</strong> serves as the primary interface for pilots to interact with the aircraft's avionics systems. The CDU allows for flight management, system monitoring, and operational control, making it indispensable for safe and efficient flight operations.
+            </p>
+            <p style="color: black;">
+                <strong>Key Applications of the CDU:</strong><br>
                 - <strong>Flight Management:</strong> Input navigation waypoints, flight plans, and performance data.<br>
-                - <strong>Communication:</strong> CDU communicates information to other avionics systems like the Flight Management System (FMS), Autopilot, and Navigation Display.<br>
+                - <strong>Communication:</strong>Communicate information to other avionics systems like the Flight Management System (FMS), Autopilot, and Navigation Display.<br>
                 - <strong>Fuel Management:</strong> Manage the aircraft fuel system and optimize fuel efficiency to ensure sufficient reserves for the duration of the flight.<br>
                 - <strong>System Diagnostics:</strong> Monitor performance parameters and diagnose abnormalities.
             </p>
             <p style="color: black;">
-                <strong>Background:</strong><br>
-                AeroConnect Airlines has been rapidly expanding its fleet and network over the past three years. As part of its operational optimization initiative, the airline is currently reviewing its procurement strategy for critical aircraft components. Your team has been tasked with selecting a new supplier for <strong>Avionics Control Units</strong>, which are essential components that manage flight-critical electronic systems throughout the aircraft.
-            </p>
-            <p style="color: black;">
-                <strong>Situation:</strong><br>
+                <strong>Problem Statement:</strong><br>
                 The current supplier's contract is expiring in <strong>60 days</strong>, and the procurement department must finalize a new supplier relationship. AeroConnect operates <strong>45 commercial aircraft</strong> with plans to add <strong>8 more within the next 18 months</strong>. Each aircraft requires regular replacement of these units as part of scheduled maintenance procedures.
             </p>
             <p style="color: black;">
@@ -216,7 +216,7 @@ def display_scenario():
             </p>
             <p style="color: black;">
                 <strong>Your Task:</strong><br>
-                As the procurement specialist, you must evaluate three potential suppliers and make a recommendation. Your decision will impact not only cost structures but also maintenance schedules, parts availability, and potentially operational reliability.
+                As the procurement specialist, you must evaluate <strong>3</strong> potential suppliers and make a recommendation. Your decision will impact not only cost structures but also maintenance schedules, parts availability, and potentially operational reliability.
             </p>
             <p style="color: black;">
                 <strong>Industry Data:</strong><br>
@@ -231,7 +231,7 @@ def display_scenario():
 def display_question(question):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
@@ -242,7 +242,7 @@ def display_question(question):
 def display_numeric_input(question, min_value, max_value, key):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
@@ -255,7 +255,7 @@ def display_numeric_input(question, min_value, max_value, key):
 def display_multiple_choice(question, options, key):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
@@ -268,7 +268,7 @@ def display_multiple_choice(question, options, key):
 def display_importance_ratings(question, factors, key):
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <p style="color: black; font-weight: 900;">{question}</p>
         </div>
         """,
@@ -278,7 +278,7 @@ def display_importance_ratings(question, factors, key):
     for factor in factors:
         st.markdown(
             f"""
-            <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
                 <p style="color: black; font-weight: 900;">{factor}</p>
             </div>
             """,
@@ -309,7 +309,7 @@ def bias_group():
     # Display questions based on the current page
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3>{st.session_state.page}</h3>
         </div>
         """,
