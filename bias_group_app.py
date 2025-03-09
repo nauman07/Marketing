@@ -269,8 +269,8 @@ def display_slider(question, min_value, max_value, key):
         <style>
         div[data-testid="stSlider"] {
             background-color: white;
-            padding: 5px;
-            border-radius: 5px;
+            padding: 2px;
+            border-radius: 2px;
         }
         </style>
         """,
