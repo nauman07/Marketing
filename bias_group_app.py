@@ -259,14 +259,14 @@ def display_question(question):
 
 # Function to display numeric input with reduced distance
 def display_numeric_input(question, min_value, max_value, key):
-    st.markdown(
-        f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # st.markdown(
+    #     f"""
+    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
     return value
 
