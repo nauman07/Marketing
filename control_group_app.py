@@ -1,6 +1,7 @@
 import streamlit as st
 from firebase_config import initialize_firebase
 import base64
+import pandas as pd
 
 # Initialize Firebase
 db = initialize_firebase()
@@ -54,6 +55,11 @@ suppliers = {
         "Additional": "Used by 7 of the top 10 global airlines, 7-year warranty"
     }
 }
+
+# Convert supplier data to a pandas DataFrame for tabular display
+suppliers_df = pd.DataFrame(suppliers).transpose()
+suppliers_df.index.name = "Supplier"
+suppliers_df.reset_index(inplace=True)
 
 # Function to save responses to Firebase
 def save_to_firebase(answers):
@@ -109,7 +115,7 @@ def display_footer():
         unsafe_allow_html=True
     )
 
-# Function to display supplier details
+# Function to display supplier details in a table
 def display_supplier_details():
     st.markdown(
         """
@@ -119,24 +125,7 @@ def display_supplier_details():
         """,
         unsafe_allow_html=True
     )
-    for supplier, details in suppliers.items():
-        st.markdown(
-            f"""
-            <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-                <h4>{supplier}</h4>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        for key, value in details.items():
-            st.markdown(
-                f"""
-                <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
-                    <p><strong>{key}</strong>: {value}</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    st.table(suppliers_df)  # Display supplier data in a table
 
 # Function to display scenarios
 def display_scenario():
@@ -231,6 +220,6 @@ def control_group():
         st.rerun()
     
     display_footer()
-    
+
 if __name__ == "__main__":
     control_group()
