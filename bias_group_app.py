@@ -29,16 +29,16 @@ questions = {
         "Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation. (1 = Strongly Disagree, 5 = Strongly Agree)",
         "Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise. (1 = Strongly Disagree, 5 = Strongly Agree)"
     ],
-    "Page 4": [
+    "Page 4: Follow-up Scenarios": [
         "If Supplier B improved their reliability rating to 97% but increased their price by 10%, would you change your original supplier selection? (Note- Each 1% decrease in reliability has historically corresponded to a 15% increase in maintenance issues)",
         "What is the minimum reliability percentage you would consider acceptable? (Each reliability percentage point below 99% correlates with approximately 3 additional flight cancellations per year)",
         "If a delivery delay grounds aircraft and disrupts operations, which option would you prefer?"
     ],
-    "Page 5": [
+    "Page 5: Importance Ratings": [
         "Rate the importance of each factor in your supplier selection decision: (1 = Not Important, 2 = Slightly Important, 3 = Moderately Important, 4 = Very Important, 5 = Extremely Important)",
         "Which attribute would you be most willing to compromise on to improve reliability by 2%?"
     ],
-    "Page 6": [
+    "Page 6: Long-term Considerations": [
         "Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction? (Note- This would protect against any potential future price increases due to market volatility)",
         "How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
     ]
@@ -240,20 +240,51 @@ def display_question(question):
 
 # Function to display numeric input with semi-transparent background
 def display_numeric_input(question, min_value, max_value, key):
+    st.markdown(
+        f"""
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <p style="color: black; font-weight: 900;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
     return value
 
 # Function to display multiple-choice questions
 def display_multiple_choice(question, options, key):
+    st.markdown(
+        f"""
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <p style="color: black; font-weight: 900;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     selected_option = st.radio("", options, key=key)
     return selected_option
 
 # Function to display importance ratings
 def display_importance_ratings(question, factors, key):
-    st.markdown(f"**{question}**")
+    st.markdown(
+        f"""
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <p style="color: black; font-weight: 900;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     ratings = {}
     for factor in factors:
-        ratings[factor] = st.slider(factor, 1, 5, 3, key=f"{key}_{factor}")
+        st.markdown(
+            f"""
+            <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+                <p style="color: black; font-weight: 900;">{factor}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        ratings[factor] = st.number_input("", min_value=1, max_value=5, value=3, key=f"{key}_{factor}")
     return ratings
 
 # Main function for Bias Group
@@ -285,7 +316,6 @@ def bias_group():
         unsafe_allow_html=True
     )
     for question in questions[st.session_state.page]:
-        display_question(question)
         if "Rate your confidence" in question or "Strongly Disagree" in question:
             # Use a numeric input for rating questions
             min_value = 1
