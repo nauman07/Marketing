@@ -394,8 +394,8 @@ def bias_group():
                 "Supplier A",
                 "Supplier B",
                 "Supplier C"
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
             ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question) 
         elif "If Supplier B improved" in question:
             # Multiple-choice question
             options = [
