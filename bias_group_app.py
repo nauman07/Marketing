@@ -96,7 +96,7 @@ def set_background(image_path):
 def display_header():
     st.markdown(
         """
-        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;">
+        <div style="text-align: center; padding: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
             <h1>Group Survey</h1>
         </div>
@@ -180,8 +180,37 @@ def display_scenario():
         <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Scenario Description</h3>
             <p style="color: black;">
-                <strong>Group Scenario:</strong><br>
-                In the past year, airlines with supplier reliability issues reported operational disruptions averaging 3-5 days per incident. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging $450,000 per incident. Quality control variations among suppliers were identified as the primary contributing factor. AeroConnect Airlines must select a new supplier for avionics control units, considering these risks.
+                <strong>Aircraft Part: Control Display Unit (CDU)</strong><br>
+                CDUs are essential components in modern aircraft, enabling pilots to manage and monitor various flight systems. The <strong>Control Display Unit (CDU)</strong> serves as the primary interface for pilots to interact with the aircraft's avionics systems. The CDU allows for flight management, system monitoring, and operational control, making it indispensable for safe and efficient flight operations.
+            </p>
+            <p style="color: black;">
+                <strong>Main Uses of CDU:</strong><br>
+                - <strong>Flight Management:</strong> Input navigation waypoints, flight plans, and performance data.<br>
+                - <strong>Communication:</strong> CDU communicates information to other avionics systems like the Flight Management System (FMS), Autopilot, and Navigation Display.<br>
+                - <strong>Fuel Management:</strong> Manage the aircraft fuel system and optimize fuel efficiency to ensure sufficient reserves for the duration of the flight.<br>
+                - <strong>System Diagnostics:</strong> Monitor performance parameters and diagnose abnormalities.
+            </p>
+            <p style="color: black;">
+                <strong>Background:</strong><br>
+                AeroConnect Airlines has been rapidly expanding its fleet and network over the past three years. As part of its operational optimization initiative, the airline is currently reviewing its procurement strategy for critical aircraft components. Your team has been tasked with selecting a new supplier for <strong>Avionics Control Units</strong>, which are essential components that manage flight-critical electronic systems throughout the aircraft.
+            </p>
+            <p style="color: black;">
+                <strong>Situation:</strong><br>
+                The current supplier's contract is expiring in <strong>60 days</strong>, and the procurement department must finalize a new supplier relationship. AeroConnect operates <strong>45 commercial aircraft</strong> with plans to add <strong>8 more within the next 18 months</strong>. Each aircraft requires regular replacement of these units as part of scheduled maintenance procedures.
+            </p>
+            <p style="color: black;">
+                The Avionics Control Units are critical safety components - any malfunction could potentially lead to flight delays, cancellations, or in extreme cases, safety incidents requiring investigation. The airline's maintenance schedule indicates it will need approximately <strong>120 units annually</strong>.
+            </p>
+            <p style="color: black;">
+                <strong>Your Task:</strong><br>
+                As the procurement specialist, you must evaluate three potential suppliers and make a recommendation. Your decision will impact not only cost structures but also maintenance schedules, parts availability, and potentially operational reliability.
+            </p>
+            <p style="color: black;">
+                Review the information provided about each supplier. Consider factors such as price, lead time, reliability, minimum order quantities, and additional terms. Based on this information, select the supplier that you believe offers the best overall value for AeroConnect Airlines.
+            </p>
+            <p style="color: black;">
+                <strong>Industry Data:</strong><br>
+                In the past year, airlines with supplier reliability issues reported operational disruptions averaging <strong>3-5 days per incident</strong>. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging <strong>$450,000 per incident</strong>. Quality control variations among suppliers were identified as the primary contributing factor.
             </p>
         </div>
         """,
@@ -215,9 +244,13 @@ def bias_group():
     if "answers" not in st.session_state:
         st.session_state.answers = {}
 
-    # Display scenario and supplier details
-    display_scenario()
-    display_supplier_details()
+    # Display scenario on the first page only
+    if st.session_state.page == "Page 1":
+        display_scenario()
+
+    # Display supplier details from the second page onwards
+    if st.session_state.page != "Page 1":
+        display_supplier_details()
 
     # Display questions based on the current page
     st.markdown(
