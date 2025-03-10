@@ -276,7 +276,7 @@ def display_multiple_choice(question, options, key):
         """
         <style>
         .stRadio > div {
-            background-color: black;
+            background-color: pink;
             padding: 10px;
             border-radius: 5px;
         }
