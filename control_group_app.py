@@ -29,32 +29,20 @@ questions = {
         "Q5. The hidden costs from selecting the lowest-price supplier (emergency shipments, flight cancellations, maintenance complications) often exceed the initial savings. (1 = Strongly Disagree, 5 = Strongly Agree)",
         "Q6. Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation. (1 = Strongly Disagree, 5 = Strongly Agree)",
         "Q7. Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise. (1 = Strongly Disagree, 5 = Strongly Agree)"
+    ],
+    "Page 4: Follow-up Scenarios": [
+        "Q8. If Supplier B improved their reliability rating to 97% but increased their price by 10%, would you change your original supplier selection? (Note- Each 1% decrease in reliability has historically corresponded to a 15% increase in maintenance issues)",
+        "Q9. What is the minimum reliability percentage you would consider acceptable? (Each reliability percentage point below 99% correlates with approximately 3 additional flight cancellations per year)",
+        "Q10. If a delivery delay grounds aircraft and disrupts operations, which option would you prefer?"
+    ],
+    "Page 5: Importance Ratings": [
+        "Q11. Rate the importance of each factor in your supplier selection decision: (1 = Not Important, 2 = Slightly Important, 3 = Moderately Important, 4 = Very Important, 5 = Extremely Important)",
+        "Q12. Which attribute would you be most willing to compromise on to improve reliability by 2%?"
+    ],
+    "Page 6: Long-term Considerations": [
+        "Q13. Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction? (Note- This would protect against any potential future price increases due to market volatility)",
+        "Q14. How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
     ]
-}
-
-# Supplier details
-suppliers = {
-    "Supplier A": {
-        "Price": "$8,750/unit (25% above market average)",
-        "Lead Time": "18 days (±4 days variability)",
-        "Reliability": "97% defect-free rate",
-        "Minimum Order Quantity": "15 units",
-        "Additional": "FAA-certified manufacturing facility, 5-year warranty"
-    },
-    "Supplier B": {
-        "Price": "$7,000/unit (Industry Benchmark)",
-        "Lead Time": "20 days (±7 days variability)",
-        "Reliability": "95% defect-free rate",
-        "Minimum Order Quantity": "10 units",
-        "Additional": "Recently ISO 9001 certified, 2-year warranty"
-    },
-    "Supplier C": {
-        "Price": "$9,800/unit (40% above market average)",
-        "Lead Time": "15 days (±2 days variability)",
-        "Reliability": "99% defect-free rate",
-        "Minimum Order Quantity": "20 units",
-        "Additional": "Used by 7 of the top 10 global airlines, 7-year warranty"
-    }
 }
 
 # Convert supplier data to a pandas DataFrame for tabular display
@@ -415,6 +403,68 @@ def control_group():
                 "Supplier C"
             ]
             st.session_state.answers[question] = display_multiple_choice(question, options, key=question) 
+        elif "If Supplier B improved" in question:
+            # Multiple-choice question
+            options = [
+                "Yes, I would switch to Supplier B",
+                "No, I would stay with my original choice",
+                "I originally chose Supplier B and would still choose them"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "minimum reliability percentage" in question:
+            # Multiple-choice question
+            options = [
+                "99% or higher",
+                "97-98%",
+                "95-96%",
+                "90-94%",
+                "Below 90%"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "If a delivery delay grounds aircraft" in question:
+            # Multiple-choice question
+            options = [
+                "Pay a 35% premium for emergency shipments, impacting quarterly profit targets",
+                "Cancel revenue-generating flights until delivery, potentially losing loyal customers",
+                "Maintain a larger safety stock (increasing inventory costs by 20% and reducing capital available for other investments)"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "Rate the importance of each factor" in question:
+            # Importance ratings
+            factors = [
+                "Initial purchase price",
+                "Reliability rating",
+                "Lead time",
+                "Lead time variability",
+                "Minimum order quantity",
+                "Certification standards",
+                "Warranty period"
+            ]
+            st.session_state.answers[question] = display_importance_ratings(question, factors, key=question)
+        elif "Which attribute would you be most willing to compromise on" in question:
+            # Multiple-choice question
+            options = [
+                "Price",
+                "Lead time",
+                "Lead time variability",
+                "Minimum order quantity",
+                "Warranty period"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "Would you be willing to commit to a 2-year contract" in question:
+            # Multiple-choice question
+            options = ["Yes", "No", "Unsure"]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+        elif "How much would you be willing to invest" in question:
+            # Multiple-choice question
+            options = [
+                "$0 (not willing to invest)",
+                "Up to $50,000",
+                "$50,001 - $100,000",
+                "$100,001 - $200,000",
+                "Over $200,000"
+            ]
+            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
         else:
             # Use a text input for other questions
             st.session_state.answers[question] = st.text_input(" ", value=st.session_state.answers.get(question, ""), key=question)
@@ -434,7 +484,7 @@ def control_group():
         st.rerun()
     
     # Submit button
-    if st.session_state.page == "Page 3" and st.button("Submit"):
+    if st.session_state.page == "Page 6: Long-term Considerations" and st.button("Submit"):
         save_to_firebase(st.session_state.answers)
         st.session_state.answers = {}
         st.session_state.page = "Page 1"  # Reset to first page after submission
