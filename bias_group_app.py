@@ -578,7 +578,7 @@ def bias_group():
         st.rerun()
     
     # Submit button
-    if st.session_state.page == "Page 6" and st.button("Submit"):
+    if st.session_state.page == "Page 6: Long-term Considerations" and st.button("Submit"):
         save_to_firebase(st.session_state.answers)
         st.session_state.answers = {}
         st.session_state.page = "Page 1"  # Reset to first page after submission
