@@ -47,32 +47,36 @@ questions = {
 
 # Supplier details
 suppliers = {
-    "Supplier A": {
-        "Price": "$8,750/unit (25% above market average)",
-        "Lead Time": "18 days (±4 days variability)",
-        "Reliability": "97% defect-free rate",
-        "Minimum Order Quantity": "15 units",
-        "Additional": "FAA-certified manufacturing facility, 5-year warranty"
+    "Price": {
+        "Supplier A": "$8,750/unit (25% above market average)",
+        "Supplier B": "$7,000/unit (Industry Benchmark)",
+        "Supplier C": "$9,800/unit (40% above market average)"
     },
-    "Supplier B": {
-        "Price": "$7,000/unit (Industry Benchmark)",
-        "Lead Time": "20 days (±7 days variability)",
-        "Reliability": "95% defect-free rate",
-        "Minimum Order Quantity": "10 units",
-        "Additional": "Recently ISO 9001 certified, 2-year warranty"
+    "Lead Time": {
+        "Supplier A": "18 days (±4 days variability)",
+        "Supplier B": "20 days (±7 days variability)",
+        "Supplier C": "15 days (±2 days variability)"
     },
-    "Supplier C": {
-        "Price": "$9,800/unit (40% above market average)",
-        "Lead Time": "15 days (±2 days variability)",
-        "Reliability": "99% defect-free rate",
-        "Minimum Order Quantity": "20 units",
-        "Additional": "Used by 7 of the top 10 global airlines, 7-year warranty"
+    "Reliability": {
+        "Supplier A": "97% defect-free rate",
+        "Supplier B": "95% defect-free rate",
+        "Supplier C": "99% defect-free rate"
+    },
+    "Minimum Order Quantity": {
+        "Supplier A": "15 units",
+        "Supplier B": "10 units",
+        "Supplier C": "20 units"
+    },
+    "Additional": {
+        "Supplier A": "FAA-certified manufacturing facility, 5-year warranty",
+        "Supplier B": "Recently ISO 9001 certified, 2-year warranty",
+        "Supplier C": "Used by 7 of the top 10 global airlines, 7-year warranty"
     }
 }
 
-# Convert supplier data to a pandas DataFrame for tabular display
-suppliers_df = pd.DataFrame(suppliers).transpose()
-suppliers_df.index.name = "Supplier"
+# Convert supplier data to a pandas DataFrame
+suppliers_df = pd.DataFrame(suppliers)
+suppliers_df.index.name = "Feature"
 suppliers_df.reset_index(inplace=True)
 
 # Function to save responses to Firebase
@@ -112,7 +116,7 @@ def display_header():
         """
         <div style="text-align: center; padding: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
-            <h1>Survey: Supplier Selection for Aircraft CDU</h1>
+            <h1 style="color: black;">Survey: Supplier Selection for Aircraft CDU</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -131,16 +135,16 @@ def display_footer():
 
     st.markdown(
         f"""
-        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-top: 20px;">
-            <p>© 2025 RWTH Aachen University. All rights reserved.</p>
-            <p>For more information or if you are facing any issues, please contact the developer:</p>
+        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-top: 20px;">
+            <p style="color: black;">© 2025 RWTH Aachen University. All rights reserved.</p>
+            <p style="color: black;">For more information or if you are facing any issues, please contact the developer:</p>
             <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
                 <img src="data:image/jpeg;base64,{image_base64}" alt="Developer Logo" width="50" style="border-radius: 50%;">
                 <div>
-                    <p style="margin: 0;"><strong>HarshVardhan Kanthode</strong></p>
+                    <p style="margin: 0; color: black;"><strong>HarshVardhan Kanthode</strong></p>
                     <p style="margin: 0;">
-                        <a href="mailto:harshvardhan.kanthode@rwth-aachen.de" style="text-decoration: none; color: inherit;">📧 Email</a> | 
-                        <a href="https://www.linkedin.com/in/harshvardhan-kanthode-628863189/" target="_blank" style="text-decoration: none; color: inherit;">🔗 LinkedIn</a>
+                        <a href="mailto:harshvardhan.kanthode@rwth-aachen.de" style="text-decoration: none; color: black;">📧 Email</a> | 
+                        <a href="https://www.linkedin.com/in/harshvardhan-kanthode-628863189/" target="_blank" style="text-decoration: none; color: black;">🔗 LinkedIn</a>
                     </p>
                 </div>
             </div>
@@ -153,18 +157,7 @@ def display_footer():
 def display_supplier_details():
     st.markdown(
         """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <h3 style="color: black;">Evaluation Criteria</h3>
-            <p style="color: black;">
-                You are expected to evaluate the suppliers through various criteria: <strong>Lead Time, Lead Variability, Reliability, Price, Minimum Order Quantity, Certification Standards, and Warranty Period</strong>.
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Supplier Details</h3>
         </div>
         """,
@@ -174,12 +167,12 @@ def display_supplier_details():
     table_html = suppliers_df.to_html(index=False, escape=False)
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <style>
             table {{
                 width: 100%;
                 border-collapse: collapse;
-                background-color: rgba(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0.8);
             }}
             th, td {{
                 padding: 8px;
@@ -188,7 +181,7 @@ def display_supplier_details():
                 color: black; /* Ensure text color is black */
             }}
             th {{
-                background-color: rgba(255, 255, 255);
+                background-color: rgba(255, 255, 255, 0.8);
                 color: black; /* Ensure header text color is black */
             }}
             </style>
@@ -202,7 +195,7 @@ def display_supplier_details():
 def display_scenario():
     st.markdown(
         """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Scenario Description</h3>
             <p style="color: black;">
                 <strong> Case Study Background:</strong><br>
@@ -234,23 +227,12 @@ def display_scenario():
         """,
         unsafe_allow_html=True
     )
-    st.markdown(
-        """
-        <div style="padding: 10px; background-color: rgba(255, 0, 0); border-radius: 10px; margin-bottom: 10px;">
-            <p style="color: white;">
-                <strong>Industry Data:</strong><br>
-                In the past year, airlines with supplier reliability issues reported operational disruptions averaging <strong>3-5 days per incident</strong>. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging <strong>$450,000 per incident</strong>. Quality control variations among suppliers were identified as the primary contributing factor.
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
 # Function to display questions with reduced distance and no background on options
 def display_question(question):
     st.markdown(
         f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+        <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
             <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
@@ -258,10 +240,6 @@ def display_question(question):
     )
 
 # Function to display numeric input with reduced distance
-# def display_numeric_input(question, min_value, max_value, key):
-#     value = st.number_input("", min_value=min_value, max_value=max_value, value=min_value, key=key)
-#     return value
-
 def display_slider(question, min_value, max_value, key):
     # Apply white background and padding for better visibility
     st.markdown(
@@ -291,40 +269,8 @@ def display_slider(question, min_value, max_value, key):
     value = st.slider("", min_value=min_value, max_value=max_value, value=(min_value + max_value) // 2, key=key)
     return value
 
-# Function to display importance ratings with reduced distance and white background for options
-def display_importance_ratings(question, factors, key):
-    st.markdown(
-        f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    ratings = {}
-    for factor in factors:
-        st.markdown(
-            f"""
-            <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-                <p style="color: black; font-weight: 900; margin-bottom: 5px;">{factor}</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        ratings[factor] = st.number_input("", min_value=1, max_value=5, value=3, key=f"{key}_{factor}")
-    return ratings
-
 # Function to display multiple-choice questions with white background for options
 def display_multiple_choice(question, options, key):
-    # st.markdown(
-    #     f"""
-    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-    #     </div>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
-    # Inject custom CSS for white background on radio buttons
     st.markdown(
         """
         <style>
@@ -345,17 +291,6 @@ def display_multiple_choice(question, options, key):
     return selected_option
 
 def display_percentage_allocation():
-    # st.markdown(
-    #     """
-    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">
-    #             Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)
-    #         </p>
-    #     </div>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
-
     # Initialize session state for percentages
     if "supplier_a_percent" not in st.session_state:
         st.session_state.supplier_a_percent = 33
@@ -424,7 +359,7 @@ def display_percentage_allocation():
     total_percent = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
     st.markdown(
         f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+        <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
             <p style="color: black; font-weight: 900; margin-bottom: 5px;">
                 Current Allocation: Supplier A = {st.session_state.supplier_a_percent}%, Supplier B = {st.session_state.supplier_b_percent}%, Supplier C = {st.session_state.supplier_c_percent}%
             </p>
@@ -440,6 +375,29 @@ def display_percentage_allocation():
     st.session_state.answers["Supplier A: in %"] = st.session_state.supplier_a_percent
     st.session_state.answers["Supplier B: in %"] = st.session_state.supplier_b_percent
     st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
+
+# Function to display importance ratings with reduced distance and white background for options
+def display_importance_ratings(question, factors, key):
+    st.markdown(
+        f"""
+        <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    ratings = {}
+    for factor in factors:
+        st.markdown(
+            f"""
+            <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
+                <p style="color: black; font-weight: 900; margin-bottom: 5px;">{factor}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        ratings[factor] = st.number_input("", min_value=1, max_value=5, value=3, key=f"{key}_{factor}")
+    return ratings
 
 # Main function for Bias Group
 def bias_group():
@@ -473,8 +431,8 @@ def bias_group():
     # Display questions based on the current page
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <h3>{st.session_state.page}</h3>
+        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+            <h3 style="color: black;">{st.session_state.page}</h3>
         </div>
         """,
         unsafe_allow_html=True
