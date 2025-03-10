@@ -405,14 +405,14 @@ def display_multiple_choice(question, options, key):
     st.markdown(
         """
         <style>
-        .stRadio > div {
-            background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .stRadio label {
+        div[role="radiogroup"] label {
             color: black !important;
             font-weight: bold;
+            background-color: white;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
         }
         </style>
         """,
