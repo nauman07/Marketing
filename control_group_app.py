@@ -370,6 +370,60 @@ def display_percentage_allocation():
     st.session_state.answers["Supplier B: in %"] = st.session_state.supplier_b_percent
     st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
 
+# Function to display importance ratings with reduced distance and white background for options
+def display_importance_ratings(question, factors, key):
+    st.markdown(
+        f"""
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    ratings = {}
+    for factor in factors:
+        st.markdown(
+            f"""
+            <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+                <p style="color: black; font-weight: 900; margin-bottom: 5px;">{factor}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        ratings[factor] = st.number_input("", min_value=1, max_value=5, value=3, key=f"{key}_{factor}")
+    return ratings
+
+# Function to display multiple-choice questions with white background for options
+def display_multiple_choice(question, options, key):
+    # st.markdown(
+    #     f"""
+    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
+    # Inject custom CSS for white background on radio buttons
+    st.markdown(
+        """
+        <style>
+        .stRadio > div {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    selected_option = st.radio(
+        "",
+        options,
+        key=key,
+    )
+    return selected_option
+
+
 # Main function for Control Group
 def control_group():
     set_background("rwth-aachen.jpg")  # Background image
