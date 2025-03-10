@@ -44,6 +44,7 @@ questions = {
         "Q14. How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
     ]
 }
+
 # Supplier details
 suppliers = {
     "Supplier A": {
@@ -68,9 +69,10 @@ suppliers = {
         "Additional": "Used by 7 of the top 10 global airlines, 7-year warranty"
     }
 }
-# Convert supplier data to a pandas DataFrame for tabular display
+
+# Convert supplier data to a pandas DataFrame and transpose it
 suppliers_df = pd.DataFrame(suppliers).transpose()
-suppliers_df.index.name = "Supplier"
+suppliers_df.index.name = "Feature"
 suppliers_df.reset_index(inplace=True)
 
 # Function to save responses to Firebase
