@@ -233,7 +233,7 @@ def display_question(question):
     st.markdown(
         f"""
         <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
+            <p style="color: white; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
         unsafe_allow_html=True
