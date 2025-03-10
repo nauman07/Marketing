@@ -410,12 +410,16 @@ def display_multiple_choice(question, options, key):
             padding: 10px;
             border-radius: 5px;
         }
+        .stRadio label {
+            color: black !important;
+            font-weight: bold;
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
     selected_option = st.radio(
-        "",
+        question,
         options,
         key=key,
     )
