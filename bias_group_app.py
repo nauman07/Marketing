@@ -155,7 +155,7 @@ def display_footer():
 
 # Function to display supplier details in a table with semi-transparent background
 def display_supplier_details():
-     st.markdown(
+    st.markdown(
         """
         <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Evaluation Criteria</h3>
