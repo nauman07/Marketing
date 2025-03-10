@@ -135,7 +135,7 @@ def display_footer():
 
     st.markdown(
         f"""
-        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-top: 20px;">
+        <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-top: 20px;">
             <p style="color: black;">© 2025 RWTH Aachen University. All rights reserved.</p>
             <p style="color: black;">For more information or if you are facing any issues, please contact the developer:</p>
             <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
@@ -155,9 +155,20 @@ def display_footer():
 
 # Function to display supplier details in a table with semi-transparent background
 def display_supplier_details():
+     st.markdown(
+        """
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+            <h3 style="color: black;">Evaluation Criteria</h3>
+            <p style="color: black;">
+                You are expected to evaluate the suppliers through various criteria: <strong>Lead Time, Lead Variability, Reliability, Price, Minimum Order Quantity, Certification Standards, and Warranty Period</strong>.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     st.markdown(
         """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Supplier Details</h3>
         </div>
         """,
@@ -167,12 +178,12 @@ def display_supplier_details():
     table_html = suppliers_df.to_html(index=False, escape=False)
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <style>
             table {{
                 width: 100%;
                 border-collapse: collapse;
-                background-color: rgba(255, 255, 255, 0.8);
+                background-color: rgba(255, 255, 255);
             }}
             th, td {{
                 padding: 8px;
@@ -181,7 +192,7 @@ def display_supplier_details():
                 color: black; /* Ensure text color is black */
             }}
             th {{
-                background-color: rgba(255, 255, 255, 0.8);
+                background-color: rgba(255, 255, 255);
                 color: black; /* Ensure header text color is black */
             }}
             </style>
@@ -195,7 +206,7 @@ def display_supplier_details():
 def display_scenario():
     st.markdown(
         """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">Scenario Description</h3>
             <p style="color: black;">
                 <strong> Case Study Background:</strong><br>
@@ -223,6 +234,10 @@ def display_scenario():
                 <strong>Your Task:</strong><br>
                 As the procurement specialist, you must evaluate <strong>3</strong> potential suppliers and make a recommendation. Your decision will impact not only cost structures but also maintenance schedules, parts availability, and potentially operational reliability.
             </p>
+            <p style="color: white;">
+                <strong>Industry Data:</strong><br>
+                In the past year, airlines with supplier reliability issues reported operational disruptions averaging <strong>3-5 days per incident</strong>. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging <strong>$450,000 per incident</strong>. Quality control variations among suppliers were identified as the primary contributing factor.
+            </p>
         </div>
         """,
         unsafe_allow_html=True
@@ -232,7 +247,7 @@ def display_scenario():
 def display_question(question):
     st.markdown(
         f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
             <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
@@ -359,7 +374,7 @@ def display_percentage_allocation():
     total_percent = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
     st.markdown(
         f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
             <p style="color: black; font-weight: 900; margin-bottom: 5px;">
                 Current Allocation: Supplier A = {st.session_state.supplier_a_percent}%, Supplier B = {st.session_state.supplier_b_percent}%, Supplier C = {st.session_state.supplier_c_percent}%
             </p>
@@ -380,7 +395,7 @@ def display_percentage_allocation():
 def display_importance_ratings(question, factors, key):
     st.markdown(
         f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
             <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
         </div>
         """,
@@ -390,7 +405,7 @@ def display_importance_ratings(question, factors, key):
     for factor in factors:
         st.markdown(
             f"""
-            <div style="padding: 5px; background-color: rgba(255, 255, 255, 0.8);">
+            <div style="padding: 5px; background-color: rgba(255, 255, 255);">
                 <p style="color: black; font-weight: 900; margin-bottom: 5px;">{factor}</p>
             </div>
             """,
@@ -431,7 +446,7 @@ def bias_group():
     # Display questions based on the current page
     st.markdown(
         f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; margin-bottom: 10px;">
+        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
             <h3 style="color: black;">{st.session_state.page}</h3>
         </div>
         """,
