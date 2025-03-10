@@ -116,7 +116,7 @@ def display_header():
         """
         <div style="text-align: center; padding: 10px;">
             <img src="https://www.total-e-quality.de/media/cache/71/47/71471181693ed2ace2081f0e9adf4df9.png" width="100">
-            <h1 style="color: black;">Survey: Supplier Selection for Aircraft CDU</h1>
+            <h1 style="color: white;">Survey: Supplier Selection for Aircraft CDU</h1>
         </div>
         """,
         unsafe_allow_html=True
