@@ -44,7 +44,30 @@ questions = {
         "Q14. How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
     ]
 }
-
+# Supplier details
+suppliers = {
+    "Supplier A": {
+        "Price": "$8,750/unit (25% above market average)",
+        "Lead Time": "18 days (±4 days variability)",
+        "Reliability": "97% defect-free rate",
+        "Minimum Order Quantity": "15 units",
+        "Additional": "FAA-certified manufacturing facility, 5-year warranty"
+    },
+    "Supplier B": {
+        "Price": "$7,000/unit (Industry Benchmark)",
+        "Lead Time": "20 days (±7 days variability)",
+        "Reliability": "95% defect-free rate",
+        "Minimum Order Quantity": "10 units",
+        "Additional": "Recently ISO 9001 certified, 2-year warranty"
+    },
+    "Supplier C": {
+        "Price": "$9,800/unit (40% above market average)",
+        "Lead Time": "15 days (±2 days variability)",
+        "Reliability": "99% defect-free rate",
+        "Minimum Order Quantity": "20 units",
+        "Additional": "Used by 7 of the top 10 global airlines, 7-year warranty"
+    }
+}
 # Convert supplier data to a pandas DataFrame for tabular display
 suppliers_df = pd.DataFrame(suppliers).transpose()
 suppliers_df.index.name = "Supplier"
