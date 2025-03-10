@@ -276,7 +276,7 @@ def display_multiple_choice(question, options, key):
         """
         <style>
         .stRadio > div {
-            background-color: black;
+            background-color: white;
             padding: 10px;
             border-radius: 5px;
         }
@@ -400,31 +400,6 @@ def display_importance_ratings(question, factors, key):
         )
         ratings[factor] = st.number_input("", min_value=1, max_value=5, value=3, key=f"{key}_{factor}")
     return ratings
-
-# Function to display multiple-choice questions with white background for options
-def display_multiple_choice(question, options, key):
-    st.markdown(
-        """
-        <style>
-        div[role="radiogroup"] label {
-            color: black !important;
-            font-weight: bold;
-            background-color: white;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            width: 100%;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    selected_option = st.radio(
-        question,
-        options,
-        key=key,
-    )
-    return selected_option
 
 # Main function for Control Group
 def control_group():
