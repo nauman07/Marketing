@@ -270,13 +270,13 @@ def display_slider(question, min_value, max_value, key):
     return value
 
 # Function to display multiple-choice questions with white background for options
+# Function to display multiple-choice questions with white background for options
 def display_multiple_choice(question, options, key):
     st.markdown(
         """
         <style>
         .stRadio > div {
-            color: black;
-            background-color: white;
+            background-color: black;
             padding: 10px;
             border-radius: 5px;
         }
@@ -290,6 +290,7 @@ def display_multiple_choice(question, options, key):
         key=key,
     )
     return selected_option
+
 
 def display_percentage_allocation():
     # Initialize session state for percentages
