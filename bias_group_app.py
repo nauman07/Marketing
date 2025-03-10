@@ -234,6 +234,13 @@ def display_scenario():
                 <strong>Your Task:</strong><br>
                 As the procurement specialist, you must evaluate <strong>3</strong> potential suppliers and make a recommendation. Your decision will impact not only cost structures but also maintenance schedules, parts availability, and potentially operational reliability.
             </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        """
+        <div style="padding: 10px; background-color: rgba(255, 0, 0); border-radius: 10px; margin-bottom: 10px;">
             <p style="color: white;">
                 <strong>Industry Data:</strong><br>
                 In the past year, airlines with supplier reliability issues reported operational disruptions averaging <strong>3-5 days per incident</strong>. These disruptions resulted in maintenance costs, schedule adjustments, and customer compensation averaging <strong>$450,000 per incident</strong>. Quality control variations among suppliers were identified as the primary contributing factor.
