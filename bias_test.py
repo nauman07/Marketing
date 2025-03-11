@@ -294,11 +294,20 @@ def display_dropdown(question, options, key):
             padding: 2px;  /* Internal spacing within the container */
             border-radius: 2px;
         }
+        
         /* Target the first child element inside the selectbox container 
            to remove any top margin/padding */
         div[data-testid="stSelectbox"] > div {
             margin-top: 0px !important;
             padding-top: -3px !important;
+        }
+        
+        /* Style all dropdown elements with same pink */
+        div[data-baseweb="select"],
+        div[data-baseweb="popover"] ul,
+        div[data-baseweb="popover"] li,
+        div[data-baseweb="popover"] li:hover {
+            background-color: pink !important;
         }
         </style>
         """,
