@@ -420,7 +420,7 @@ def display_slider(question, min_value, max_value, key):
 #     st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
 
 def display_percentage_allocation_sliders():
-    st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
     
     # Initialize session state for percentages (only if not already set)
     if "supplier_a_percent" not in st.session_state:
@@ -516,14 +516,20 @@ def display_percentage_allocation_sliders():
 
 # Function to display importance ratings with a 2x3 matrix of sliders for space optimization
 def display_importance_ratings_matrix(question, factors, key):
-    # st.markdown(
-    #     f"""
-    #     <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-    #         <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-    #     </div>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
+    # Add CSS for pink background on sliders
+    st.markdown(
+        """
+        <style>
+        div[data-testid="stSlider"] {
+            background-color: pink;
+            padding: 5px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Create a 2x3 matrix layout
     ratings = {}
