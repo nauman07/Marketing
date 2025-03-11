@@ -787,10 +787,18 @@ def main():
         # For Designation, use dropdown instead of text fields
         if question == "Designation":
             options = [
-                "1. Director/Manager",
-                "2. Professor/Researcher",
-                "3. Student",
-                "4. Consultant/Entry Level"
+                "Director/Manager",
+                "VP/Executive",
+                "Procurement Specialist",
+                "Supply Chain Analyst",
+                "Operations Manager",
+                "Quality Engineer",
+                "Financial Analyst",
+                "Consultant",
+                "Logistics Coordinator",
+                "Student",
+                "Professor/Researcher",
+                "Other"
             ]
             st.session_state.answers[question] = display_dropdown(question, options, key=question)
         
