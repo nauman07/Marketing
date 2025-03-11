@@ -547,6 +547,8 @@ def display_importance_ratings_matrix(question, factors, key):
 
 # 2. Fix for the navigation buttons and validation
 def navigation_buttons():
+    FIRST_NAME_FIELD = "First Name (*)"
+    
     # Add spacing before navigation buttons
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
@@ -582,7 +584,7 @@ def navigation_buttons():
         
         # Validation for Page 1 - First Name is mandatory
         if st.session_state.page == "Page 1":
-            first_name = st.session_state.answers.get("First Name (Mandatory)", "")
+            first_name = st.session_state.answers.get(FIRST_NAME_FIELD, "")
             if first_name.strip() == "":
                 message = "First Name is mandatory. Please fill it before proceeding."
             else:
