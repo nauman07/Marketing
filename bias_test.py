@@ -608,7 +608,7 @@ def display_importance_ratings_matrix(question, factors, key):
 def navigation_buttons():
     FIRST_NAME_FIELD = "First Name (*)"
     
-    # Inject custom CSS to remove padding from columns (Streamlit’s container elements)
+    # Inject custom CSS to remove padding from columns (Streamlit's container elements)
     st.markdown(
     """
     <style>
@@ -629,6 +629,7 @@ def navigation_buttons():
     
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
+    is_last_page = current_index == len(pages) - 1  # Check if on last page
     
     # Previous button in first column
     if current_index > 0:
@@ -636,50 +637,50 @@ def navigation_buttons():
             st.session_state.page = pages[current_index - 1]
             st.rerun()
     
-    # Next button in third column - no custom HTML, just basic Streamlit
-    next_clicked = col3.button("Next", key="real_next")
-    
-    
-    if next_clicked:
-        message = ""  # Initialize message variable
+    # Next button in third column - only show if not on the last page
+    if not is_last_page:
+        next_clicked = col3.button("Next", key="real_next")
         
-        # Validation for Page 1 - First Name is mandatory
-        if st.session_state.page == "Page 1":
-            first_name = st.session_state.answers.get(FIRST_NAME_FIELD, "")
-            if first_name.strip() == "":
-                message = "First Name is mandatory. Please fill it before proceeding."
+        if next_clicked:
+            message = ""  # Initialize message variable
+            
+            # Validation for Page 1 - First Name is mandatory
+            if st.session_state.page == "Page 1":
+                first_name = st.session_state.answers.get(FIRST_NAME_FIELD, "")
+                if first_name.strip() == "":
+                    message = "First Name is mandatory. Please fill it before proceeding."
+                else:
+                    st.session_state.page = pages[current_index + 1]
+                    st.rerun()
+            
+            # Validation for Page 2 - Total allocation must be 100%
+            elif st.session_state.page == "Page 2":
+                if "allocation_valid" in st.session_state and not st.session_state.allocation_valid:
+                    message = "Please ensure the total allocation equals 100% before proceeding."
+                else:
+                    st.session_state.page = pages[current_index + 1]
+                    st.rerun()
+            
+            # No validation required for other pages
             else:
                 st.session_state.page = pages[current_index + 1]
                 st.rerun()
-        
-        # Validation for Page 2 - Total allocation must be 100%
-        elif st.session_state.page == "Page 2":
-            if "allocation_valid" in st.session_state and not st.session_state.allocation_valid:
-                message = "Please ensure the total allocation equals 100% before proceeding."
-            else:
-                st.session_state.page = pages[current_index + 1]
-                st.rerun()
-        
-        # No validation required for other pages
-        else:
-            st.session_state.page = pages[current_index + 1]
-            st.rerun()
-        
-        # Display error message inside a styled box if validation fails
-        if message:
-            st.markdown(
-                f"""
-                <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.9); 
-                            border-radius: 10px; margin-bottom: 10px; border: 1px solid red;">
-                    <p style="color: red; font-weight: bold;">⚠️ {message}</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            
+            # Display error message inside a styled box if validation fails
+            if message:
+                st.markdown(
+                    f"""
+                    <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.9); 
+                                border-radius: 10px; margin-bottom: 10px; border: 1px solid red;">
+                        <p style="color: red; font-weight: bold;">⚠️ {message}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
     
-    # Submit button (only on the last page)
-    if st.session_state.page == "Page 5":
-        submit_clicked = st.button("Submit")
+    # Submit button (only on the last page) - placed in the same column as the Next button would be
+    if is_last_page:
+        submit_clicked = col3.button("Submit")
         if submit_clicked:
             st.markdown(
                 """
@@ -693,7 +694,7 @@ def navigation_buttons():
             st.session_state.answers = {}
             st.session_state.page = "Page 1"  # Reset to first page after submission
             st.rerun()
-
+            
 # Main function for the survey
 def main():
     set_background("rwth-aachen.jpg")  # Background image
