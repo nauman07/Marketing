@@ -862,12 +862,18 @@ def main():
         
         # For all other questions (like name, email), use text input
         else:
-            # Add CSS for styling text inputs only
+            # Add CSS for styling just the text input field itself
             st.markdown(
                 """
                 <style>
-                /* Style for text inputs */
-                div[data-testid="stTextInput"] {
+                /* Style for text input field itself */
+                input[type="text"] {
+                    background-color: white !important;
+                    border: 1px solid #cccccc !important;
+                }
+                
+                /* Style for the outer container */
+                div[data-testid="stTextInput"] > div {
                     background-color: pink;
                     padding: 10px;
                     border-radius: 5px;
