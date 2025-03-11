@@ -520,19 +520,12 @@ def display_importance_ratings_matrix(question, factors, key):
     st.markdown(
         """
         <style>
-        /* Style for the slider containers */
+        /* Style for the entire slider component including label */
         div[data-testid="stSlider"] {
             background-color: pink;
-            padding: 10px 15px 5px 15px;
+            padding: 10px;
             border-radius: 5px;
             margin-bottom: 10px;
-        }
-        
-        /* Make labels appear inside the pink box by removing their default margin */
-        .factor-label {
-            margin-bottom: 0 !important;
-            font-size: 14px;
-            font-weight: 500;
         }
         </style>
         """,
@@ -545,38 +538,72 @@ def display_importance_ratings_matrix(question, factors, key):
     # First row - 3 factors
     col1, col2, col3 = st.columns(3)
     with col1:
-        # Place the label inside a container div so it's treated as part of the slider styling
-        st.markdown(f"<div class='factor-label'>{factors[0]}</div>", unsafe_allow_html=True)
-        ratings[factors[0]] = st.slider("", min_value=1, max_value=5, value=3, key=f"{key}_{factors[0]}")
+        # Use the label parameter to include the factor name
+        ratings[factors[0]] = st.slider(
+            label=factors[0],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[0]}"
+        )
     
     with col2:
-        st.markdown(f"<div class='factor-label'>{factors[1]}</div>", unsafe_allow_html=True)
-        ratings[factors[1]] = st.slider("", min_value=1, max_value=5, value=3, key=f"{key}_{factors[1]}")
+        ratings[factors[1]] = st.slider(
+            label=factors[1],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[1]}"
+        )
     
     with col3:
-        st.markdown(f"<div class='factor-label'>{factors[2]}</div>", unsafe_allow_html=True)
-        ratings[factors[2]] = st.slider("", min_value=1, max_value=5, value=3, key=f"{key}_{factors[2]}")
+        ratings[factors[2]] = st.slider(
+            label=factors[2],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[2]}"
+        )
     
     # Second row - 4 factors
     col4, col5, col6, col7 = st.columns(4)
     with col4:
-        st.markdown(f"<div class='factor-label'>{factors[3]}</div>", unsafe_allow_html=True)
-        ratings[factors[3]] = st.slider("", min_value=1, max_value=5, value=3, key=f"{key}_{factors[3]}")
+        ratings[factors[3]] = st.slider(
+            label=factors[3],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[3]}"
+        )
     
     with col5:
-        st.markdown(f"<div class='factor-label'>{factors[4]}</div>", unsafe_allow_html=True)
-        ratings[factors[4]] = st.slider("", min_value=1, max_value=5, value=3, key=f"{key}_{factors[4]}")
+        ratings[factors[4]] = st.slider(
+            label=factors[4],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[4]}"
+        )
     
     with col6:
-        st.markdown(f"<div class='factor-label'>{factors[5]}</div>", unsafe_allow_html=True)
-        ratings[factors[5]] = st.slider("", min_value=1, max_value=5, value=3, key=f"{key}_{factors[5]}")
+        ratings[factors[5]] = st.slider(
+            label=factors[5],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[5]}"
+        )
     
     with col7:
-        st.markdown(f"<div class='factor-label'>{factors[6]}</div>", unsafe_allow_html=True)
-        ratings[factors[6]] = st.slider("", min_value=1, max_value=5, value=3, key=f"{key}_{factors[6]}")
+        ratings[factors[6]] = st.slider(
+            label=factors[6],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[6]}"
+        )
     
     return ratings
-
 # 2. Fix for the navigation buttons and validation
 def navigation_buttons():
     FIRST_NAME_FIELD = "First Name (*)"
