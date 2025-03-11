@@ -420,7 +420,7 @@ def display_slider(question, min_value, max_value, key):
 #     st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
 
 def display_percentage_allocation_sliders():
-    st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
     
     # Initialize session state for percentages (only if not already set)
     if "supplier_a_percent" not in st.session_state:
@@ -566,6 +566,19 @@ def display_importance_ratings_matrix(question, factors, key):
 def navigation_buttons():
     FIRST_NAME_FIELD = "First Name (*)"
     
+    # Inject custom CSS to remove padding from columns (Streamlit’s container elements)
+    st.markdown(
+    """
+    <style>
+    /* This targets the column container (the selector may vary across Streamlit versions) */
+    div[data-testid="column"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
     # Add spacing before navigation buttons
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
