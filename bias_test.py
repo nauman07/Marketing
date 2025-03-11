@@ -430,10 +430,17 @@ def display_percentage_allocation_sliders():
     if "supplier_c_percent" not in st.session_state:
         st.session_state.supplier_c_percent = 0
 
-    # Create a pink background container
+    # Add CSS that targets only the individual slider containers
     st.markdown(
         """
-        <div style="background-color: pink; padding: 10px; border-radius: 5px;">
+        <style>
+        /* Target individual sliders but not their parent container */
+        div[data-testid="column"] div[data-testid="stSlider"] {
+            background-color: pink;
+            padding: 5px 20px;
+            border-radius: 5px;
+        }
+        </style>
         """, 
         unsafe_allow_html=True
     )
