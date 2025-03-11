@@ -732,15 +732,15 @@ def main():
     # Display supplier details as a popup button on every page
     display_supplier_details_popup()
 
-    # Display questions based on the current page
-    st.markdown(
-        f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <h3 style="color: black;">{st.session_state.page}</h3>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # # Display questions based on the current page
+    # st.markdown(
+    #     f"""
+    #     <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+    #         <h3 style="color: black;">{st.session_state.page}</h3>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
     
     # For Page 3, display the common remark for scale at the top
     if st.session_state.page == "Page 3":
