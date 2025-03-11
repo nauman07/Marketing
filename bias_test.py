@@ -855,7 +855,7 @@ def main():
                 "$0 (not willing to invest)",
                 "Up to $50,000",
                 "\$50,001 - \$100,000",
-                "$100,001 - $200,000",
+                "\$100,001 - \$200,000",
                 "Over $200,000"
             ]
             st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=False)
