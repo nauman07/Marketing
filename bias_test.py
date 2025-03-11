@@ -298,7 +298,7 @@ def display_dropdown(question, options, key):
            to remove any top margin/padding */
         div[data-testid="stSelectbox"] > div {
             margin-top: 0px !important;
-            padding-top: 0px !important;
+            padding-top: -3px !important;
         }
         </style>
         """,
