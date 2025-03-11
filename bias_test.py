@@ -7,7 +7,7 @@ from firebase_config import initialize_firebase
 try:
     db = initialize_firebase()
 except Exception as e:
-    st.warning(f"Firebase initialization failed: {e}")
+    # st.warning(f"Firebase initialization failed: {e}")
     db = None
 
 # Questions for Survey - Reduced to 3 pages
