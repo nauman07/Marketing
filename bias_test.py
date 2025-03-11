@@ -20,10 +20,10 @@ questions = {
         "Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)"
     ],
     "Page 3": [
-        "Q4. Selecting a supplier with lower reliability exposes AeroConnect to significant operational disruptions, potential regulatory scrutiny, and passenger compensation claims. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q5. The hidden costs from selecting the lowest-price supplier (emergency shipments, flight cancellations, maintenance complications) often exceed the initial savings. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q6. Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q7. Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise. (1 = Strongly Disagree, 5 = Strongly Agree)"
+        "Q4. Selecting a supplier with lower reliability exposes AeroConnect to significant operational disruptions, potential regulatory scrutiny, and passenger compensation claims.",
+        "Q5. The hidden costs from selecting the lowest-price supplier (emergency shipments, flight cancellations, maintenance complications) often exceed the initial savings.",
+        "Q6. Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation.",
+        "Q7. Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise."
     ],
     "Page 4": [
         "Q8. If Supplier B improved their reliability rating to 97% but increased their price by 10%, would you change your original supplier selection? (Note- Each 1% decrease in reliability has historically corresponded to a 15% increase in maintenance issues)",
@@ -786,7 +786,7 @@ def main():
             display_percentage_allocation_sliders()
         
         # For rating questions with confidence or agree/disagree scale
-        elif "Rate your confidence" in question or "Strongly Disagree" in question:
+        elif ["Q4","Q5","Q6","Q7","Q11"] in question:
             min_value = 1
             max_value = 10 if "confidence" in question else 5
             st.session_state.answers[question] = display_slider(question, min_value, max_value, key=question)
