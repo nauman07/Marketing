@@ -570,7 +570,7 @@ def navigation_buttons():
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
     # Navigation buttons
-    col1, col2, col3 = st.columns([1, 3, 1])
+    col1, col2, col3 = st.columns([1, 2, 1])
     
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
@@ -580,23 +580,36 @@ def navigation_buttons():
         if col1.button("Previous"):
             st.session_state.page = pages[current_index - 1]
             st.rerun()
-
-    # Add custom styling to right-align the Next button
-    col3.markdown(
-        """
-        <style>
-        div[data-testid="column"]:nth-child(3) {
-            display: flex;
-            justify-content: flex-end;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
     
-    # Move the Next button to the right side
-    # We're removing the custom HTML button and just using the Streamlit button
-    next_clicked = col3.button("Next", key="real_next", help="Go to the next page")
+    # Custom HTML for the Next button positioned further right
+    with col3:
+        st.markdown(
+            """
+            <div style="display: flex; justify-content: flex-end; margin-right: 20px;">
+                <button id="next_btn" style="padding: 8px 15px; border: none; 
+                                           border-radius: 5px; cursor: pointer; 
+                                           background-color: #4F8BF9; color: white;"
+                        onclick="document.getElementById('real_next').click()">
+                    Next
+                </button>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        # Hide the actual button using CSS but keep its functionality
+        st.markdown(
+            """
+            <style>
+            div[data-testid="column"]:nth-child(3) button[kind="secondary"] {
+                visibility: hidden;
+                height: 0px;
+                position: absolute;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+        next_clicked = st.button("Next", key="real_next", help="Go to the next page")
     
     if next_clicked:
         message = ""  # Initialize message variable
