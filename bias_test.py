@@ -360,89 +360,6 @@ def display_slider(question, min_value, max_value, key):
     return value
 
 # # Function to display percentage allocation using sliders
-# def display_percentage_allocation_sliders():
-#     # Initialize session state for percentages
-#     if "supplier_a_percent" not in st.session_state:
-#         st.session_state.supplier_a_percent = 33
-#     if "supplier_b_percent" not in st.session_state:
-#         st.session_state.supplier_b_percent = 33
-#     if "supplier_c_percent" not in st.session_state:
-#         st.session_state.supplier_c_percent = 34
-
-#     # Function to adjust percentages dynamically
-#     def adjust_percentages(changed_supplier):
-#         total = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
-#         if total != 100:
-#             if changed_supplier == "A":
-#                 remaining = 100 - st.session_state.supplier_a_percent
-#                 st.session_state.supplier_b_percent = remaining // 2
-#                 st.session_state.supplier_c_percent = remaining - st.session_state.supplier_b_percent
-#             elif changed_supplier == "B":
-#                 remaining = 100 - st.session_state.supplier_b_percent
-#                 st.session_state.supplier_a_percent = remaining // 2
-#                 st.session_state.supplier_c_percent = remaining - st.session_state.supplier_a_percent
-#             elif changed_supplier == "C":
-#                 remaining = 100 - st.session_state.supplier_c_percent
-#                 st.session_state.supplier_a_percent = remaining // 2
-#                 st.session_state.supplier_b_percent = remaining - st.session_state.supplier_a_percent
-    
-#     # Create a row of three sliders
-#     col1, col2, col3 = st.columns(3)
-    
-#     with col1:
-#         st.session_state.supplier_a_percent = st.slider(
-#             "Supplier A",
-#             min_value=0,
-#             max_value=100,
-#             value=st.session_state.supplier_a_percent,
-#             key="supplier_a_slider",
-#             on_change=adjust_percentages,
-#             args=("A",)
-#         )
-
-#     with col2:
-#         st.session_state.supplier_b_percent = st.slider(
-#             "Supplier B",
-#             min_value=0,
-#             max_value=100,
-#             value=st.session_state.supplier_b_percent,
-#             key="supplier_b_slider",
-#             on_change=adjust_percentages,
-#             args=("B",)
-#         )
-
-#     with col3:
-#         st.session_state.supplier_c_percent = st.slider(
-#             "Supplier C",
-#             min_value=0,
-#             max_value=100,
-#             value=st.session_state.supplier_c_percent,
-#             key="supplier_c_slider",
-#             on_change=adjust_percentages,
-#             args=("C",)
-#         )
-
-#     # Display current allocation and total
-#     total_percent = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
-#     st.markdown(
-#         f"""
-#         <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-#             <p style="color: black; font-weight: 900; margin-bottom: 5px;">
-#                 Current Allocation: Supplier A = {st.session_state.supplier_a_percent}%, Supplier B = {st.session_state.supplier_b_percent}%, Supplier C = {st.session_state.supplier_c_percent}%
-#             </p>
-#             <p style="color: black; font-weight: 900; margin-bottom: 5px;">
-#                 Total: {total_percent}%
-#             </p>
-#         </div>
-#         """,
-#         unsafe_allow_html=True
-#     )
-
-#     # Save the answers to session state
-#     st.session_state.answers["Supplier A: in %"] = st.session_state.supplier_a_percent
-#     st.session_state.answers["Supplier B: in %"] = st.session_state.supplier_b_percent
-#     st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
-
 def display_percentage_allocation_sliders():
     st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
     
@@ -453,7 +370,17 @@ def display_percentage_allocation_sliders():
         st.session_state.supplier_b_percent = 0
     if "supplier_c_percent" not in st.session_state:
         st.session_state.supplier_c_percent = 0
-
+        
+    # Define callback functions
+    def on_change_a():
+        st.session_state.supplier_a_percent = st.session_state.supplier_a_slider
+        
+    def on_change_b():
+        st.session_state.supplier_b_percent = st.session_state.supplier_b_slider
+        
+    def on_change_c():
+        st.session_state.supplier_c_percent = st.session_state.supplier_c_slider
+    
     # Add CSS that targets only the individual slider containers
     st.markdown(
         """
@@ -472,42 +399,43 @@ def display_percentage_allocation_sliders():
     # Create a row of three sliders
     col1, col2, col3 = st.columns(3)
     
-    # Use the sliders without modifying session state directly in assignment
+    # Use the sliders with on_change callbacks
     with col1:
         a_percent = st.slider(
             "Supplier A",
             min_value=0,
             max_value=100,
-            step=5,  # This ensures increments of 5
+            step=5,
             value=st.session_state.supplier_a_percent,
-            key="supplier_a_slider"
+            key="supplier_a_slider",
+            on_change=on_change_a
         )
-
     with col2:
         b_percent = st.slider(
             "Supplier B",
             min_value=0,
             max_value=100,
-            step=5,  # This ensures increments of 5
+            step=5,
             value=st.session_state.supplier_b_percent,
-            key="supplier_b_slider"
+            key="supplier_b_slider",
+            on_change=on_change_b
         )
-
     with col3:
         c_percent = st.slider(
             "Supplier C",
             min_value=0,
             max_value=100,
-            step=5,  # This ensures increments of 5
+            step=5,
             value=st.session_state.supplier_c_percent,
-            key="supplier_c_slider"
+            key="supplier_c_slider",
+            on_change=on_change_c
         )
     
-    # Update session state after all sliders are rendered
-    st.session_state.supplier_a_percent = a_percent
-    st.session_state.supplier_b_percent = b_percent
-    st.session_state.supplier_c_percent = c_percent
-
+    # Get values directly from session state
+    a_percent = st.session_state.supplier_a_percent
+    b_percent = st.session_state.supplier_b_percent
+    c_percent = st.session_state.supplier_c_percent
+    
     # Display current allocation and total
     total_percent = a_percent + b_percent + c_percent
     
@@ -532,11 +460,105 @@ def display_percentage_allocation_sliders():
     
     # Add this to session state for validation
     st.session_state.allocation_valid = (total_percent == 100)
-
     # Save the answers to session state
     st.session_state.answers["Supplier A: in %"] = a_percent
     st.session_state.answers["Supplier B: in %"] = b_percent
     st.session_state.answers["Supplier C: in %"] = c_percent
+
+# def display_percentage_allocation_sliders():
+#     st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
+    
+#     # Initialize session state for percentages (only if not already set)
+#     if "supplier_a_percent" not in st.session_state:
+#         st.session_state.supplier_a_percent = 0
+#     if "supplier_b_percent" not in st.session_state:
+#         st.session_state.supplier_b_percent = 0
+#     if "supplier_c_percent" not in st.session_state:
+#         st.session_state.supplier_c_percent = 0
+
+#     # Add CSS that targets only the individual slider containers
+#     st.markdown(
+#         """
+#         <style>
+#         /* Target individual sliders but not their parent container */
+#         div[data-testid="column"] div[data-testid="stSlider"] {
+#             background-color: pink;
+#             padding: 5px 20px;
+#             border-radius: 5px;
+#         }
+#         </style>
+#         """, 
+#         unsafe_allow_html=True
+#     )
+    
+#     # Create a row of three sliders
+#     col1, col2, col3 = st.columns(3)
+    
+#     # Use the sliders without modifying session state directly in assignment
+#     with col1:
+#         a_percent = st.slider(
+#             "Supplier A",
+#             min_value=0,
+#             max_value=100,
+#             step=5,  # This ensures increments of 5
+#             value=st.session_state.supplier_a_percent,
+#             key="supplier_a_slider"
+#         )
+
+#     with col2:
+#         b_percent = st.slider(
+#             "Supplier B",
+#             min_value=0,
+#             max_value=100,
+#             step=5,  # This ensures increments of 5
+#             value=st.session_state.supplier_b_percent,
+#             key="supplier_b_slider"
+#         )
+
+#     with col3:
+#         c_percent = st.slider(
+#             "Supplier C",
+#             min_value=0,
+#             max_value=100,
+#             step=5,  # This ensures increments of 5
+#             value=st.session_state.supplier_c_percent,
+#             key="supplier_c_slider"
+#         )
+    
+#     # Update session state after all sliders are rendered
+#     st.session_state.supplier_a_percent = a_percent
+#     st.session_state.supplier_b_percent = b_percent
+#     st.session_state.supplier_c_percent = c_percent
+
+#     # Display current allocation and total
+#     total_percent = a_percent + b_percent + c_percent
+    
+#     # Check if total exceeds 100%
+#     if total_percent != 100:
+#         color = "red"
+#         warning_message = " (Please adjust to equal 100%)"
+#     else:
+#         color = "black"
+#         warning_message = ""
+    
+#     st.markdown(
+#         f"""
+#         <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+#             <p style="color: {color}; font-weight: 900; margin-bottom: 5px;">
+#                 Total: {total_percent}% (A: {a_percent}%, B: {b_percent}%, C: {c_percent}%){warning_message}
+#             </p>
+#         </div>
+#         """,
+#         unsafe_allow_html=True
+#     )
+    
+#     # Add this to session state for validation
+#     st.session_state.allocation_valid = (total_percent == 100)
+
+#     # Save the answers to session state
+#     st.session_state.answers["Supplier A: in %"] = a_percent
+#     st.session_state.answers["Supplier B: in %"] = b_percent
+#     st.session_state.answers["Supplier C: in %"] = c_percent
 
 # Function to display importance ratings with a 2x3 matrix of sliders for space optimization
 def display_importance_ratings_matrix(question, factors, key):
