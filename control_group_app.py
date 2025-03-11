@@ -153,43 +153,61 @@ def display_footer():
         unsafe_allow_html=True
     )
 
-# Function to display supplier details in a table with semi-transparent background
-def display_supplier_details():
-    st.markdown(
-        """
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <h3 style="color: black;">Supplier Details</h3>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    # Convert the DataFrame to HTML and inject custom CSS for the table
-    table_html = suppliers_df.to_html(index=False, escape=False)
-    st.markdown(
-        f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <style>
-            table {{
-                width: 100%;
-                border-collapse: collapse;
-                background-color: rgba(255, 255, 255);
-            }}
-            th, td {{
-                padding: 8px;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
-                color: black; /* Ensure text color is black */
-            }}
-            th {{
-                background-color: rgba(255, 255, 255);
-                color: black; /* Ensure header text color is black */
-            }}
-            </style>
-            {table_html}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+# Function to display supplier details as a popup
+def display_supplier_details_popup():
+    # Initialize the session state if it doesn't exist
+    if "show_supplier_details" not in st.session_state:
+        st.session_state.show_supplier_details = True
+    
+    # Toggle button - changes label based on current state
+    button_label = "Hide Supplier Details" if st.session_state.show_supplier_details else "Show Supplier Details"
+    
+    if st.button(button_label):
+        # Toggle the state when clicked
+        st.session_state.show_supplier_details = not st.session_state.show_supplier_details
+        st.rerun()  # Rerun to update the UI with the new state
+    
+    # Show the popup if the state is True
+    if st.session_state.show_supplier_details:
+        st.markdown(
+            """
+            <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+                <h3 style="color: black;">Evaluation Criteria</h3>
+                <p style="color: black;">
+                    You are expected to evaluate the suppliers through various criteria: <strong>Lead Time, Lead Variability, Reliability, Price, Minimum Order Quantity, Certification Standards, and Warranty Period</strong>.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+        # Convert the DataFrame to HTML and inject custom CSS for the table
+        table_html = suppliers_df.to_html(index=False, escape=False)
+        st.markdown(
+            f"""
+            <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+                <style>
+                table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    background-color: rgba(255, 255, 255);
+                }}
+                th, td {{
+                    padding: 8px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                    color: black;
+                }}
+                th {{
+                    background-color: rgba(255, 255, 255);
+                    color: black;
+                }}
+                </style>
+                {table_html}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # Function to display scenarios
 def display_scenario():
@@ -239,15 +257,65 @@ def display_question(question):
         unsafe_allow_html=True
     )
 
-# Function to display numeric input with reduced distance
+# Function to display multiple-choice questions horizontally with optimized styling
+def display_horizontal_choice(options, key, horizontal=True):
+    st.markdown(
+        """
+        <style>
+        .stRadio > div {
+            background-color: pink;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    selected_option = st.radio(
+        "",
+        options,
+        key=key,
+        horizontal=horizontal
+    )
+    return selected_option
+
+# Function to display a dropdown
+def display_dropdown(question, options, key):
+    st.markdown(
+        """
+        <style>
+        /* Style the selectbox container */
+        div[data-testid="stSelectbox"] {
+            background-color: white;
+            padding: 2px;  /* Internal spacing within the container */
+            border-radius: 2px;
+        }
+        /* Target the first child element inside the selectbox container 
+           to remove any top margin/padding */
+        div[data-testid="stSelectbox"] > div {
+            margin-top: 0px !important;
+            padding-top: 0px !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    selected_option = st.selectbox(
+        "",
+        options,
+        key=key
+    )
+    return selected_option
+
+# Function to display slider with reduced distance
 def display_slider(question, min_value, max_value, key):
     # Apply white background and padding for better visibility
     st.markdown(
         """
         <style>
         div[data-testid="stSlider"] {
-            background-color: white;
-            padding: 5px;  /* Reduced padding */
+            background-color: pink;
+            padding: 5px 20px;  /* Reduced padding */
             border-radius: 5px;
         }
         
@@ -269,148 +337,304 @@ def display_slider(question, min_value, max_value, key):
     value = st.slider("", min_value=min_value, max_value=max_value, value=(min_value + max_value) // 2, key=key)
     return value
 
-# Function to display multiple-choice questions with white background for options
-# Function to display multiple-choice questions with white background for options
-def display_multiple_choice(question, options, key):
+# Function to display percentage allocation using sliders
+def display_percentage_allocation_sliders():
+    st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
+    
+    # Initialize session state for percentages (only if not already set)
+    if "supplier_a_percent" not in st.session_state:
+        st.session_state.supplier_a_percent = 0
+    if "supplier_b_percent" not in st.session_state:
+        st.session_state.supplier_b_percent = 0
+    if "supplier_c_percent" not in st.session_state:
+        st.session_state.supplier_c_percent = 0
+
+    # Add CSS that targets only the individual slider containers
     st.markdown(
         """
         <style>
-        .stRadio > div {
+        /* Target individual sliders but not their parent container */
+        div[data-testid="column"] div[data-testid="stSlider"] {
+            background-color: pink;
+            padding: 5px 20px;
+            border-radius: 5px;
+        }
+        </style>
+        """, 
+        unsafe_allow_html=True
+    )
+    
+    # Create a row of three sliders
+    col1, col2, col3 = st.columns(3)
+    
+    # Use the sliders without modifying session state directly in assignment
+    with col1:
+        a_percent = st.slider(
+            "Supplier A",
+            min_value=0,
+            max_value=100,
+            step=5,  # This ensures increments of 5
+            value=st.session_state.supplier_a_percent,
+            key="supplier_a_slider"
+        )
+
+    with col2:
+        b_percent = st.slider(
+            "Supplier B",
+            min_value=0,
+            max_value=100,
+            step=5,  # This ensures increments of 5
+            value=st.session_state.supplier_b_percent,
+            key="supplier_b_slider"
+        )
+
+    with col3:
+        c_percent = st.slider(
+            "Supplier C",
+            min_value=0,
+            max_value=100,
+            step=5,  # This ensures increments of 5
+            value=st.session_state.supplier_c_percent,
+            key="supplier_c_slider"
+        )
+    
+    # Update session state after all sliders are rendered
+    st.session_state.supplier_a_percent = a_percent
+    st.session_state.supplier_b_percent = b_percent
+    st.session_state.supplier_c_percent = c_percent
+
+    # Display current allocation and total
+    total_percent = a_percent + b_percent + c_percent
+    
+    # Check if total exceeds 100%
+    if total_percent != 100:
+        color = "red"
+        warning_message = " (Please adjust to equal 100%)"
+    else:
+        color = "black"
+        warning_message = ""
+    
+    st.markdown(
+        f"""
+        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
+            <p style="color: {color}; font-weight: 900; margin-bottom: 5px;">
+                Total: {total_percent}% (A: {a_percent}%, B: {b_percent}%, C: {c_percent}%){warning_message}
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Add this to session state for validation
+    st.session_state.allocation_valid = (total_percent == 100)
+
+    # Save the answers to session state
+    st.session_state.answers["Supplier A: in %"] = a_percent
+    st.session_state.answers["Supplier B: in %"] = b_percent
+    st.session_state.answers["Supplier C: in %"] = c_percent
+
+# Function to display importance ratings with a 2x3 matrix of sliders for space optimization
+def display_importance_ratings_matrix(question, factors, key):
+    # Add CSS for styling
+    st.markdown(
+        """
+        <style>
+        /* Style for the entire slider component including label */
+        div[data-testid="stSlider"] {
             background-color: pink;
             padding: 10px;
             border-radius: 5px;
+            margin-bottom: 10px;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
-    selected_option = st.radio(
-        "",
-        options,
-        key=key,
-    )
-    return selected_option
-
-
-def display_percentage_allocation():
-    # Initialize session state for percentages
-    if "supplier_a_percent" not in st.session_state:
-        st.session_state.supplier_a_percent = 33
-    if "supplier_b_percent" not in st.session_state:
-        st.session_state.supplier_b_percent = 33
-    if "supplier_c_percent" not in st.session_state:
-        st.session_state.supplier_c_percent = 34
-
-    # Function to adjust percentages dynamically
-    def adjust_percentages(changed_supplier):
-        total = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
-        if total != 100:
-            if changed_supplier == "A":
-                remaining = 100 - st.session_state.supplier_a_percent
-                st.session_state.supplier_b_percent = remaining // 2
-                st.session_state.supplier_c_percent = remaining - st.session_state.supplier_b_percent
-            elif changed_supplier == "B":
-                remaining = 100 - st.session_state.supplier_b_percent
-                st.session_state.supplier_a_percent = remaining // 2
-                st.session_state.supplier_c_percent = remaining - st.session_state.supplier_a_percent
-            elif changed_supplier == "C":
-                remaining = 100 - st.session_state.supplier_c_percent
-                st.session_state.supplier_a_percent = remaining // 2
-                st.session_state.supplier_b_percent = remaining - st.session_state.supplier_a_percent
     
-    # Add a space between the previous text box and the slider columns
-    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-    
-    # Sliders for percentage allocation
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.session_state.supplier_a_percent = st.slider(
-            "Supplier A: in %",
-            min_value=0,
-            max_value=100,
-            value=st.session_state.supplier_a_percent,
-            key="supplier_a_slider",
-            on_change=adjust_percentages,
-            args=("A",)
-        )
-
-    with col2:
-        st.session_state.supplier_b_percent = st.slider(
-            "Supplier B: in %",
-            min_value=0,
-            max_value=100,
-            value=st.session_state.supplier_b_percent,
-            key="supplier_b_slider",
-            on_change=adjust_percentages,
-            args=("B",)
-        )
-
-    with col3:
-        st.session_state.supplier_c_percent = st.slider(
-            "Supplier C: in %",
-            min_value=0,
-            max_value=100,
-            value=st.session_state.supplier_c_percent,
-            key="supplier_c_slider",
-            on_change=adjust_percentages,
-            args=("C",)
-        )
-
-    # Display current allocation and total
-    total_percent = st.session_state.supplier_a_percent + st.session_state.supplier_b_percent + st.session_state.supplier_c_percent
-    st.markdown(
-        f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">
-                Current Allocation: Supplier A = {st.session_state.supplier_a_percent}%, Supplier B = {st.session_state.supplier_b_percent}%, Supplier C = {st.session_state.supplier_c_percent}%
-            </p>
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">
-                Total: {total_percent}%
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # Save the answers to session state
-    st.session_state.answers["Supplier A: in %"] = st.session_state.supplier_a_percent
-    st.session_state.answers["Supplier B: in %"] = st.session_state.supplier_b_percent
-    st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
-
-# Function to display importance ratings with reduced distance and white background for options
-def display_importance_ratings(question, factors, key):
-    st.markdown(
-        f"""
-        <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-            <p style="color: black; font-weight: 900; margin-bottom: 5px;">{question}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # Create a 2x3 matrix layout
     ratings = {}
-    for factor in factors:
-        st.markdown(
-            f"""
-            <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-                <p style="color: black; font-weight: 900; margin-bottom: 5px;">{factor}</p>
-            </div>
-            """,
-            unsafe_allow_html=True
+    
+    # First row - 3 factors
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        # Use the label parameter to include the factor name
+        ratings[factors[0]] = st.slider(
+            label=factors[0],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[0]}"
         )
-        ratings[factor] = st.number_input("", min_value=1, max_value=5, value=3, key=f"{key}_{factor}")
+    
+    with col2:
+        ratings[factors[1]] = st.slider(
+            label=factors[1],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[1]}"
+        )
+    
+    with col3:
+        ratings[factors[2]] = st.slider(
+            label=factors[2],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[2]}"
+        )
+    
+    # Second row - 4 factors
+    col4, col5, col6, col7 = st.columns(4)
+    with col4:
+        ratings[factors[3]] = st.slider(
+            label=factors[3],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[3]}"
+        )
+    
+    with col5:
+        ratings[factors[4]] = st.slider(
+            label=factors[4],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[4]}"
+        )
+    
+    with col6:
+        ratings[factors[5]] = st.slider(
+            label=factors[5],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[5]}"
+        )
+    
+    with col7:
+        ratings[factors[6]] = st.slider(
+            label=factors[6],
+            min_value=1, 
+            max_value=5, 
+            value=3, 
+            key=f"{key}_{factors[6]}"
+        )
+    
     return ratings
 
-# Main function for Control Group
-def control_group():
+# 2. Fix for the navigation buttons and validation
+def navigation_buttons():
+    FIRST_NAME_FIELD = "First Name (Mandatory)"
+    
+    # Inject custom CSS to remove padding from columns (Streamlit's container elements)
+    st.markdown(
+    """
+    <style>
+    /* This targets the column container (the selector may vary across Streamlit versions) */
+    div[data-testid="column"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+    # Add spacing before navigation buttons
+    st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
+    
+    # Create a 3-column layout with the last column much wider to push the button right
+    col1, spacer, col3 = st.columns([1, 5, 1])
+    
+    pages = list(questions.keys())
+    current_index = pages.index(st.session_state.page)
+    is_last_page = current_index == len(pages) - 1  # Check if on last page
+    
+    # Previous button in first column
+    if current_index > 0:
+        if col1.button("Previous"):
+            st.session_state.page = pages[current_index - 1]
+            st.rerun()
+    
+    # Next button in third column - only show if not on the last page
+    if not is_last_page:
+        next_clicked = col3.button("Next", key="real_next")
+        
+        if next_clicked:
+            message = ""  # Initialize message variable
+            
+            # Validation for Page 1 - First Name is mandatory
+            if st.session_state.page == "Page 1":
+                first_name = st.session_state.answers.get(FIRST_NAME_FIELD, "")
+                if first_name.strip() == "":
+                    message = "First Name is mandatory. Please fill it before proceeding."
+                else:
+                    st.session_state.page = pages[current_index + 1]
+                    st.rerun()
+            
+            # Validation for Page 2 - Total allocation must be 100%
+            elif st.session_state.page == "Page 2":
+                if "allocation_valid" in st.session_state and not st.session_state.allocation_valid:
+                    message = "Please ensure the total allocation equals 100% before proceeding."
+                else:
+                    st.session_state.page = pages[current_index + 1]
+                    st.rerun()
+            
+            # No validation required for other pages
+            else:
+                st.session_state.page = pages[current_index + 1]
+                st.rerun()
+            
+            # Display error message inside a styled box if validation fails
+            if message:
+                st.markdown(
+                    f"""
+                    <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.9); 
+                                border-radius: 10px; margin-bottom: 10px; border: 1px solid red;">
+                        <p style="color: red; font-weight: bold;">⚠️ {message}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+    
+    # Submit button (only on the last page) - placed in the same column as the Next button would be
+    if is_last_page:
+        submit_clicked = col3.button("Submit")
+        if submit_clicked:
+            st.markdown(
+                """
+                <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.9); 
+                            border-radius: 10px; margin-bottom: 10px; border: 1px solid green;">
+                    <p style="color: green; font-weight: bold;">✅ Survey submitted successfully! Thank you for your participation.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            st.session_state.answers = {}
+            st.session_state.page = "Page 1"  # Reset to first page after submission
+            st.rerun()
+            
+# Main function for the survey
+def main():
     set_background("rwth-aachen.jpg")  # Background image
     display_header()
 
-    # Inject custom CSS to reduce spacing before any questions are displayed
+    # Inject custom CSS to reduce spacing
     st.markdown(
         """
         <style>
         div[data-testid="stTextInput"] { margin-top: -20px; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Inject custom CSS to reduce spacing
+    st.markdown(
+        """
+        <style>
+        div[data-testid="stRadio"] { margin-top: -35px; }
         </style>
         """,
         unsafe_allow_html=True
@@ -426,47 +650,72 @@ def control_group():
     if st.session_state.page == "Page 1":
         display_scenario()
 
-    # Display supplier details from the second page onwards
-    if st.session_state.page != "Page 1":
-        display_supplier_details()
+    # Display supplier details as a popup button on every page
+    display_supplier_details_popup()
 
-    # Display questions based on the current page
-    st.markdown(
-        f"""
-        <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-            <h3 style="color: black;">{st.session_state.page}</h3>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # # Display questions based on the current page
+    # st.markdown(
+    #     f"""
+    #     <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
+    #         <h3 style="color: black;">{st.session_state.page}</h3>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
+    
+    # For Page 3, display the common remark for scale at the top
+    if st.session_state.page == "Page 3":
+        st.markdown(
+            """
+            <div style="padding: 5px; background-color: rgba(255, 255, 255); border-radius: 5px; margin-bottom: 10px;">
+                <p style="color: black; font-style: italic;">
+                    <strong>Note:</strong> Rate the following questions (Q4-Q7) from a scale of 1-5 (1 = Strongly Disagree/Not Important, 5 = Strongly Agree/Extremely Important)
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    
+    # Process questions for the current page
     for question in questions[st.session_state.page]:
         display_question(question)
-
-        if "Q3. If you had to distribute AeroConnect's" in question:
-            display_percentage_allocation()  # Call the custom function for percentage allocation
         
+        # For Designation, use dropdown instead of text fields
+        if question == "Designation":
+            options = [
+                "1. Director/Manager",
+                "2. Professor/Researcher",
+                "3. Student",
+                "4. Consultant/Entry Level"
+            ]
+            st.session_state.answers[question] = display_dropdown(question, options, key=question)
+        
+        # For Q1 (supplier selection), display options horizontally
+        elif "Q1. Based on the information provided" in question:
+            options = ["Supplier A", "Supplier B", "Supplier C"]
+            st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=True)
+        
+        # For Q3 (percentage allocation), use sliders
+        elif "Q3. If you had to distribute AeroConnect's" in question:
+            display_percentage_allocation_sliders()
+        
+        # For rating questions with confidence or agree/disagree scale
         elif "Rate your confidence" in question or "Strongly Disagree" in question:
-            # Use a numeric input for rating questions
             min_value = 1
             max_value = 10 if "confidence" in question else 5
             st.session_state.answers[question] = display_slider(question, min_value, max_value, key=question)
-        elif "which supplier would you select for AeroConnect" in question:
-            options = [
-                "Supplier A",
-                "Supplier B",
-                "Supplier C"
-            ]
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question) 
+        
+        # For Q8 (supplier improvement), display options horizontally
         elif "If Supplier B improved" in question:
-            # Multiple-choice question
             options = [
                 "Yes, I would switch to Supplier B",
                 "No, I would stay with my original choice",
                 "I originally chose Supplier B and would still choose them"
             ]
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+            st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=False)
+        
+        # For Q9 (reliability percentage), display options horizontally
         elif "minimum reliability percentage" in question:
-            # Multiple-choice question
             options = [
                 "99% or higher",
                 "97-98%",
@@ -474,29 +723,32 @@ def control_group():
                 "90-94%",
                 "Below 90%"
             ]
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+            st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=True)
+        
+        # For Q10 (delivery delay), display options horizontally
         elif "If a delivery delay grounds aircraft" in question:
-            # Multiple-choice question
             options = [
-                "Pay a 35% premium for emergency shipments, impacting quarterly profit targets",
-                "Cancel revenue-generating flights until delivery, potentially losing loyal customers",
-                "Maintain a larger safety stock (increasing inventory costs by 20% and reducing capital available for other investments)"
+                "Pay a 35% premium for emergency shipments",
+                "Cancel revenue-generating flights until delivery",
+                "Maintain a larger safety stock (20% increase in inventory costs)"
             ]
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+            st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=False)
+        
+        # For Q11 (importance ratings), use a matrix of sliders
         elif "Rate the importance of each factor" in question:
-            # Importance ratings
             factors = [
-                "Initial purchase price",
-                "Reliability rating",
+                "Initial price",
+                "Reliability",
                 "Lead time",
-                "Lead time variability",
-                "Minimum order quantity",
-                "Certification standards",
-                "Warranty period"
+                "Lead variability",
+                "Minimum order",
+                "Certification",
+                "Warranty"
             ]
-            st.session_state.answers[question] = display_importance_ratings(question, factors, key=question)
+            st.session_state.answers[question] = display_importance_ratings_matrix(question, factors, key=question)
+        
+        # For Q12 (compromise attribute), display options horizontally
         elif "Which attribute would you be most willing to compromise on" in question:
-            # Multiple-choice question
             options = [
                 "Price",
                 "Lead time",
@@ -504,47 +756,53 @@ def control_group():
                 "Minimum order quantity",
                 "Warranty period"
             ]
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+            st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=False)
+        
+        # For Q13 (contract commitment), display options horizontally
         elif "Would you be willing to commit to a 2-year contract" in question:
-            # Multiple-choice question
             options = ["Yes", "No", "Unsure"]
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+            st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=True)
+        
+        # For Q14 (investment), display options horizontally
         elif "How much would you be willing to invest" in question:
-            # Multiple-choice question
             options = [
                 "$0 (not willing to invest)",
                 "Up to $50,000",
-                "$50,001 - $100,000",
-                "$100,001 - $200,000",
+                "\$50,001 - $100,000",
+                "\$100,001 - $200,000",
                 "Over $200,000"
             ]
-            st.session_state.answers[question] = display_multiple_choice(question, options, key=question)
+            st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=False)
+        
+        # For all other questions (like name, email), use text input
         else:
-            # Use a text input for other questions
-            st.session_state.answers[question] = st.text_input(" ", value=st.session_state.answers.get(question, ""), key=question)
-
-    # Navigation buttons
-    col1, col2, col3 = st.columns(3)
+            st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
     
-    pages = list(questions.keys())
-    current_index = pages.index(st.session_state.page)
+    # # Navigation buttons
+    # col1, col2, col3 = st.columns(3)
     
-    if current_index > 0 and col1.button("Previous"):
-        st.session_state.page = pages[current_index - 1]
-        st.rerun()
+    # pages = list(questions.keys())
+    # current_index = pages.index(st.session_state.page)
     
-    if current_index < len(pages) - 1 and col3.button("Next"):
-        st.session_state.page = pages[current_index + 1]
-        st.rerun()
+    # if current_index > 0 and col1.button("Previous"):
+    #     st.session_state.page = pages[current_index - 1]
+    #     st.rerun()
     
-    # Submit button
-    if st.session_state.page == "Page 6: Long-term Considerations" and st.button("Submit"):
-        save_to_firebase(st.session_state.answers)
-        st.session_state.answers = {}
-        st.session_state.page = "Page 1"  # Reset to first page after submission
-        st.rerun()
+    # # Next button on Page 1 no longer checks for filled information
+    # if current_index < len(pages) - 1 and col3.button("Next"):
+    #     st.session_state.page = pages[current_index + 1]
+    #     st.rerun()
+    
+    # # Submit button
+    # if st.session_state.page == "Page 5" and st.button("Submit"):
+    #     # Firebase connection commented out, so just show success message
+    #     st.success("Survey submitted successfully! Thank you for your participation.")
+    #     st.session_state.answers = {}
+    #     st.session_state.page = "Page 1"  # Reset to first page after submission
+    #     st.rerun()
+    navigation_buttons()
     
     display_footer()
 
 if __name__ == "__main__":
-    control_group()
+    main()
