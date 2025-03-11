@@ -862,6 +862,22 @@ def main():
         
         # For all other questions (like name, email), use text input
         else:
+            # Add CSS for styling text inputs only
+            st.markdown(
+                """
+                <style>
+                /* Style for text inputs */
+                div[data-testid="stTextInput"] {
+                    background-color: pink;
+                    padding: 10px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+        
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
     
     # # Navigation buttons
