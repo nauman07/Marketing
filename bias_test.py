@@ -152,6 +152,12 @@ def display_supplier_details_popup():
     if "show_supplier_details" not in st.session_state:
         # Default: Hidden on Page 1, shown on all other pages
         st.session_state.show_supplier_details = (st.session_state.page != "Page 1")
+
+    # Check if we're transitioning from Page 1 to another page
+    if "previous_page" in st.session_state:
+        if st.session_state.previous_page == "Page 1" and st.session_state.page != "Page 1":
+            # If moving from Page 1 to any other page, show the details
+            st.session_state.show_supplier_details = True
     
     # Toggle button - changes label based on current state
     button_label = "Hide Supplier Details" if st.session_state.show_supplier_details else "Show Supplier Details"
@@ -202,6 +208,8 @@ def display_supplier_details_popup():
             """,
             unsafe_allow_html=True
         )
+    # Store current page for comparison on next run
+    st.session_state.previous_page = st.session_state.page
 
 # Function to display scenario
 def display_scenario():
