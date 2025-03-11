@@ -288,9 +288,20 @@ def display_dropdown(question, options, key):
     st.markdown(
         """
         <style>
+        /* Reduce internal padding within the dropdown box */
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+        
+        /* Make the dropdown height smaller */
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+            min-height: 32px !important;  /* Reduced from default */
+        }
+        
+        /* Keep the background white */
         div[data-testid="stSelectbox"] {
             background-color: white;
-            padding: 2px;
             border-radius: 2px;
         }
         </style>
