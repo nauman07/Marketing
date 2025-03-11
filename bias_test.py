@@ -581,32 +581,43 @@ def navigation_buttons():
             st.session_state.page = pages[current_index - 1]
             st.rerun()
     
-    # Create a container for the Next button with the click handler
-    container = st.container()
-    
-    # This will be our hidden button that gets triggered
-    next_clicked = st.button("Next", key="real_next", help="Go to the next page", visible=False)
-    
-    # Create the custom positioned Next button
-    container.markdown(
+    # Create the custom positioned Next button with hidden Streamlit button
+    st.markdown(
         """
-        <div style="position: absolute; right: 80px; bottom: 40px;">
-            <button 
-                style="background-color: #4F8BF9; color: white; border: none; 
-                       border-radius: 4px; padding: 8px 16px; cursor: pointer;"
-                onclick="document.getElementById('real_next').click()">
+        <style>
+        /* Hide the original button */
+        [data-testid="baseButton-secondary"]:has(div:contains("Next")) {
+            visibility: hidden;
+            position: absolute;
+            height: 0;
+        }
+        
+        /* Style for custom button */
+        .custom-next-btn {
+            position: absolute;
+            right: 80px;
+            bottom: 40px;
+            background-color: #4F8BF9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        </style>
+        
+        <div>
+            <button class="custom-next-btn" onclick="document.querySelector('[data-testid=\\"baseButton-secondary\\"] > div:contains(\\"Next\\")').click()">
                 Next
             </button>
         </div>
-        <style>
-            /* Hide the original button */
-            button[kind="secondary"] {
-                display: none;
-            }
-        </style>
         """,
         unsafe_allow_html=True
     )
+    
+    # The regular button is now hidden via CSS but still functional
+    next_clicked = st.button("Next", key="real_next", help="Go to the next page")
+    
     
     if next_clicked:
         message = ""  # Initialize message variable
