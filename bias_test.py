@@ -148,13 +148,17 @@ def display_footer():
 
 # Function to display supplier details as a popup
 def display_supplier_details_popup():
-    # Add a button to show the popup
-    if st.button("Show Supplier Details"):
-        st.session_state.show_supplier_details = True
-    
     # Initialize the session state if it doesn't exist
     if "show_supplier_details" not in st.session_state:
         st.session_state.show_supplier_details = False
+    
+    # Toggle button - changes label based on current state
+    button_label = "Hide Supplier Details" if st.session_state.show_supplier_details else "Show Supplier Details"
+    
+    if st.button(button_label):
+        # Toggle the state when clicked
+        st.session_state.show_supplier_details = not st.session_state.show_supplier_details
+        st.rerun()  # Rerun to update the UI with the new state
     
     # Show the popup if the state is True
     if st.session_state.show_supplier_details:
@@ -197,11 +201,6 @@ def display_supplier_details_popup():
             """,
             unsafe_allow_html=True
         )
-        
-        # Add a button to close the popup
-        if st.button("Close Details"):
-            st.session_state.show_supplier_details = False
-            st.rerun()
 
 # Function to display scenario
 def display_scenario():
