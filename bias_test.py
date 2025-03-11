@@ -581,20 +581,9 @@ def navigation_buttons():
             st.session_state.page = pages[current_index - 1]
             st.rerun()
     
-    with col3:
-        st.markdown(
-            """
-            <div style="display: flex; justify-content: flex-end;">
-                <button id="next_btn" style="padding: 8px 15px; border: none; 
-                                            border-radius: 5px; cursor: pointer;"
-                        onclick="document.getElementById('real_next').click()">
-                    Next_check_2
-                </button>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        next_clicked = st.button("Next", key="real_next", help="Go to the next page")
+    # Move the Next button to the right side
+    # We're removing the custom HTML button and just using the Streamlit button
+    next_clicked = col3.button("Next", key="real_next", help="Go to the next page")
     
     if next_clicked:
         message = ""  # Initialize message variable
