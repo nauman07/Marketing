@@ -39,7 +39,8 @@ questions = {
     "Page 5": [
         "Q13. Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction? (Note- This would protect against any potential future price increases due to market volatility)",
         "Q14. How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
-    ]
+    ],
+    "Success": []
 }
 
 # Supplier details
@@ -593,7 +594,7 @@ def navigation_buttons():
     
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
-    is_last_page = current_index == len(pages) - 1  # Check if on last page
+    is_last_page = current_index == len(pages) - 2  # Check if on last page ( 1 before Success Page)
     
     # Previous button in first column
     if current_index > 0:
@@ -646,17 +647,6 @@ def navigation_buttons():
     if is_last_page:
         submit_clicked = col3.button("Submit")
         if submit_clicked:
-            
-            st.markdown(
-                """
-                <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.9); 
-                            border-radius: 10px; margin-bottom: 10px; border: 1px solid green;">
-                    <p style="color: green; font-weight: bold;">✅ Survey submitted successfully! Thank you for your participation.</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
             ######################## INSERT FIREBASE LOGIC HERE ###############################
             try:
                 save_to_firebase(st.session_state.answers)
@@ -665,7 +655,8 @@ def navigation_buttons():
                 print(f"Error saving data to Firebase: {e}")
                 
             st.session_state.answers = {}
-            st.session_state.page = "Page 1"  # Reset to first page after submission
+            st.session_state.page = "Success"  # This critical line was missing
+            # st.session_state.page = "Page 1"  # Reset to first page after submission
             st.rerun()
             
 # Main function for the survey
@@ -699,6 +690,30 @@ def main():
     if "answers" not in st.session_state:
         st.session_state.answers = {}
 
+    ######## INSERT SUCCESS PAGE ######
+        # Display the success page if that's the current page
+    if st.session_state.page == "Success":
+        st.markdown(
+            """
+            <div style="padding: 20px; background-color: rgba(255, 255, 255, 0.9); 
+                        border-radius: 10px; margin: 50px auto; max-width: 600px; text-align: center;">
+                <h2 style="color: green;">Thank You!</h2>
+                <p style="font-size: 18px;">Your survey has been submitted successfully.</p>
+                <p>Your responses will help improve our research.</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+        # Add a button to restart the survey if desired
+        if st.button("Take Another Survey"):
+            st.session_state.answers = {}
+            st.session_state.page = "Page 1"
+            st.rerun()
+            
+        display_footer()
+        return  # Exit function early - don't show the rest of the survey
+    
     # Display scenario on the first page only
     if st.session_state.page == "Page 1":
         display_scenario()
