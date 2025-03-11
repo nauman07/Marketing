@@ -569,54 +569,20 @@ def navigation_buttons():
     # Add spacing before navigation buttons
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
-    # Navigation buttons
-    col1, col2, col3 = st.columns([1, 2, 1])
+    # Create a 3-column layout with the last column much wider to push the button right
+    col1, spacer, col3 = st.columns([1, 5, 1])
     
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
     
-    # Previous button
+    # Previous button in first column
     if current_index > 0:
         if col1.button("Previous"):
             st.session_state.page = pages[current_index - 1]
             st.rerun()
     
-    # Create the custom positioned Next button with hidden Streamlit button
-    st.markdown(
-        """
-        <style>
-        /* Hide the original button */
-        [data-testid="baseButton-secondary"]:has(div:contains("Next")) {
-            visibility: hidden;
-            position: absolute;
-            height: 0;
-        }
-        
-        /* Style for custom button */
-        .custom-next-btn {
-            position: absolute;
-            right: 80px;
-            bottom: 40px;
-            background-color: #4F8BF9;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 8px 16px;
-            cursor: pointer;
-        }
-        </style>
-        
-        <div>
-            <button class="custom-next-btn" onclick="document.querySelector('[data-testid=\\"baseButton-secondary\\"] > div:contains(\\"Next\\")').click()">
-                Next
-            </button>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    # The regular button is now hidden via CSS but still functional
-    next_clicked = st.button("Next", key="real_next", help="Go to the next page")
+    # Next button in third column - no custom HTML, just basic Streamlit
+    next_clicked = col3.button("Next", key="real_next")
     
     
     if next_clicked:
