@@ -3,7 +3,12 @@ import base64
 import pandas as pd
 
 from firebase_config import initialize_firebase
-db = initialize_firebase()
+# Try to save to Firebase
+try:
+    save_to_firebase(st.session_state.answers)
+except Exception as e:
+    # If there's an error with Firebase, still show success but log the error
+    st.error(f"Error saving data: {e}")
 
 # Questions for Survey - Reduced to 3 pages
 questions = {
@@ -72,16 +77,16 @@ suppliers_df.index.name = "Feature"
 suppliers_df.reset_index(inplace=True)
 
 # FIREBASE FUNCTION COMMENTED OUT
-# def save_to_firebase(answers):
-#     try:
-#         user_name = answers.get("First Name (Mandatory)", "Unknown")
-#         collection_name = f"survey_{user_name.replace(' ', '_')}"
-#         processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
-#         processed_answers["is_control"] = False  # Mark as Bias Group
-#         db.collection(collection_name).add(processed_answers)
-#         st.success("Data successfully saved to Firebase!")
-#     except Exception as e:
-#         st.error(f"Error saving data: {e}")
+def save_to_firebase(answers):
+    try:
+        user_name = answers.get("First Name (Mandatory)", "Unknown")
+        collection_name = f"survey_{user_name.replace(' ', '_')}"
+        processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
+        processed_answers["is_control"] = False  # Mark as Bias Group
+        db.collection(collection_name).add(processed_answers)
+        st.success("Data successfully saved to Firebase!")
+    except Exception as e:
+        st.error(f"Error saving data: {e}")
 
 # Function to set a background image
 def set_background(image_path):
@@ -641,6 +646,7 @@ def navigation_buttons():
     if is_last_page:
         submit_clicked = col3.button("Submit")
         if submit_clicked:
+            
             st.markdown(
                 """
                 <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.9); 
@@ -650,6 +656,14 @@ def navigation_buttons():
                 """,
                 unsafe_allow_html=True
             )
+
+            ######################## INSERT FIREBASE LOGIC HERE ###############################
+            try:
+                save_to_firebase(st.session_state.answers)
+            except Exception as e:
+                # Log the error but don't show it to the user
+                print(f"Error saving data to Firebase: {e}")
+                
             st.session_state.answers = {}
             st.session_state.page = "Page 1"  # Reset to first page after submission
             st.rerun()
@@ -836,17 +850,18 @@ def main():
             )
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
     
-    # Submit button
-    pages = list(questions.keys())
-    current_index = pages.index(st.session_state.page)
-    is_last_page = current_index == len(pages) - 1
+    # # Submit button
+    # pages = list(questions.keys())
+    # current_index = pages.index(st.session_state.page)
+    # is_last_page = current_index == len(pages) - 1
     
-    if is_last_page and st.button("Submit"):
-        # Firebase connection commented out, so just show success message
-        st.success("Survey submitted successfully! Thank you for your participation.")
-        st.session_state.answers = {}
-        st.session_state.page = pages[0]  # Reset to first page after submission
-        st.rerun()
+    # if is_last_page and st.button("Submit"):
+    #     # Firebase connection commented out, so just show success message
+    #     st.success("Survey submitted successfully! Thank you for your participation.")
+    #     st.session_state.answers = {}
+    #     st.session_state.page = pages[0]  # Reset to first page after submission
+    #     st.rerun()
+    
     navigation_buttons()
     
     display_footer()
