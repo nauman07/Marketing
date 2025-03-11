@@ -290,7 +290,7 @@ def display_dropdown(question, options, key):
         <style>
         /* Style the selectbox container */
         div[data-testid="stSelectbox"] {
-            background-color: white;
+            background-color: pink;
             padding: 2px;  /* Internal spacing within the container */
             border-radius: 2px;
         }
