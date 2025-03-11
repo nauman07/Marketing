@@ -862,7 +862,7 @@ def main():
         
         # For all other questions (like name, email), use text input
         else:
-            # Add CSS for styling both the container and the input field itself
+            # Add CSS for styling both the container and the input field with the same pink
             st.markdown(
                 """
                 <style>
@@ -876,7 +876,7 @@ def main():
                 
                 /* Style for the input field itself */
                 div[data-testid="stTextInput"] input {
-                    background-color: #ffdddd !important;  /* Lighter pink for better text visibility */
+                    background-color: pink !important;
                     border: 1px solid #ffbbbb !important;
                 }
                 </style>
