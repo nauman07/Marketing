@@ -3,12 +3,12 @@ import base64
 import pandas as pd
 
 from firebase_config import initialize_firebase
-# Try to save to Firebase
+# Initialize Firebase at the app startup
 try:
-    save_to_firebase(st.session_state.answers)
+    db = initialize_firebase()
 except Exception as e:
-    # If there's an error with Firebase, still show success but log the error
-    st.error(f"Error saving data: {e}")
+    st.warning(f"Firebase initialization failed: {e}")
+    db = None
 
 # Questions for Survey - Reduced to 3 pages
 questions = {
