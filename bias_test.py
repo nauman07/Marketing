@@ -81,7 +81,7 @@ suppliers_df.reset_index(inplace=True)
 def save_to_firebase(answers):
     try:
         user_name = answers.get("First Name (Mandatory)", "Unknown")
-        collection_name = f"survey_{user_name.replace(' ', '_')}"
+        collection_name = "survey_bais"
         processed_answers = {q: (answers.get(q, "N/A") or "N/A") for q in answers}
         processed_answers["is_control"] = False  # Mark as Bias Group
         db.collection(collection_name).add(processed_answers)
