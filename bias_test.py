@@ -150,7 +150,8 @@ def display_footer():
 def display_supplier_details_popup():
     # Initialize the session state if it doesn't exist
     if "show_supplier_details" not in st.session_state:
-        st.session_state.show_supplier_details = True
+        # Default: Hidden on Page 1, shown on all other pages
+        st.session_state.show_supplier_details = (st.session_state.page != "Page 1")
     
     # Toggle button - changes label based on current state
     button_label = "Hide Supplier Details" if st.session_state.show_supplier_details else "Show Supplier Details"
