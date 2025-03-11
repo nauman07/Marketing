@@ -16,24 +16,24 @@ questions = {
     ],
     "Page 2": [
         "Q1. Based on the information provided, which supplier would you select for AeroConnect Airlines?",
-        "Q2. Rate your confidence in this decision, considering the potential impact on aircraft availability (1 = Not at all confident, 10 = Extremely confident)",
+        "Q2. Rate your confidence in this decision: (1 = Not at all confident, 10 = Extremely confident)",
         "Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)"
     ],
     "Page 3": [
-        "Q4. Selecting a supplier with lower reliability exposes AeroConnect to significant operational disruptions, potential regulatory scrutiny, and passenger compensation claims. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q5. The hidden costs from selecting the lowest-price supplier (emergency shipments, flight cancellations, maintenance complications) often exceed the initial savings. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q6. Paying more upfront for quality avionics units protects against costly flight cancellations, emergency maintenance, and damage to AeroConnect's safety reputation. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q7. Longer and variable lead times increase the risk of grounded aircraft and lost revenue when unexpected maintenance needs arise. (1 = Strongly Disagree, 5 = Strongly Agree)"
+        "Q4. I believe selecting a supplier with a lower reliability poses a risk to AeroConnect’s operations. (1 = Strongly Disagree, 5 = Strongly Agree)",
+        "Q5. I am concerned about potential hidden costs that might arise from selecting the lowest-price supplier. (1 = Strongly Disagree, 5 = Strongly Agree)",
+        "Q6. I would rather pay more upfront for avionics units than risk unexpected costs later. (1 = Strongly Disagree, 5 = Strongly Agree)",
+        "Q7. I am comfortable with longer and more variable lead times if it results in significant cost savings. (1 = Strongly Disagree, 5 = Strongly Agree)"
     ],
     "Page 4": [
-        "Q8. If Supplier B improved their reliability rating to 97% but increased their price by 10%, would you change your original supplier selection? (Note- Each 1% decrease in reliability has historically corresponded to a 15% increase in maintenance issues)",
-        "Q9. What is the minimum reliability percentage you would consider acceptable? (Each reliability percentage point below 99% correlates with approximately 3 additional flight cancellations per year)",
-        "Q10. If a delivery delay grounds aircraft and disrupts operations, which option would you prefer?",
+        "Q8. If Supplier B improved their reliability rating to 97% (equal to Supplier A) but increased their price by 10%, would you change your original supplier selection?",
+        "Q9. What is the minimum reliability percentage you would consider acceptable for these avionics control units?",
+        "Q10. If a delay in avionics unit delivery would ground an aircraft, which option would you prefer?",
         "Q11. Rate the importance of each factor in your supplier selection decision: (1 = Not Important, 5 = Extremely Important)",
-        "Q12. Which attribute would you be most willing to compromise on to improve reliability by 2%?"
+        "Q12. Which attribute would you be most willing to alter to improve reliability by 2%?"
     ],
     "Page 5": [
-        "Q13. Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction? (Note- This would protect against any potential future price increases due to market volatility)",
+        "Q13. Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction?",
         "Q14. How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
     ]
 }
