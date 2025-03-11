@@ -862,16 +862,10 @@ def main():
         
         # For all other questions (like name, email), use text input
         else:
-            # Add CSS for styling just the text input field itself
+            # Add CSS for styling both the container and the input field itself
             st.markdown(
                 """
                 <style>
-                # /* Style for text input field itself */
-                # input[type="text"] {
-                #     background-color: white !important;
-                #     border: 1px solid #cccccc !important;
-                # }
-                
                 /* Style for the outer container */
                 div[data-testid="stTextInput"] > div {
                     background-color: pink;
@@ -879,11 +873,16 @@ def main():
                     border-radius: 5px;
                     margin-bottom: 10px;
                 }
+                
+                /* Style for the input field itself */
+                div[data-testid="stTextInput"] input {
+                    background-color: #ffdddd !important;  /* Lighter pink for better text visibility */
+                    border: 1px solid #ffbbbb !important;
+                }
                 </style>
                 """,
                 unsafe_allow_html=True
             )
-        
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
     
     # # Navigation buttons
