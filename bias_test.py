@@ -570,7 +570,7 @@ def navigation_buttons():
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
     # Navigation buttons
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, col3 = st.columns([1, 3, 1])
     
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
@@ -580,6 +580,19 @@ def navigation_buttons():
         if col1.button("Previous"):
             st.session_state.page = pages[current_index - 1]
             st.rerun()
+
+    # Add custom styling to right-align the Next button
+    col3.markdown(
+        """
+        <style>
+        div[data-testid="column"]:nth-child(3) {
+            display: flex;
+            justify-content: flex-end;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Move the Next button to the right side
     # We're removing the custom HTML button and just using the Streamlit button
