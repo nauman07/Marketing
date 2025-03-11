@@ -3,8 +3,12 @@ from firebase_config import initialize_firebase
 import base64
 import pandas as pd
 
-# Initialize Firebase
-db = initialize_firebase()
+# Initialize Firebase at the app startup
+try:
+    db = initialize_firebase()
+except Exception as e:
+    st.warning(f"Firebase initialization failed: {e}")
+    db = None
 
 # Questions for Survey - Reduced to 3 pages
 questions = {
@@ -35,7 +39,8 @@ questions = {
     "Page 5": [
         "Q13. Would you be willing to commit to a 2-year contract with your chosen supplier in exchange for a 12% price reduction?",
         "Q14. How much would you be willing to invest in additional quality testing equipment that could detect potential defects before installation?"
-    ]
+    ],
+    "Success": []
 }
 
 # Supplier details
@@ -150,7 +155,14 @@ def display_footer():
 def display_supplier_details_popup():
     # Initialize the session state if it doesn't exist
     if "show_supplier_details" not in st.session_state:
-        st.session_state.show_supplier_details = True
+        # Default: Hidden on Page 1, shown on all other pages
+        st.session_state.show_supplier_details = (st.session_state.page != "Page 1")
+    
+    # Check if we're transitioning from Page 1 to another page
+    if "previous_page" in st.session_state:
+        if st.session_state.previous_page == "Page 1" and st.session_state.page != "Page 1":
+            # If moving from Page 1 to any other page, show the details
+            st.session_state.show_supplier_details = True
     
     # Toggle button - changes label based on current state
     button_label = "Hide Supplier Details" if st.session_state.show_supplier_details else "Show Supplier Details"
@@ -201,6 +213,8 @@ def display_supplier_details_popup():
             """,
             unsafe_allow_html=True
         )
+    # Store current page for comparison on next run
+    st.session_state.previous_page = st.session_state.page
 
 # Function to display scenarios
 def display_scenario():
@@ -279,15 +293,32 @@ def display_dropdown(question, options, key):
         <style>
         /* Style the selectbox container */
         div[data-testid="stSelectbox"] {
-            background-color: white;
-            padding: 2px;  /* Internal spacing within the container */
+            background-color: pink;
+            padding: 2px;
             border-radius: 2px;
         }
-        /* Target the first child element inside the selectbox container 
-           to remove any top margin/padding */
+        
+        /* Remove top margin/padding */
         div[data-testid="stSelectbox"] > div {
             margin-top: 0px !important;
-            padding-top: 0px !important;
+            padding-top: -3px !important;
+        }
+        
+        /* Target the actual dropdown button */
+        div[data-baseweb="select"] > div:first-child {
+            background-color: pink !important;
+        }
+        
+        /* Style the value display area */
+        div[data-baseweb="select"] [data-baseweb="tag"] {
+            background-color: pink !important;
+        }
+        
+        /* Style dropdown options */
+        div[data-baseweb="popover"] ul,
+        div[data-baseweb="popover"] li,
+        div[data-baseweb="popover"] li:hover {
+            background-color: pink !important;
         }
         </style>
         """,
@@ -342,6 +373,16 @@ def display_percentage_allocation_sliders():
     if "supplier_c_percent" not in st.session_state:
         st.session_state.supplier_c_percent = 0
 
+    # Define callback functions
+    def on_change_a():
+        st.session_state.supplier_a_percent = st.session_state.supplier_a_slider
+        
+    def on_change_b():
+        st.session_state.supplier_b_percent = st.session_state.supplier_b_slider
+        
+    def on_change_c():
+        st.session_state.supplier_c_percent = st.session_state.supplier_c_slider
+    
     # Add CSS that targets only the individual slider containers
     st.markdown(
         """
@@ -368,7 +409,8 @@ def display_percentage_allocation_sliders():
             max_value=100,
             step=5,  # This ensures increments of 5
             value=st.session_state.supplier_a_percent,
-            key="supplier_a_slider"
+            key="supplier_a_slider",
+            on_change=on_change_a
         )
 
     with col2:
@@ -378,7 +420,8 @@ def display_percentage_allocation_sliders():
             max_value=100,
             step=5,  # This ensures increments of 5
             value=st.session_state.supplier_b_percent,
-            key="supplier_b_slider"
+            key="supplier_b_slider",
+            on_change=on_change_b
         )
 
     with col3:
@@ -388,13 +431,14 @@ def display_percentage_allocation_sliders():
             max_value=100,
             step=5,  # This ensures increments of 5
             value=st.session_state.supplier_c_percent,
-            key="supplier_c_slider"
+            key="supplier_c_slider",
+            on_change=on_change_c
         )
     
-    # Update session state after all sliders are rendered
-    st.session_state.supplier_a_percent = a_percent
-    st.session_state.supplier_b_percent = b_percent
-    st.session_state.supplier_c_percent = c_percent
+    # Get values directly from session state
+    a_percent = st.session_state.supplier_a_percent
+    b_percent = st.session_state.supplier_b_percent
+    c_percent = st.session_state.supplier_c_percent
 
     # Display current allocation and total
     total_percent = a_percent + b_percent + c_percent
@@ -542,7 +586,7 @@ def navigation_buttons():
     
     pages = list(questions.keys())
     current_index = pages.index(st.session_state.page)
-    is_last_page = current_index == len(pages) - 1  # Check if on last page
+    is_last_page = current_index == len(pages) - 2  # Check if on last page
     
     # Previous button in first column
     if current_index > 0:
@@ -595,17 +639,16 @@ def navigation_buttons():
     if is_last_page:
         submit_clicked = col3.button("Submit")
         if submit_clicked:
-            st.markdown(
-                """
-                <div style="padding: 10px; background-color: rgba(255, 255, 255, 0.9); 
-                            border-radius: 10px; margin-bottom: 10px; border: 1px solid green;">
-                    <p style="color: green; font-weight: bold;">✅ Survey submitted successfully! Thank you for your participation.</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            ######################## INSERT FIREBASE LOGIC HERE ###############################
+            try:
+                save_to_firebase(st.session_state.answers)
+            except Exception as e:
+                # Log the error but don't show it to the user
+                print(f"Error saving data to Firebase: {e}")
+                
             st.session_state.answers = {}
-            st.session_state.page = "Page 1"  # Reset to first page after submission
+            st.session_state.page = "Success"  # This critical line was missing
+            # st.session_state.page = "Page 1"  # Reset to first page after submission
             st.rerun()
             
 # Main function for the survey
@@ -639,22 +682,36 @@ def main():
     if "answers" not in st.session_state:
         st.session_state.answers = {}
 
+    ######## INSERT SUCCESS PAGE ######
+        # Display the success page if that's the current page
+    if st.session_state.page == "Success":
+        st.markdown(
+            """
+            <div style="padding: 20px; background-color: rgba(255, 255, 255, 0.9); 
+                        border-radius: 10px; margin: 50px auto; max-width: 600px; text-align: center;">
+                <h2 style="color: green;">Thank You!</h2>
+                <p style="font-size: 18px;">Your survey has been submitted successfully.</p>
+                <p>Your responses will help improve our research.</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+        # Add a button to restart the survey if desired
+        if st.button("Take Another Survey"):
+            st.session_state.answers = {}
+            st.session_state.page = "Page 1"
+            st.rerun()
+            
+        display_footer()
+        return  # Exit function early - don't show the rest of the survey
+    
     # Display scenario on the first page only
     if st.session_state.page == "Page 1":
         display_scenario()
 
     # Display supplier details as a popup button on every page
     display_supplier_details_popup()
-
-    # # Display questions based on the current page
-    # st.markdown(
-    #     f"""
-    #     <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-    #         <h3 style="color: black;">{st.session_state.page}</h3>
-    #     </div>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
     
     # For Page 3, display the common remark for scale at the top
     if st.session_state.page == "Page 3":
@@ -676,10 +733,18 @@ def main():
         # For Designation, use dropdown instead of text fields
         if question == "Designation":
             options = [
-                "1. Director/Manager",
-                "2. Professor/Researcher",
-                "3. Student",
-                "4. Consultant/Entry Level"
+                "Director/Manager",
+                "VP/Executive",
+                "Procurement Specialist",
+                "Supply Chain Analyst",
+                "Operations Manager",
+                "Quality Engineer",
+                "Financial Analyst",
+                "Consultant",
+                "Logistics Coordinator",
+                "Student",
+                "Professor/Researcher",
+                "Other"
             ]
             st.session_state.answers[question] = display_dropdown(question, options, key=question)
         
@@ -693,7 +758,7 @@ def main():
             display_percentage_allocation_sliders()
         
         # For rating questions with confidence or agree/disagree scale
-        elif "Rate your confidence" in question or "Strongly Disagree" in question:
+        elif any(q in question for q in ["Q2","Q4", "Q5", "Q6", "Q7", "Q11"]):
             min_value = 1
             max_value = 10 if "confidence" in question else 5
             st.session_state.answers[question] = display_slider(question, min_value, max_value, key=question)
@@ -719,7 +784,7 @@ def main():
             st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=True)
         
         # For Q10 (delivery delay), display options horizontally
-        elif "If a delivery delay grounds aircraft" in question:
+        elif "If a delay in avionics unit delivery would ground an aircraft, which option would you prefer?" in question:
             options = [
                 "Pay a 35% premium for emergency shipments",
                 "Cancel revenue-generating flights until delivery",
@@ -741,7 +806,7 @@ def main():
             st.session_state.answers[question] = display_importance_ratings_matrix(question, factors, key=question)
         
         # For Q12 (compromise attribute), display options horizontally
-        elif "Which attribute would you be most willing to compromise on" in question:
+        elif "Which attribute would you be most willing to alter to improve reliability by 2%?" in question:
             options = [
                 "Price",
                 "Lead time",
@@ -761,14 +826,35 @@ def main():
             options = [
                 "$0 (not willing to invest)",
                 "Up to $50,000",
-                "\$50,001 - $100,000",
-                "\$100,001 - $200,000",
+                "\$50,001 - \$100,000",
+                "\$100,001 - \$200,000",
                 "Over $200,000"
             ]
             st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=False)
         
         # For all other questions (like name, email), use text input
         else:
+            # Add CSS for styling both the container and the input field with the same pink
+            st.markdown(
+                """
+                <style>
+                /* Style for the outer container */
+                div[data-testid="stTextInput"] > div {
+                    background-color: pink;
+                    padding: 10px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                }
+                
+                /* Style for the input field itself */
+                div[data-testid="stTextInput"] input {
+                    background-color: pink !important;
+                    border: 1px solid #ffbbbb !important;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
     
     # # Navigation buttons
