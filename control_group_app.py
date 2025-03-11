@@ -20,10 +20,10 @@ questions = {
         "Q3. If you had to distribute AeroConnect's annual orders to manage supply risk, what percentage would you allocate to each supplier? (Total must equal 100%)"
     ],
     "Page 3": [
-        "Q4. I believe selecting a supplier with a lower reliability poses a risk to AeroConnect’s operations. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q5. I am concerned about potential hidden costs that might arise from selecting the lowest-price supplier. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q6. I would rather pay more upfront for avionics units than risk unexpected costs later. (1 = Strongly Disagree, 5 = Strongly Agree)",
-        "Q7. I am comfortable with longer and more variable lead times if it results in significant cost savings. (1 = Strongly Disagree, 5 = Strongly Agree)"
+        "Q4. I believe selecting a supplier with a lower reliability poses a risk to AeroConnect’s operations.",
+        "Q5. I am concerned about potential hidden costs that might arise from selecting the lowest-price supplier.",
+        "Q6. I would rather pay more upfront for avionics units than risk unexpected costs later.",
+        "Q7. I am comfortable with longer and more variable lead times if it results in significant cost savings."
     ],
     "Page 4": [
         "Q8. If Supplier B improved their reliability rating to 97% (equal to Supplier A) but increased their price by 10%, would you change your original supplier selection?",
