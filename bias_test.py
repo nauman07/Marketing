@@ -2,9 +2,8 @@ import streamlit as st
 import base64
 import pandas as pd
 
-# FIREBASE CONNECTION COMMENTED OUT
-# from firebase_config import initialize_firebase
-# db = initialize_firebase()
+from firebase_config import initialize_firebase
+db = initialize_firebase()
 
 # Questions for Survey - Reduced to 3 pages
 questions = {
@@ -474,101 +473,6 @@ def display_percentage_allocation_sliders():
     st.session_state.answers["Supplier B: in %"] = b_percent
     st.session_state.answers["Supplier C: in %"] = c_percent
 
-# def display_percentage_allocation_sliders():
-#     st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
-    
-#     # Initialize session state for percentages (only if not already set)
-#     if "supplier_a_percent" not in st.session_state:
-#         st.session_state.supplier_a_percent = 0
-#     if "supplier_b_percent" not in st.session_state:
-#         st.session_state.supplier_b_percent = 0
-#     if "supplier_c_percent" not in st.session_state:
-#         st.session_state.supplier_c_percent = 0
-
-#     # Add CSS that targets only the individual slider containers
-#     st.markdown(
-#         """
-#         <style>
-#         /* Target individual sliders but not their parent container */
-#         div[data-testid="column"] div[data-testid="stSlider"] {
-#             background-color: pink;
-#             padding: 5px 20px;
-#             border-radius: 5px;
-#         }
-#         </style>
-#         """, 
-#         unsafe_allow_html=True
-#     )
-    
-#     # Create a row of three sliders
-#     col1, col2, col3 = st.columns(3)
-    
-#     # Use the sliders without modifying session state directly in assignment
-#     with col1:
-#         a_percent = st.slider(
-#             "Supplier A",
-#             min_value=0,
-#             max_value=100,
-#             step=5,  # This ensures increments of 5
-#             value=st.session_state.supplier_a_percent,
-#             key="supplier_a_slider"
-#         )
-
-#     with col2:
-#         b_percent = st.slider(
-#             "Supplier B",
-#             min_value=0,
-#             max_value=100,
-#             step=5,  # This ensures increments of 5
-#             value=st.session_state.supplier_b_percent,
-#             key="supplier_b_slider"
-#         )
-
-#     with col3:
-#         c_percent = st.slider(
-#             "Supplier C",
-#             min_value=0,
-#             max_value=100,
-#             step=5,  # This ensures increments of 5
-#             value=st.session_state.supplier_c_percent,
-#             key="supplier_c_slider"
-#         )
-    
-#     # Update session state after all sliders are rendered
-#     st.session_state.supplier_a_percent = a_percent
-#     st.session_state.supplier_b_percent = b_percent
-#     st.session_state.supplier_c_percent = c_percent
-
-#     # Display current allocation and total
-#     total_percent = a_percent + b_percent + c_percent
-    
-#     # Check if total exceeds 100%
-#     if total_percent != 100:
-#         color = "red"
-#         warning_message = " (Please adjust to equal 100%)"
-#     else:
-#         color = "black"
-#         warning_message = ""
-    
-#     st.markdown(
-#         f"""
-#         <div style="padding: 5px; background-color: rgba(255, 255, 255);">
-#             <p style="color: {color}; font-weight: 900; margin-bottom: 5px;">
-#                 Total: {total_percent}% (A: {a_percent}%, B: {b_percent}%, C: {c_percent}%){warning_message}
-#             </p>
-#         </div>
-#         """,
-#         unsafe_allow_html=True
-#     )
-    
-#     # Add this to session state for validation
-#     st.session_state.allocation_valid = (total_percent == 100)
-
-#     # Save the answers to session state
-#     st.session_state.answers["Supplier A: in %"] = a_percent
-#     st.session_state.answers["Supplier B: in %"] = b_percent
-#     st.session_state.answers["Supplier C: in %"] = c_percent
-
 # Function to display importance ratings with a 2x3 matrix of sliders for space optimization
 def display_importance_ratings_matrix(question, factors, key):
     # Add CSS for styling
@@ -787,16 +691,6 @@ def main():
 
     # Display supplier details as a popup button on every page
     display_supplier_details_popup()
-
-    # # Display questions based on the current page
-    # st.markdown(
-    #     f"""
-    #     <div style="padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-bottom: 10px;">
-    #         <h3 style="color: black;">{st.session_state.page}</h3>
-    #     </div>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
     
     # For Page 3, display the common remark for scale at the top
     if st.session_state.page == "Page 3":
@@ -942,28 +836,17 @@ def main():
             )
             st.session_state.answers[question] = st.text_input("", value=st.session_state.answers.get(question, ""), key=question)
     
-    # # Navigation buttons
-    # col1, col2, col3 = st.columns(3)
+    # Submit button
+    pages = list(questions.keys())
+    current_index = pages.index(st.session_state.page)
+    is_last_page = current_index == len(pages) - 1
     
-    # pages = list(questions.keys())
-    # current_index = pages.index(st.session_state.page)
-    
-    # if current_index > 0 and col1.button("Previous"):
-    #     st.session_state.page = pages[current_index - 1]
-    #     st.rerun()
-    
-    # # Next button on Page 1 no longer checks for filled information
-    # if current_index < len(pages) - 1 and col3.button("Next"):
-    #     st.session_state.page = pages[current_index + 1]
-    #     st.rerun()
-    
-    # # Submit button
-    # if st.session_state.page == "Page 5" and st.button("Submit"):
-    #     # Firebase connection commented out, so just show success message
-    #     st.success("Survey submitted successfully! Thank you for your participation.")
-    #     st.session_state.answers = {}
-    #     st.session_state.page = "Page 1"  # Reset to first page after submission
-    #     st.rerun()
+    if is_last_page and st.button("Submit"):
+        # Firebase connection commented out, so just show success message
+        st.success("Survey submitted successfully! Thank you for your participation.")
+        st.session_state.answers = {}
+        st.session_state.page = pages[0]  # Reset to first page after submission
+        st.rerun()
     navigation_buttons()
     
     display_footer()
