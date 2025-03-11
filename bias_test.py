@@ -866,11 +866,11 @@ def main():
             st.markdown(
                 """
                 <style>
-                /* Style for text input field itself */
-                input[type="text"] {
-                    background-color: white !important;
-                    border: 1px solid #cccccc !important;
-                }
+                # /* Style for text input field itself */
+                # input[type="text"] {
+                #     background-color: white !important;
+                #     border: 1px solid #cccccc !important;
+                # }
                 
                 /* Style for the outer container */
                 div[data-testid="stTextInput"] > div {
