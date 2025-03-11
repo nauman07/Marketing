@@ -9,7 +9,7 @@ import pandas as pd
 # Questions for Survey - Reduced to 3 pages
 questions = {
     "Page 1": [
-        "First Name (Mandatory)",
+        "First Name (*)",
         "Last Name",
         "Email",
         "Designation"  # Replaced Company+Position+Department with Designation dropdown
@@ -291,8 +291,8 @@ def display_dropdown(question, options, key):
         <style>
         div[data-testid="stSelectbox"] {
             background-color: white;
-            padding: 5px;
-            border-radius: 5px;
+            padding: 2px;
+            border-radius: 2px;
         }
         </style>
         """,
@@ -422,11 +422,11 @@ def display_slider(question, min_value, max_value, key):
 def display_percentage_allocation_sliders():
     # Initialize session state for percentages (only if not already set)
     if "supplier_a_percent" not in st.session_state:
-        st.session_state.supplier_a_percent = 33
+        st.session_state.supplier_a_percent = 0
     if "supplier_b_percent" not in st.session_state:
-        st.session_state.supplier_b_percent = 33
+        st.session_state.supplier_b_percent = 0
     if "supplier_c_percent" not in st.session_state:
-        st.session_state.supplier_c_percent = 34
+        st.session_state.supplier_c_percent = 0
     
     # Create a row of three sliders
     col1, col2, col3 = st.columns(3)
@@ -437,6 +437,7 @@ def display_percentage_allocation_sliders():
             "Supplier A",
             min_value=0,
             max_value=100,
+            step=5,  # This ensures increments of 5
             value=st.session_state.supplier_a_percent,
             key="supplier_a_slider"
         )
@@ -446,6 +447,7 @@ def display_percentage_allocation_sliders():
             "Supplier B",
             min_value=0,
             max_value=100,
+            step=5,  # This ensures increments of 5
             value=st.session_state.supplier_b_percent,
             key="supplier_b_slider"
         )
@@ -455,6 +457,7 @@ def display_percentage_allocation_sliders():
             "Supplier C",
             min_value=0,
             max_value=100,
+            step=5,  # This ensures increments of 5
             value=st.session_state.supplier_c_percent,
             key="supplier_c_slider"
         )
