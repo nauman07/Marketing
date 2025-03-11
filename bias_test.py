@@ -312,8 +312,8 @@ def display_slider(question, min_value, max_value, key):
         """
         <style>
         div[data-testid="stSlider"] {
-            background-color: white;
-            padding: 5px;  /* Reduced padding */
+            background-color: pink;
+            padding: 5px 20px;  /* Reduced padding */
             border-radius: 5px;
         }
         
@@ -420,6 +420,8 @@ def display_slider(question, min_value, max_value, key):
 #     st.session_state.answers["Supplier C: in %"] = st.session_state.supplier_c_percent
 
 def display_percentage_allocation_sliders():
+    st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+    
     # Initialize session state for percentages (only if not already set)
     if "supplier_a_percent" not in st.session_state:
         st.session_state.supplier_a_percent = 0
@@ -427,6 +429,14 @@ def display_percentage_allocation_sliders():
         st.session_state.supplier_b_percent = 0
     if "supplier_c_percent" not in st.session_state:
         st.session_state.supplier_c_percent = 0
+
+    # Create a pink background container
+    st.markdown(
+        """
+        <div style="background-color: pink; padding: 10px; border-radius: 5px;">
+        """, 
+        unsafe_allow_html=True
+    )
     
     # Create a row of three sliders
     col1, col2, col3 = st.columns(3)
@@ -687,7 +697,7 @@ def main():
             """
             <div style="padding: 5px; background-color: rgba(255, 255, 255); border-radius: 5px; margin-bottom: 10px;">
                 <p style="color: black; font-style: italic;">
-                    <strong>Scale Reference:</strong> For rating questions (1 = Strongly Disagree/Not Important, 5 = Strongly Agree/Extremely Important)
+                    <strong>Note:</strong> Rate the following questions (Q4-Q7) from a scale of 1-5 (1 = Strongly Disagree/Not Important, 5 = Strongly Agree/Extremely Important)
                 </p>
             </div>
             """,
