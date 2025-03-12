@@ -12,11 +12,6 @@ def main():
     if "selected_app" not in st.session_state:
         st.session_state.selected_app = random.choice(["control", "bias"])
 
-    # Provide a button to reset the app selection
-    if st.button("Reset App Selection"):
-        st.session_state.selected_app = random.choice(["control", "bias"])
-        st.experimental_rerun()
-
     # Run the selected app
     if st.session_state.selected_app == "control":
         control_group_main()
