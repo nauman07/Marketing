@@ -8,11 +8,20 @@ from bias_test import main as bias_test_main
 def main():
     st.set_page_config(page_title="Main App", page_icon="📊")
 
-    # Randomly select one of the two apps
-    selected_app = random.choice([control_group_main, bias_test_main])
-  
+    # Store selected app in session state
+    if "selected_app" not in st.session_state:
+        st.session_state.selected_app = random.choice(["control", "bias"])
+
+    # Provide a button to reset the app selection
+    if st.button("Reset App Selection"):
+        st.session_state.selected_app = random.choice(["control", "bias"])
+        st.experimental_rerun()
+
     # Run the selected app
-    selected_app()
+    if st.session_state.selected_app == "control":
+        control_group_main()
+    else:
+        bias_test_main()
 
 if __name__ == "__main__":
     main()
