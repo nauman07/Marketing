@@ -690,18 +690,18 @@ def main():
             <div style="padding: 20px; background-color: rgba(255, 255, 255, 0.9); 
                         border-radius: 10px; margin: 50px auto; max-width: 600px; text-align: center;">
                 <h2 style="color: green;">Thank You!</h2>
-                <p style="font-size: 18px;">Your survey has been submitted successfully.</p>
-                <p>Your responses will help improve our research.</p>
+                <p style="font-size: 18px;color: green;">Your survey has been submitted successfully.</p>
+                <p style="color: green;">Your responses will help improve our research.</p>
             </div>
             """,
             unsafe_allow_html=True
         )
         
         # Add a button to restart the survey if desired
-        if st.button("Take Another Survey"):
-            st.session_state.answers = {}
-            st.session_state.page = "Page 1"
-            st.rerun()
+        #if st.button("Take Another Survey"):
+         #   st.session_state.answers = {}
+          #  st.session_state.page = "Page 1"
+           # st.rerun()
             
         display_footer()
         return  # Exit function early - don't show the rest of the survey
