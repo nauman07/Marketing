@@ -135,17 +135,6 @@ def display_footer():
         f"""
         <div style="text-align: center; padding: 10px; background-color: rgba(255, 255, 255); border-radius: 10px; margin-top: 20px;">
             <p style="color: black;">© 2025 RWTH Aachen University. All rights reserved.</p>
-            <p style="color: black;">For more information or if you are facing any issues, please contact the developer:</p>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <img src="data:image/jpeg;base64,{image_base64}" alt="Developer Logo" width="50" style="border-radius: 50%;">
-                <div>
-                    <p style="margin: 0; color: black;"><strong>HarshVardhan Kanthode</strong></p>
-                    <p style="margin: 0;">
-                        <a href="mailto:harshvardhan.kanthode@rwth-aachen.de" style="text-decoration: none; color: black;">📧 Email</a> | 
-                        <a href="https://www.linkedin.com/in/harshvardhan-kanthode-628863189/" target="_blank" style="text-decoration: none; color: black;">🔗 LinkedIn</a>
-                    </p>
-                </div>
-            </div>
         </div>
         """,
         unsafe_allow_html=True
