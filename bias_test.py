@@ -699,7 +699,7 @@ def main():
                         border-radius: 10px; margin: 50px auto; max-width: 600px; text-align: center;">
                 <h2 style="color: green;">Thank You!</h2>
                 <p style="font-size: 18px;color: green;">Your survey has been submitted successfully.</p>
-                <p>Your responses will help improve our research.</p>
+                <p style="color: green;">Your responses will help improve our research.</p>
             </div>
             """,
             unsafe_allow_html=True
