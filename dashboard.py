@@ -35,19 +35,6 @@ def main():
         st.warning("No data available in this collection.")
         return
     
-    # Dynamic column filters
-    filters = {}
-    for col in df.columns:
-        unique_values = df[col].dropna().unique().tolist()
-        if len(unique_values) > 1 and len(unique_values) < 20:
-            filters[col] = st.multiselect(f"Filter {col}", unique_values, default=unique_values)
-        else:
-            filters[col] = unique_values
-    
-    # Apply filters
-    for col, values in filters.items():
-        df = df[df[col].isin(values)]
-    
     # Display table
     st.dataframe(df)
     
