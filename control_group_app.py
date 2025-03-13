@@ -747,7 +747,7 @@ def main():
             display_percentage_allocation_sliders()
         
         # For rating questions with confidence or agree/disagree scale
-        elif any(q in question for q in ["Q2","Q4", "Q5", "Q6", "Q7", "Q11"]):
+        elif any(q in question for q in ["Q2","Q4", "Q5", "Q6", "Q7"]):
             min_value = 1
             max_value = 10 if "confidence" in question else 5
             st.session_state.answers[question] = display_slider(question, min_value, max_value, key=question)
