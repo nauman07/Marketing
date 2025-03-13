@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import time
+import re
 from firebase_config import initialize_firebase
 
 # Initialize Firebase
@@ -11,21 +12,44 @@ def fetch_data(collection_name):
     try:
         docs = firestore_client.collection(collection_name).stream()
         data = [doc.to_dict() for doc in docs]
-        return pd.DataFrame(data) if data else pd.DataFrame()
+        df = pd.DataFrame(data) if data else pd.DataFrame()
+        if not df.empty:
+            df["Source_Collection"] = collection_name  # Add collection identifier
+        return df
     except Exception as e:
         st.error(f"Error fetching data: {e}")
         return pd.DataFrame()
 
-def merge_data(df1, df2):
-    """Merge two DataFrames on common columns, aligning Q1-Q14 fields."""
-    common_columns = list(set(df1.columns) & set(df2.columns))
-    question_columns = [col for col in common_columns if any(f"Q{i}" in col for i in range(1, 15))]
-    other_columns = list(set(common_columns) - set(question_columns))
+def standardize_columns(columns):
+    """Standardize column names to group Q1-Q14 fields and other common columns."""
+    column_mapping = {}
+    for col in columns:
+        match = re.search(r"Q(\d{1,2})", col, re.IGNORECASE)
+        if match:
+            column_mapping[col] = f"Q{match.group(1)}"
+        else:
+            column_mapping[col] = col
+    return column_mapping
+
+def merge_data(dfs):
+    """Merge multiple DataFrames, aligning Q1-Q14 fields and common columns."""
+    if not dfs:
+        return pd.DataFrame()
     
-    df1["Source_Collection"] = "Collection 1"
-    df2["Source_Collection"] = "Collection 2"
+    # Get all unique columns
+    all_columns = set()
+    for df in dfs:
+        all_columns.update(df.columns)
     
-    merged_df = pd.concat([df1, df2], ignore_index=True)
+    # Standardize column names
+    column_mapping = standardize_columns(all_columns)
+    
+    # Rename columns in each DataFrame
+    for i, df in enumerate(dfs):
+        df.rename(columns=column_mapping, inplace=True)
+    
+    # Merge all DataFrames
+    merged_df = pd.concat(dfs, ignore_index=True, sort=False)
     return merged_df
 
 def main():
@@ -34,23 +58,17 @@ def main():
     collections = firestore_client.collections()
     collection_names = [col.id for col in collections]
     
-    if len(collection_names) < 2:
-        st.warning("At least two collections are required for merging.")
+    if not collection_names:
+        st.warning("No collections found in Firestore.")
         return
     
-    col1, col2 = st.multiselect("📂 Select two collections to merge", collection_names, default=collection_names[:2])
+    dfs = [fetch_data(col) for col in collection_names]
     
-    if len([col1, col2]) != 2:
+    if all(df.empty for df in dfs):
+        st.warning("⚠ All collections are empty.")
         return
     
-    df1 = fetch_data(col1)
-    df2 = fetch_data(col2)
-    
-    if df1.empty or df2.empty:
-        st.warning("⚠ One or both collections are empty.")
-        return
-    
-    merged_df = merge_data(df1, df2)
+    merged_df = merge_data(dfs)
     st.markdown("**📊 Merged Data Preview:**")
     st.dataframe(merged_df, use_container_width=True)
     
