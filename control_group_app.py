@@ -782,7 +782,7 @@ def main():
             st.session_state.answers[question] = display_horizontal_choice(options, key=question, horizontal=False)
         
         # For Q11 (importance ratings), use a matrix of sliders
-        elif "Rate the importance of each factor" in question:
+        elif "Q11. Rate the importance of each factor" in question:
             factors = [
                 "Initial price",
                 "Reliability",
