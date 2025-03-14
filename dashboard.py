@@ -74,8 +74,6 @@ def plot_dashboard(df):
                 ax.set_title("Response Trend Over Time")
                 plt.xticks(rotation=45)
                 st.pyplot(fig)
-            else:
-                st.warning("No timestamp column found to generate trends.")
         
         with col2:
             st.subheader("📊 Statistical Summary")
@@ -83,13 +81,12 @@ def plot_dashboard(df):
     
     with st.container():
         st.subheader("📊 Response Distributions")
-        fig, ax = plt.subplots(figsize=(12, 6))
         for col in numeric_columns:
             if df[col].dropna().shape[0] > 1:
-                sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax, label=col)
-        ax.set_title("Overlapping Distributions of Survey Responses")
-        ax.legend()
-        st.pyplot(fig)
+                fig, ax = plt.subplots()
+                sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax)
+                ax.set_title(f"Distribution of {col}")
+                st.pyplot(fig)
     
     if "user_id" in df.columns and "timestamp" in df.columns:
         df["timestamp"] = pd.to_datetime(df["timestamp"])
@@ -111,8 +108,6 @@ def plot_dashboard(df):
         ax.set_title("DAU Over Time")
         plt.xticks(rotation=45)
         st.pyplot(fig)
-    else:
-        st.warning("User engagement analysis requires 'user_id' and 'timestamp' columns.")
 
 def main():
     st.title("✨ Firestore Data Analytics Dashboard ✨")
