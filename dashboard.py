@@ -3,16 +3,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import scipy.stats as stats
+from firebase_config import initialize_firebase  # Ensure you have this module set up
 
-# Load the data using Streamlit's file uploader
-def load_data():
-    uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
-    if uploaded_file is not None:
-        data = pd.read_csv(uploaded_file)
-        return data
-    else:
-        st.warning("Please upload a CSV file.")
-        return None
+# Initialize Firebase
+firestore_client = initialize_firebase()
+
+# Fetch data from Firestore
+@st.cache_data
+def fetch_data():
+    try:
+        # Fetch data from the Firestore collection
+        docs = firestore_client.collection("merged_data").stream()  # Replace "merged_data" with your collection name
+        data = [doc.to_dict() for doc in docs]
+        df = pd.DataFrame(data)
+        return df
+    except Exception as e:
+        st.error(f"Error fetching data from Firestore: {e}")
+        return pd.DataFrame()
 
 # Separate the data into bias and control groups
 def separate_groups(data):
@@ -25,12 +32,12 @@ sns.set(style="whitegrid", palette="pastel")
 
 # Main function for the Streamlit app
 def main():
-    st.title("📊 Real-Time Data Analysis Dashboard")
+    st.title("📊 Real-Time Data Analysis Dashboard (Firestore Data)")
     
-    # Load data
-    data = load_data()
+    # Fetch data from Firestore
+    data = fetch_data()
     
-    if data is not None:
+    if not data.empty:
         # Separate into bias and control groups
         bias_group, control_group = separate_groups(data)
         
@@ -133,6 +140,8 @@ def main():
         ]
         chi2_results_df = pd.DataFrame(chi2_results)
         st.table(chi2_results_df)
+    else:
+        st.warning("No data found in Firestore. Please check your Firestore collection.")
 
 # Run the app
 if __name__ == "__main__":
