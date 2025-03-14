@@ -50,37 +50,44 @@ def merge_data(dfs):
     merged_df = pd.concat(dfs, ignore_index=True, sort=False)
     return merged_df
 
-def plot_histograms(df):
-    """Plot histograms for Q1-Q14 fields."""
-    st.subheader("📊 Response Distributions")
+def plot_dashboard(df):
+    """Create a single-page dashboard with multiple visualizations."""
+    st.subheader("📊 Data Dashboard")
+    
     numeric_columns = [col for col in df.columns if re.match(r"Q\d+", col)]
-    for col in numeric_columns:
-        fig, ax = plt.subplots()
-        sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax)
-        ax.set_title(f"Distribution of {col}")
-        st.pyplot(fig)
-
-def plot_trend(df):
-    """Plot trend lines over time."""
-    if "timestamp" in df.columns:
-        df["timestamp"] = pd.to_datetime(df["timestamp"])
-        df["date"] = df["timestamp"].dt.date
-        trend_df = df.groupby("date").size().reset_index(name="count")
-        fig, ax = plt.subplots()
-        sns.lineplot(data=trend_df, x="date", y="count", ax=ax)
-        ax.set_title("📈 Response Trend Over Time")
-        plt.xticks(rotation=45)
-        st.pyplot(fig)
-    else:
-        st.warning("No timestamp column found to generate trends.")
-
-def show_statistics(df):
-    """Display basic statistical summaries."""
+    
+    if not numeric_columns:
+        st.warning("No numeric fields found for visualization.")
+        return
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Histogram Distributions")
+        for col in numeric_columns:
+            if df[col].dropna().shape[0] > 1:  # Ensure there are multiple elements
+                fig, ax = plt.subplots()
+                sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax)
+                ax.set_title(f"Distribution of {col}")
+                st.pyplot(fig)
+    
+    with col2:
+        st.subheader("📈 Trend Analysis")
+        if "timestamp" in df.columns:
+            df["timestamp"] = pd.to_datetime(df["timestamp"])
+            df["date"] = df["timestamp"].dt.date
+            trend_df = df.groupby("date").size().reset_index(name="count")
+            fig, ax = plt.subplots()
+            sns.lineplot(data=trend_df, x="date", y="count", ax=ax)
+            ax.set_title("Response Trend Over Time")
+            plt.xticks(rotation=45)
+            st.pyplot(fig)
+        else:
+            st.warning("No timestamp column found to generate trends.")
+    
     st.subheader("📊 Statistical Summary")
     st.write(df.describe())
-
-def user_engagement_analysis(df):
-    """Analyze user engagement metrics like DAU, repeat users, etc."""
+    
     if "user_id" in df.columns and "timestamp" in df.columns:
         df["timestamp"] = pd.to_datetime(df["timestamp"])
         df["date"] = df["timestamp"].dt.date
@@ -94,7 +101,7 @@ def user_engagement_analysis(df):
         
         fig, ax = plt.subplots()
         sns.lineplot(x=dau.index, y=dau.values, ax=ax)
-        ax.set_title("📈 DAU Over Time")
+        ax.set_title("DAU Over Time")
         plt.xticks(rotation=45)
         st.pyplot(fig)
     else:
@@ -127,10 +134,7 @@ def main():
             time.sleep(1)
             st.toast("🎉 File downloaded successfully!")
         
-        plot_histograms(merged_df)
-        plot_trend(merged_df)
-        show_statistics(merged_df)
-        user_engagement_analysis(merged_df)
+        plot_dashboard(merged_df)
 
 if __name__ == "__main__":
     main()
