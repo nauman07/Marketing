@@ -1,136 +1,84 @@
 import streamlit as st
 import pandas as pd
-import time
-import re
-import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
 import plotly.express as px
-from firebase_config import initialize_firebase
+from scipy.stats import chi2_contingency
 
-# Initialize Firebase
-firestore_client = initialize_firebase()
+# Sample Data (Replace this with your actual data)
+def generate_sample_data():
+    data = {
+        "Q8": np.random.choice(["Yes", "No"], 100, p=[0.6, 0.4]),
+        "Q13": np.random.choice(["Low", "Medium", "High"], 100, p=[0.3, 0.5, 0.2]),
+        "Q4": np.random.randint(1, 10, 100),
+        "Group": np.random.choice(["Bias Group", "Control Group"], 100),
+    }
+    return pd.DataFrame(data)
 
-@st.cache_data
-def fetch_data(collection_name):
-    """Fetch data from a Firestore collection."""
-    try:
-        docs = firestore_client.collection(collection_name).stream()
-        data = [doc.to_dict() for doc in docs]
-        df = pd.DataFrame(data) if data else pd.DataFrame()
-        if not df.empty:
-            df["Source_Collection"] = collection_name  # Add collection identifier
-        return df
-    except Exception as e:
-        st.error(f"Error fetching data: {e}")
-        return pd.DataFrame()
+# Load Data
+df = generate_sample_data()
 
-def standardize_columns(columns):
-    """Standardize column names to group Q1-Q14 fields and other common columns."""
-    column_mapping = {}
-    for col in columns:
-        match = re.search(r"Q(\d{1,2})", col, re.IGNORECASE)
-        if match:
-            column_mapping[col] = f"Q{match.group(1)}"
-        else:
-            column_mapping[col] = col
-    return column_mapping
+# Title
+st.title("📊 Concise Data Dashboard")
 
-def merge_data(dfs):
-    """Merge multiple DataFrames, aligning Q1-Q14 fields and common columns."""
-    if not dfs:
-        return pd.DataFrame()
-    
-    all_columns = set()
-    for df in dfs:
-        all_columns.update(df.columns)
-    
-    column_mapping = standardize_columns(all_columns)
-    
-    for i, df in enumerate(dfs):
-        df.rename(columns=column_mapping, inplace=True)
-    
-    merged_df = pd.concat(dfs, ignore_index=True, sort=False)
-    return merged_df
+# Layout for Parallel Graphs
+st.subheader("Parallel Visualizations")
 
-def plot_dashboard(df):
-    """Create a well-structured dashboard with multiple visualizations."""
-    st.subheader("📊 Interactive Data Dashboard")
-    
-    numeric_columns = [col for col in df.columns if re.match(r"Q\d+", col)]
-    
-    if not numeric_columns:
-        st.warning("No numeric fields found for visualization.")
-        return
-    
-    with st.container():
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.subheader("📈 Trend Analysis")
-            if "timestamp" in df.columns:
-                df["timestamp"] = pd.to_datetime(df["timestamp"])
-                df["date"] = df["timestamp"].dt.date
-                trend_df = df.groupby("date").size().reset_index(name="count")
-                fig = px.line(trend_df, x="date", y="count", title="Response Trend Over Time", markers=True)
-                st.plotly_chart(fig)
-        
-        with col2:
-            st.subheader("📊 Statistical Summary")
-            st.write(df.describe())
-    
-    with st.container():
-        st.subheader("📊 Response Distributions")
-        for col in numeric_columns:
-            if df[col].dropna().shape[0] > 1:
-                fig = px.histogram(df, x=col, title=f"Distribution of {col}", nbins=20)
-                st.plotly_chart(fig)
-    
-    if "user_id" in df.columns and "timestamp" in df.columns:
-        df["timestamp"] = pd.to_datetime(df["timestamp"])
-        df["date"] = df["timestamp"].dt.date
-        dau = df.groupby("date")["user_id"].nunique()
-        repeat_users = df["user_id"].value_counts()
-        repeat_user_rate = (repeat_users > 1).sum() / len(repeat_users)
-        
-        st.subheader("📊 User Engagement Metrics")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.metric("Daily Active Users (DAU)", dau.mean())
-        with col2:
-            st.metric("Repeat User Rate", f"{repeat_user_rate:.2%}")
-        
-        fig = px.line(x=dau.index, y=dau.values, title="DAU Over Time", markers=True)
-        st.plotly_chart(fig)
+# Create columns for parallel graphs
+col1, col2, col3 = st.columns(3)
 
-def main():
-    st.title("✨ Firestore Data Analytics Dashboard ✨")
-    
-    collections = firestore_client.collections()
-    collection_names = [col.id for col in collections]
-    
-    if not collection_names:
-        st.warning("No collections found in Firestore.")
-        return
-    
-    dfs = [fetch_data(col) for col in collection_names]
-    
-    if all(df.empty for df in dfs):
-        st.warning("⚠ All collections are empty.")
-        return
-    
-    merged_df = merge_data(dfs)
-    st.markdown("**📊 Merged Data Preview:**")
-    st.dataframe(merged_df, use_container_width=True)
-    
-    if not merged_df.empty:
-        csv = merged_df.to_csv(index=False).encode("utf-8")
-        if st.download_button("📥 Download Merged CSV", data=csv, file_name="merged_data.csv", mime="text/csv"):
-            st.success("✅ Download started!")
-            time.sleep(1)
-            st.toast("🎉 File downloaded successfully!")
-        
-        plot_dashboard(merged_df)
+# Histogram for Q4
+with col1:
+    st.markdown("**Histogram: Q4**")
+    fig = px.histogram(df, x="Q4", nbins=10, color="Group", barmode="overlay")
+    st.plotly_chart(fig, use_container_width=True)
 
-if __name__ == "__main__":
-    main()
+# Bar Plot for Q8
+with col2:
+    st.markdown("**Bar Plot: Q8**")
+    q8_counts = df["Q8"].value_counts().reset_index()
+    q8_counts.columns = ["Response", "Count"]
+    fig = px.bar(q8_counts, x="Response", y="Count", color="Response")
+    st.plotly_chart(fig, use_container_width=True)
+
+# Bar Plot for Q13
+with col3:
+    st.markdown("**Bar Plot: Q13**")
+    q13_counts = df["Q13"].value_counts().reset_index()
+    q13_counts.columns = ["Level", "Count"]
+    fig = px.bar(q13_counts, x="Level", y="Count", color="Level")
+    st.plotly_chart(fig, use_container_width=True)
+
+# Trend Analysis (Over Time)
+st.subheader("Trend Analysis")
+df["Date"] = pd.date_range(start="2023-01-01", periods=len(df), freq="D")
+trend_df = df.groupby(["Date", "Group"]).size().reset_index(name="Count")
+fig = px.line(trend_df, x="Date", y="Count", color="Group", title="Response Trend Over Time")
+st.plotly_chart(fig, use_container_width=True)
+
+# Chi-Square Test for Q8 and Q13
+st.subheader("Chi-Square Test Results")
+
+# Create a contingency table for Q8 and Group
+q8_contingency = pd.crosstab(df["Q8"], df["Group"])
+chi2_q8, p_q8, _, _ = chi2_contingency(q8_contingency)
+
+# Create a contingency table for Q13 and Group
+q13_contingency = pd.crosstab(df["Q13"], df["Group"])
+chi2_q13, p_q13, _, _ = chi2_contingency(q13_contingency)
+
+# Display Chi-Square Results
+st.markdown("**Chi-Square Test for Q8 (Yes/No) vs Group**")
+st.write(f"Chi2 Statistic: {chi2_q8:.2f}, p-value: {p_q8:.4f}")
+st.markdown("**Chi-Square Test for Q13 (Low/Medium/High) vs Group**")
+st.write(f"Chi2 Statistic: {chi2_q13:.2f}, p-value: {p_q13:.4f}")
+
+# Interpretation
+st.markdown("**Interpretation:**")
+st.write("- A p-value < 0.05 indicates a significant association between the variables.")
+st.write(f"- Q8 vs Group: {'Significant' if p_q8 < 0.05 else 'Not Significant'}")
+st.write(f"- Q13 vs Group: {'Significant' if p_q13 < 0.05 else 'Not Significant'}")
+
+# Download Data
+st.subheader("Download Data")
+csv = df.to_csv(index=False).encode("utf-8")
+st.download_button("📥 Download CSV", data=csv, file_name="data.csv", mime="text/csv")
