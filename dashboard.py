@@ -4,11 +4,13 @@ import time
 import re
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 from firebase_config import initialize_firebase
 
 # Initialize Firebase
 firestore_client = initialize_firebase()
 
+@st.cache_data
 def fetch_data(collection_name):
     """Fetch data from a Firestore collection."""
     try:
@@ -69,11 +71,8 @@ def plot_dashboard(df):
                 df["timestamp"] = pd.to_datetime(df["timestamp"])
                 df["date"] = df["timestamp"].dt.date
                 trend_df = df.groupby("date").size().reset_index(name="count")
-                fig, ax = plt.subplots()
-                sns.lineplot(data=trend_df, x="date", y="count", ax=ax, marker='o')
-                ax.set_title("Response Trend Over Time")
-                plt.xticks(rotation=45)
-                st.pyplot(fig)
+                fig = px.line(trend_df, x="date", y="count", title="Response Trend Over Time", markers=True)
+                st.plotly_chart(fig)
         
         with col2:
             st.subheader("📊 Statistical Summary")
@@ -83,10 +82,8 @@ def plot_dashboard(df):
         st.subheader("📊 Response Distributions")
         for col in numeric_columns:
             if df[col].dropna().shape[0] > 1:
-                fig, ax = plt.subplots()
-                sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax)
-                ax.set_title(f"Distribution of {col}")
-                st.pyplot(fig)
+                fig = px.histogram(df, x=col, title=f"Distribution of {col}", nbins=20)
+                st.plotly_chart(fig)
     
     if "user_id" in df.columns and "timestamp" in df.columns:
         df["timestamp"] = pd.to_datetime(df["timestamp"])
@@ -103,11 +100,8 @@ def plot_dashboard(df):
         with col2:
             st.metric("Repeat User Rate", f"{repeat_user_rate:.2%}")
         
-        fig, ax = plt.subplots()
-        sns.lineplot(x=dau.index, y=dau.values, ax=ax, marker='o')
-        ax.set_title("DAU Over Time")
-        plt.xticks(rotation=45)
-        st.pyplot(fig)
+        fig = px.line(x=dau.index, y=dau.values, title="DAU Over Time", markers=True)
+        st.plotly_chart(fig)
 
 def main():
     st.title("✨ Firestore Data Analytics Dashboard ✨")
