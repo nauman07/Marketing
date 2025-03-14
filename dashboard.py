@@ -51,8 +51,8 @@ def merge_data(dfs):
     return merged_df
 
 def plot_dashboard(df):
-    """Create a single-page dashboard with multiple visualizations."""
-    st.subheader("📊 Data Dashboard")
+    """Create a well-structured dashboard with multiple visualizations."""
+    st.subheader("📊 Interactive Data Dashboard")
     
     numeric_columns = [col for col in df.columns if re.match(r"Q\d+", col)]
     
@@ -60,33 +60,36 @@ def plot_dashboard(df):
         st.warning("No numeric fields found for visualization.")
         return
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("Histogram Distributions")
-        for col in numeric_columns:
-            if df[col].dropna().shape[0] > 1:  # Ensure there are multiple elements
+    with st.container():
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.subheader("📈 Trend Analysis")
+            if "timestamp" in df.columns:
+                df["timestamp"] = pd.to_datetime(df["timestamp"])
+                df["date"] = df["timestamp"].dt.date
+                trend_df = df.groupby("date").size().reset_index(name="count")
                 fig, ax = plt.subplots()
-                sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax)
-                ax.set_title(f"Distribution of {col}")
+                sns.lineplot(data=trend_df, x="date", y="count", ax=ax, marker='o')
+                ax.set_title("Response Trend Over Time")
+                plt.xticks(rotation=45)
                 st.pyplot(fig)
+            else:
+                st.warning("No timestamp column found to generate trends.")
+        
+        with col2:
+            st.subheader("📊 Statistical Summary")
+            st.write(df.describe())
     
-    with col2:
-        st.subheader("📈 Trend Analysis")
-        if "timestamp" in df.columns:
-            df["timestamp"] = pd.to_datetime(df["timestamp"])
-            df["date"] = df["timestamp"].dt.date
-            trend_df = df.groupby("date").size().reset_index(name="count")
-            fig, ax = plt.subplots()
-            sns.lineplot(data=trend_df, x="date", y="count", ax=ax)
-            ax.set_title("Response Trend Over Time")
-            plt.xticks(rotation=45)
-            st.pyplot(fig)
-        else:
-            st.warning("No timestamp column found to generate trends.")
-    
-    st.subheader("📊 Statistical Summary")
-    st.write(df.describe())
+    with st.container():
+        st.subheader("📊 Response Distributions")
+        fig, ax = plt.subplots(figsize=(12, 6))
+        for col in numeric_columns:
+            if df[col].dropna().shape[0] > 1:
+                sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax, label=col)
+        ax.set_title("Overlapping Distributions of Survey Responses")
+        ax.legend()
+        st.pyplot(fig)
     
     if "user_id" in df.columns and "timestamp" in df.columns:
         df["timestamp"] = pd.to_datetime(df["timestamp"])
@@ -96,11 +99,15 @@ def plot_dashboard(df):
         repeat_user_rate = (repeat_users > 1).sum() / len(repeat_users)
         
         st.subheader("📊 User Engagement Metrics")
-        st.metric("Daily Active Users (DAU)", dau.mean())
-        st.metric("Repeat User Rate", f"{repeat_user_rate:.2%}")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.metric("Daily Active Users (DAU)", dau.mean())
+        with col2:
+            st.metric("Repeat User Rate", f"{repeat_user_rate:.2%}")
         
         fig, ax = plt.subplots()
-        sns.lineplot(x=dau.index, y=dau.values, ax=ax)
+        sns.lineplot(x=dau.index, y=dau.values, ax=ax, marker='o')
         ax.set_title("DAU Over Time")
         plt.xticks(rotation=45)
         st.pyplot(fig)
@@ -108,7 +115,7 @@ def plot_dashboard(df):
         st.warning("User engagement analysis requires 'user_id' and 'timestamp' columns.")
 
 def main():
-    st.title("✨ Firestore Data Dashboard ✨")
+    st.title("✨ Firestore Data Analytics Dashboard ✨")
     
     collections = firestore_client.collections()
     collection_names = [col.id for col in collections]
