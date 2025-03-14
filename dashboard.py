@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import time
-import re
 import matplotlib.pyplot as plt
 import seaborn as sns
 import scipy.stats as stats
@@ -62,7 +60,7 @@ def plot_dashboard(df):
     # Debugging: Print columns in the DataFrame
     st.write("Columns in the DataFrame:", df.columns.tolist())
     
-    # 1. Bar Plot: Average Supplier Allocation
+    # 1. Bar Plot: Average Supplier Allocation (for numerical data)
     st.subheader("📊 Average Supplier Allocation")
     suppliers = ['Supplier A: in %', 'Supplier B: in %', 'Supplier C: in %']
     
@@ -93,7 +91,7 @@ def plot_dashboard(df):
         
         st.pyplot(fig)
     
-    # 2. Box Plot: Confidence Levels (Q2)
+    # 2. Box Plot: Confidence Levels (Q2) - Numerical Data
     st.subheader("📊 Distribution of Confidence Levels (Q2)")
     if 'Q2' in df.columns and pd.api.types.is_numeric_dtype(df['Q2']):
         fig, ax = plt.subplots(figsize=(8, 6))
@@ -105,35 +103,33 @@ def plot_dashboard(df):
     else:
         st.warning("Q2 data is missing or not numeric.")
     
-    # 3. Histogram: Minimum Reliability Preferences (Q9)
-    st.subheader("📊 Distribution of Minimum Reliability Preferences (Q9)")
-    if 'Q9' in df.columns and pd.api.types.is_numeric_dtype(df['Q9']):
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.histplot(bias_group['Q9'], kde=True, color='skyblue', label='Bias Group', ax=ax)
-        sns.histplot(control_group['Q9'], kde=True, color='lightcoral', label='Control Group', ax=ax)
-        ax.set_xlabel('Minimum Reliability Percentage (Q9)')
-        ax.set_ylabel('Frequency')
-        ax.set_title('Distribution of Minimum Reliability Preferences')
-        ax.legend()
+    # 3. Categorical Plot: Trade-off Decisions (Q8) - Categorical Data
+    st.subheader("📊 Trade-off Decisions (Q8)")
+    if 'Q8' in df.columns:
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.countplot(x='Q8', hue='Source_Collection', data=df, palette="pastel", ax=ax)
+        ax.set_xlabel('Trade-off Decision (Q8)')
+        ax.set_ylabel('Count')
+        ax.set_title('Trade-off Decisions in Bias vs Control Groups')
+        ax.legend(title='Group')
         st.pyplot(fig)
     else:
-        st.warning("Q9 data is missing or not numeric.")
+        st.warning("Q8 data is missing.")
     
-    # 4. Histogram: Willingness to Invest (Q14)
-    st.subheader("📊 Distribution of Willingness to Invest (Q14)")
-    if 'Q14' in df.columns and pd.api.types.is_numeric_dtype(df['Q14']):
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.histplot(bias_group['Q14'], kde=True, color='skyblue', label='Bias Group', ax=ax)
-        sns.histplot(control_group['Q14'], kde=True, color='lightcoral', label='Control Group', ax=ax)
-        ax.set_xlabel('Willingness to Invest (Q14)')
-        ax.set_ylabel('Frequency')
-        ax.set_title('Distribution of Willingness to Invest in Quality Testing')
-        ax.legend()
+    # 4. Categorical Plot: Willingness to Commit (Q13) - Categorical Data
+    st.subheader("📊 Willingness to Commit (Q13)")
+    if 'Q13' in df.columns:
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.countplot(x='Q13', hue='Source_Collection', data=df, palette="pastel", ax=ax)
+        ax.set_xlabel('Willingness to Commit (Q13)')
+        ax.set_ylabel('Count')
+        ax.set_title('Willingness to Commit in Bias vs Control Groups')
+        ax.legend(title='Group')
         st.pyplot(fig)
     else:
-        st.warning("Q14 data is missing or not numeric.")
+        st.warning("Q13 data is missing.")
     
-    # 5. Perform t-tests for each supplier
+    # 5. Perform t-tests for each supplier (numerical data)
     st.subheader("📊 Statistical Tests: Supplier Allocation")
     if valid_suppliers:
         results = []
@@ -157,7 +153,7 @@ def plot_dashboard(df):
     else:
         st.warning("No valid supplier data found for statistical tests.")
     
-    # 6. Chi-Square Test for Q8 and Q13
+    # 6. Chi-Square Test for Q8 and Q13 (categorical data)
     st.subheader("📊 Chi-Square Test Results")
     
     if 'Q8' in df.columns and 'Q13' in df.columns:
