@@ -59,101 +59,125 @@ def plot_dashboard(df):
     bias_group = df[df['Source_Collection'] == 'survey_bais']
     control_group = df[df['Source_Collection'] == 'survey_control']
     
+    # Debugging: Print columns in the DataFrame
+    st.write("Columns in the DataFrame:", df.columns.tolist())
+    
     # 1. Bar Plot: Average Supplier Allocation
     st.subheader("📊 Average Supplier Allocation")
     suppliers = ['Supplier A: in %', 'Supplier B: in %', 'Supplier C: in %']
-    bias_avgs = [bias_group[supplier].mean() for supplier in suppliers]
-    control_avgs = [control_group[supplier].mean() for supplier in suppliers]
     
-    fig, ax = plt.subplots(figsize=(10, 6))
-    x = range(len(suppliers))
-    width = 0.35
+    # Check if supplier columns exist and are numeric
+    valid_suppliers = [supplier for supplier in suppliers if supplier in df.columns and pd.api.types.is_numeric_dtype(df[supplier])]
     
-    # Plot bias group averages
-    ax.bar([i - width/2 for i in x], bias_avgs, width, label='Bias Group', color='skyblue')
-    # Plot control group averages
-    ax.bar([i + width/2 for i in x], control_avgs, width, label='Control Group', color='lightcoral')
-    
-    ax.set_xlabel('Supplier')
-    ax.set_ylabel('Average Percentage Allocation')
-    ax.set_title('Average Percentage Allocation for Each Supplier in Bias vs Control Groups')
-    ax.set_xticks(x)
-    ax.set_xticklabels(suppliers)
-    ax.legend()
-    
-    st.pyplot(fig)
+    if not valid_suppliers:
+        st.warning("No valid supplier data found for visualization.")
+    else:
+        bias_avgs = [bias_group[supplier].mean() for supplier in valid_suppliers]
+        control_avgs = [control_group[supplier].mean() for supplier in valid_suppliers]
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        x = range(len(valid_suppliers))
+        width = 0.35
+        
+        # Plot bias group averages
+        ax.bar([i - width/2 for i in x], bias_avgs, width, label='Bias Group', color='skyblue')
+        # Plot control group averages
+        ax.bar([i + width/2 for i in x], control_avgs, width, label='Control Group', color='lightcoral')
+        
+        ax.set_xlabel('Supplier')
+        ax.set_ylabel('Average Percentage Allocation')
+        ax.set_title('Average Percentage Allocation for Each Supplier in Bias vs Control Groups')
+        ax.set_xticks(x)
+        ax.set_xticklabels(valid_suppliers)
+        ax.legend()
+        
+        st.pyplot(fig)
     
     # 2. Box Plot: Confidence Levels (Q2)
     st.subheader("📊 Distribution of Confidence Levels (Q2)")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    sns.boxplot(x='Source_Collection', y='Q2', data=df, palette="Set2", ax=ax)
-    ax.set_xlabel('Group')
-    ax.set_ylabel('Confidence Level (Q2)')
-    ax.set_title('Distribution of Confidence Levels in Bias vs Control Groups')
-    st.pyplot(fig)
+    if 'Q2' in df.columns and pd.api.types.is_numeric_dtype(df['Q2']):
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.boxplot(x='Source_Collection', y='Q2', data=df, palette="Set2", ax=ax)
+        ax.set_xlabel('Group')
+        ax.set_ylabel('Confidence Level (Q2)')
+        ax.set_title('Distribution of Confidence Levels in Bias vs Control Groups')
+        st.pyplot(fig)
+    else:
+        st.warning("Q2 data is missing or not numeric.")
     
     # 3. Histogram: Minimum Reliability Preferences (Q9)
     st.subheader("📊 Distribution of Minimum Reliability Preferences (Q9)")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.histplot(bias_group['Q9'], kde=True, color='skyblue', label='Bias Group', ax=ax)
-    sns.histplot(control_group['Q9'], kde=True, color='lightcoral', label='Control Group', ax=ax)
-    ax.set_xlabel('Minimum Reliability Percentage (Q9)')
-    ax.set_ylabel('Frequency')
-    ax.set_title('Distribution of Minimum Reliability Preferences')
-    ax.legend()
-    st.pyplot(fig)
+    if 'Q9' in df.columns and pd.api.types.is_numeric_dtype(df['Q9']):
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.histplot(bias_group['Q9'], kde=True, color='skyblue', label='Bias Group', ax=ax)
+        sns.histplot(control_group['Q9'], kde=True, color='lightcoral', label='Control Group', ax=ax)
+        ax.set_xlabel('Minimum Reliability Percentage (Q9)')
+        ax.set_ylabel('Frequency')
+        ax.set_title('Distribution of Minimum Reliability Preferences')
+        ax.legend()
+        st.pyplot(fig)
+    else:
+        st.warning("Q9 data is missing or not numeric.")
     
     # 4. Histogram: Willingness to Invest (Q14)
     st.subheader("📊 Distribution of Willingness to Invest (Q14)")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.histplot(bias_group['Q14'], kde=True, color='skyblue', label='Bias Group', ax=ax)
-    sns.histplot(control_group['Q14'], kde=True, color='lightcoral', label='Control Group', ax=ax)
-    ax.set_xlabel('Willingness to Invest (Q14)')
-    ax.set_ylabel('Frequency')
-    ax.set_title('Distribution of Willingness to Invest in Quality Testing')
-    ax.legend()
-    st.pyplot(fig)
+    if 'Q14' in df.columns and pd.api.types.is_numeric_dtype(df['Q14']):
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.histplot(bias_group['Q14'], kde=True, color='skyblue', label='Bias Group', ax=ax)
+        sns.histplot(control_group['Q14'], kde=True, color='lightcoral', label='Control Group', ax=ax)
+        ax.set_xlabel('Willingness to Invest (Q14)')
+        ax.set_ylabel('Frequency')
+        ax.set_title('Distribution of Willingness to Invest in Quality Testing')
+        ax.legend()
+        st.pyplot(fig)
+    else:
+        st.warning("Q14 data is missing or not numeric.")
     
     # 5. Perform t-tests for each supplier
     st.subheader("📊 Statistical Tests: Supplier Allocation")
-    suppliers = ['Supplier A: in %', 'Supplier B: in %', 'Supplier C: in %']
-    results = []
-    
-    for supplier in suppliers:
-        bias_data = bias_group[supplier].dropna()
-        control_data = control_group[supplier].dropna()
+    if valid_suppliers:
+        results = []
         
-        # Perform two-sample t-test
-        t_stat, p_value = stats.ttest_ind(bias_data, control_data)
-        results.append({
-            "Supplier": supplier,
-            "T-Statistic": t_stat,
-            "P-Value": p_value,
-            "Significance": "Significant" if p_value < 0.05 else "Not Significant"
-        })
-    
-    # Display results in a table
-    results_df = pd.DataFrame(results)
-    st.table(results_df)
+        for supplier in valid_suppliers:
+            bias_data = bias_group[supplier].dropna()
+            control_data = control_group[supplier].dropna()
+            
+            # Perform two-sample t-test
+            t_stat, p_value = stats.ttest_ind(bias_data, control_data)
+            results.append({
+                "Supplier": supplier,
+                "T-Statistic": t_stat,
+                "P-Value": p_value,
+                "Significance": "Significant" if p_value < 0.05 else "Not Significant"
+            })
+        
+        # Display results in a table
+        results_df = pd.DataFrame(results)
+        st.table(results_df)
+    else:
+        st.warning("No valid supplier data found for statistical tests.")
     
     # 6. Chi-Square Test for Q8 and Q13
     st.subheader("📊 Chi-Square Test Results")
     
-    # Create a contingency table for Q8 and Group
-    q8_contingency = pd.crosstab(df['Q8'], df['Source_Collection'])
-    chi2_q8, p_q8, _, _ = stats.chi2_contingency(q8_contingency)
-    
-    # Create a contingency table for Q13 and Group
-    q13_contingency = pd.crosstab(df['Q13'], df['Source_Collection'])
-    chi2_q13, p_q13, _, _ = stats.chi2_contingency(q13_contingency)
-    
-    # Display Chi-Square Results
-    chi2_results = [
-        {"Variable": "Q8", "Chi-Square Statistic": chi2_q8, "P-Value": p_q8, "Significance": "Significant" if p_q8 < 0.05 else "Not Significant"},
-        {"Variable": "Q13", "Chi-Square Statistic": chi2_q13, "P-Value": p_q13, "Significance": "Significant" if p_q13 < 0.05 else "Not Significant"}
-    ]
-    chi2_results_df = pd.DataFrame(chi2_results)
-    st.table(chi2_results_df)
+    if 'Q8' in df.columns and 'Q13' in df.columns:
+        # Create a contingency table for Q8 and Group
+        q8_contingency = pd.crosstab(df['Q8'], df['Source_Collection'])
+        chi2_q8, p_q8, _, _ = stats.chi2_contingency(q8_contingency)
+        
+        # Create a contingency table for Q13 and Group
+        q13_contingency = pd.crosstab(df['Q13'], df['Source_Collection'])
+        chi2_q13, p_q13, _, _ = stats.chi2_contingency(q13_contingency)
+        
+        # Display Chi-Square Results
+        chi2_results = [
+            {"Variable": "Q8", "Chi-Square Statistic": chi2_q8, "P-Value": p_q8, "Significance": "Significant" if p_q8 < 0.05 else "Not Significant"},
+            {"Variable": "Q13", "Chi-Square Statistic": chi2_q13, "P-Value": p_q13, "Significance": "Significant" if p_q13 < 0.05 else "Not Significant"}
+        ]
+        chi2_results_df = pd.DataFrame(chi2_results)
+        st.table(chi2_results_df)
+    else:
+        st.warning("Q8 or Q13 data is missing.")
 
 def main():
     st.title("✨ Firestore Data Analytics Dashboard ✨")
