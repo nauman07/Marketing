@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import time
 import re
+import matplotlib.pyplot as plt
+import seaborn as sns
 from firebase_config import initialize_firebase
 
 # Initialize Firebase
@@ -36,24 +38,70 @@ def merge_data(dfs):
     if not dfs:
         return pd.DataFrame()
     
-    # Get all unique columns
     all_columns = set()
     for df in dfs:
         all_columns.update(df.columns)
     
-    # Standardize column names
     column_mapping = standardize_columns(all_columns)
     
-    # Rename columns in each DataFrame
     for i, df in enumerate(dfs):
         df.rename(columns=column_mapping, inplace=True)
     
-    # Merge all DataFrames
     merged_df = pd.concat(dfs, ignore_index=True, sort=False)
     return merged_df
 
+def plot_histograms(df):
+    """Plot histograms for Q1-Q14 fields."""
+    st.subheader("📊 Response Distributions")
+    numeric_columns = [col for col in df.columns if re.match(r"Q\d+", col)]
+    for col in numeric_columns:
+        fig, ax = plt.subplots()
+        sns.histplot(df[col].dropna(), bins=20, kde=True, ax=ax)
+        ax.set_title(f"Distribution of {col}")
+        st.pyplot(fig)
+
+def plot_trend(df):
+    """Plot trend lines over time."""
+    if "timestamp" in df.columns:
+        df["timestamp"] = pd.to_datetime(df["timestamp"])
+        df["date"] = df["timestamp"].dt.date
+        trend_df = df.groupby("date").size().reset_index(name="count")
+        fig, ax = plt.subplots()
+        sns.lineplot(data=trend_df, x="date", y="count", ax=ax)
+        ax.set_title("📈 Response Trend Over Time")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+    else:
+        st.warning("No timestamp column found to generate trends.")
+
+def show_statistics(df):
+    """Display basic statistical summaries."""
+    st.subheader("📊 Statistical Summary")
+    st.write(df.describe())
+
+def user_engagement_analysis(df):
+    """Analyze user engagement metrics like DAU, repeat users, etc."""
+    if "user_id" in df.columns and "timestamp" in df.columns:
+        df["timestamp"] = pd.to_datetime(df["timestamp"])
+        df["date"] = df["timestamp"].dt.date
+        dau = df.groupby("date")["user_id"].nunique()
+        repeat_users = df["user_id"].value_counts()
+        repeat_user_rate = (repeat_users > 1).sum() / len(repeat_users)
+        
+        st.subheader("📊 User Engagement Metrics")
+        st.metric("Daily Active Users (DAU)", dau.mean())
+        st.metric("Repeat User Rate", f"{repeat_user_rate:.2%}")
+        
+        fig, ax = plt.subplots()
+        sns.lineplot(x=dau.index, y=dau.values, ax=ax)
+        ax.set_title("📈 DAU Over Time")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+    else:
+        st.warning("User engagement analysis requires 'user_id' and 'timestamp' columns.")
+
 def main():
-    st.title("✨ Firestore Data Merger ✨")
+    st.title("✨ Firestore Data Dashboard ✨")
     
     collections = firestore_client.collections()
     collection_names = [col.id for col in collections]
@@ -78,6 +126,11 @@ def main():
             st.success("✅ Download started!")
             time.sleep(1)
             st.toast("🎉 File downloaded successfully!")
+        
+        plot_histograms(merged_df)
+        plot_trend(merged_df)
+        show_statistics(merged_df)
+        user_engagement_analysis(merged_df)
 
 if __name__ == "__main__":
     main()
